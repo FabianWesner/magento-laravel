@@ -98,6 +98,12 @@ else
   echo "SKIP: Laravel composer validate (laravel/composer.json not found)"
 fi
 
+if [ -f laravel/phpunit.xml ]; then
+  run_optional "Laravel tests" php artisan test --compact
+else
+  echo "SKIP: Laravel tests (laravel/phpunit.xml not found)"
+fi
+
 mkdocs_bin="${MKDOCS_BIN:-}"
 if [ -z "$mkdocs_bin" ] && command -v mkdocs >/dev/null 2>&1; then
   mkdocs_bin="mkdocs"
