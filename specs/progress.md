@@ -30,6 +30,31 @@ Next:
 
 ## Entries
 
+## 2026-05-19 01:03 CEST - Module Target Gate
+
+Changed:
+- Added `dev/modernization/validate-module-target.php` to validate the no-XML module ADRs, architecture specs, POC plan, test plan, backlog, MkDocs references, and Docusaurus developer references.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires PHP module manifests, service providers, contracts, policies, events/listeners, jobs, config, route/command artifacts, module registry tests, and module-system evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `service providers`, `authorization policies`, and `events jobs configuration` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-module-target.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-module-target.php` passed.
+- `php dev/modernization/validate-module-target.php --final` failed as expected because the Laravel target does not yet include module manifests, module extension artifacts, module registry tests, or module-system evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the module target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, missing module implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php`, `bash -n dev/modernization/gate.sh`, `php -l dev/modernization/validate-module-target.php`, and `git diff --check` passed.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, module manifest/provider/policy/event/job/config/contract implementation and evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the module target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 00:57 CEST - EAV Target Gate
 
 Changed:
