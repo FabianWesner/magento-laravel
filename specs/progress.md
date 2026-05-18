@@ -92,3 +92,23 @@ Blocked:
 
 Next:
 - Complete final re-review, run final gates if needed, commit all preparation work, and record the commit hash in follow-up progress.
+
+## 2026-05-18 22:54 CEST - Current Gate Recheck
+
+Changed:
+- Recorded current verification status after re-running the preparation gate and Laravel Boost checks.
+
+Verified:
+- `bash dev/modernization/gate.sh` passed markdown checks, inventory report, no-new-XML check, removed-technology check, removed-technology bad fixture rejection, feature traceability template check, MkDocs strict build, and Docusaurus build.
+- Gate-level Docusaurus browser smoke was unavailable inside the sandbox because the script could not listen on `127.0.0.1:3012`; escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php artisan test --compact` passed with 2 tests and 2 assertions.
+- Root `php artisan` reaches Laravel `13.9.0` on PHP `8.5.5`; `boost:mcp` is present.
+- Boost MCP tools are still not exposed as first-class Codex tools in this session, but `php artisan boost:execute-tool` successfully ran `ApplicationInfo`, `DatabaseSchema`, `DatabaseQuery`, and `SearchDocs`.
+- Restricted-sandbox `SearchDocs` failed DNS resolution for `boost.laravel.com`; escalated retry succeeded for the Laravel `13.x` routing query.
+
+Blocked:
+- Real project overlay, project database fixture, and project media fixture remain unavailable.
+- The active Codex client still needs reload/restart if direct Laravel Boost MCP tools should appear from `.codex/config.toml`.
+
+Next:
+- Continue with the first unblocked preparation increment: improve baseline/inventory evidence around the core-only Magento source while waiting for project overlay, DB fixture, and media.
