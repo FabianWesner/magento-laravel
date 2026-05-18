@@ -206,6 +206,11 @@ if ($final) {
             $warnings[] = "Final documentation missing catalog IDs in {$label}: ".summarizeMissingIds($missing);
         }
 
+        $missingRows = array_values(array_diff($featureIds, featureIdsFromFirstColumn($content)));
+        if ($missingRows !== []) {
+            $warnings[] = "Final documentation missing per-feature rows in {$label}: ".summarizeMissingIds($missingRows);
+        }
+
         foreach ($finalDocumentationPlaceholderPatterns as $placeholderPattern) {
             if (preg_match($placeholderPattern, $content)) {
                 $warnings[] = "Final documentation still contains placeholder evidence in {$label}: {$path}";
