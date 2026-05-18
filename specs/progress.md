@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 01:17 CEST - API Target Gate
+
+Changed:
+- Added `dev/modernization/validate-api-target.php` to validate the API contract requirements in `specs/GOAL.md`, architecture specs, compatibility policy, roadmap, API test plan, complex-feature reverse-engineering plan, backlog, risk register, Magento API catalog, MkDocs references, and Docusaurus testing references.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires a Laravel API route file, API controllers, resources, form requests, auth/policy compatibility artifacts, API contract tests for `API-001` through `API-006`, JSON/SOAP/XML-RPC/REST/API2 coverage, OpenAPI documentation, and API contract evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost fallback `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `api resources`, `http tests json`, `routing api`, `validation form requests`, and `rate limiting` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-api-target.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-api-target.php` passed.
+- `php dev/modernization/validate-api-target.php --final` failed as expected because the Laravel target does not yet include API routes, API artifacts, API contract tests, OpenAPI docs, or API contract evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the API target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, missing module implementation/evidence, missing route fallback approval/implementation/evidence, missing cron/job implementation/evidence, missing API implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php`, `bash -n dev/modernization/gate.sh`, `php -l dev/modernization/validate-api-target.php`, and `git diff --check` passed.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, module manifest/provider/policy/event/job/config/contract implementation and evidence, approved ADR 0008 route fallback boundary, route ownership/fallback implementation and evidence, cron scheduler/command/job/event implementation and evidence, API route/controller/resource/request/auth implementation and contract evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the API target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 01:13 CEST - Cron Job Target Gate
 
 Changed:
