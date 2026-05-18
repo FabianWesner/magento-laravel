@@ -91,6 +91,12 @@ else
 fi
 echo
 run_optional "feature traceability template check" php dev/modernization/validate-feature-traceability.php --strict
+if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
+  run_optional "feature traceability final check" php dev/modernization/validate-feature-traceability.php --final
+else
+  echo "SKIP: feature traceability final check (set MODERNIZATION_FINAL=1)"
+  echo
+fi
 
 if [ -f composer.json ] && command -v composer >/dev/null 2>&1; then
   run_optional "composer validate" composer validate --no-check-publish

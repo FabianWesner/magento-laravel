@@ -30,6 +30,25 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:00 CEST - Optional Final Traceability Gate
+
+Changed:
+- Added `MODERNIZATION_FINAL=1` support to `dev/modernization/gate.sh` so the final traceability check can be enforced during release-readiness verification while remaining skipped during ordinary preparation gates.
+
+Verified:
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-feature-traceability.php --strict` passed for 79 catalog IDs.
+- `php dev/modernization/validate-feature-traceability.php --final` failed as expected with missing final evidence and missing Docusaurus per-feature rows.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode and reported `SKIP: feature traceability final check (set MODERNIZATION_FINAL=1)`.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected at `feature traceability final check`, while continuing through the remaining non-final checks.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, Docusaurus final per-feature evidence rows, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the optional final traceability gate, then continue with unblocked verification hardening.
+
 ## 2026-05-18 23:58 CEST - Schema Report In Modernization Gate
 
 Changed:
