@@ -178,6 +178,27 @@ if ($final) {
             $warnings[] = "Missing final evidence file for {$label}: {$path}";
         }
     }
+
+    $finalCatalogEvidenceFiles = [
+        'Docusaurus user feature coverage' => 'docusaurus/docs/user/feature-coverage.md',
+        'Docusaurus developer testing evidence' => 'docusaurus/docs/developer/testing-and-verification.md',
+    ];
+
+    foreach ($finalCatalogEvidenceFiles as $label => $path) {
+        if (! is_file($path)) {
+            continue;
+        }
+
+        $content = file_get_contents($path);
+        if ($content === false) {
+            continue;
+        }
+
+        $missing = array_values(array_diff($featureIds, featureIdsFromContent($content)));
+        if ($missing !== []) {
+            $warnings[] = "Final documentation missing catalog IDs in {$label}: ".summarizeMissingIds($missing);
+        }
+    }
 }
 
 if ($errors !== []) {

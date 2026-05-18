@@ -380,3 +380,25 @@ Blocked:
 
 Next:
 - Commit the fixture reporter catalog guard, then continue with unblocked verification hardening.
+
+## 2026-05-18 23:33 CEST - Docusaurus Final Traceability Coverage
+
+Changed:
+- Tightened `dev/modernization/validate-feature-traceability.php --final` so the Docusaurus user feature coverage page and developer testing evidence page must mention every catalog feature ID before final release traceability can pass.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console commands`, `testing console commands`, and `documentation` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-feature-traceability.php` passed.
+- `php dev/modernization/validate-feature-traceability.php --strict` passed for 79 catalog IDs.
+- `php dev/modernization/validate-feature-traceability.php --final` still fails as expected and now explicitly reports 79 missing catalog IDs in both `docusaurus/docs/user/feature-coverage.md` and `docusaurus/docs/developer/testing-and-verification.md`.
+- `php dev/modernization/markdown-check.php` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Docusaurus final traceability coverage check, then continue with unblocked verification hardening.
