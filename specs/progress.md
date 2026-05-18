@@ -224,3 +224,21 @@ Blocked:
 
 Next:
 - Wait for project overlay, sanitized project DB fixture, and project media fixture; meanwhile continue only with unblocked baseline tooling/spec hardening that does not claim project parity.
+
+## 2026-05-18 23:10 CEST - Optional Fixture Gate
+
+Changed:
+- Added optional fixture coverage execution to `dev/modernization/gate.sh`; it runs `dev/modernization/fixture-coverage-report.php` when `DB_DSN` is set and skips clearly when no fixture database is configured.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Escalated Laravel Boost fallback `SearchDocs` succeeded for `console commands` and `database testing` against Laravel framework `13.x` docs.
+- `bash -n dev/modernization/gate.sh` passed.
+- `bash dev/modernization/gate.sh` passed with `fixture coverage report` skipped because `DB_DSN` was not set.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento bash dev/modernization/gate.sh` passed, ran the fixture coverage report against `magento1945`, and passed Docusaurus browser smoke.
+
+Blocked:
+- Project overlay, project database fixture, and project media fixture remain unavailable.
+
+Next:
+- Commit the optional fixture gate update.
