@@ -149,3 +149,27 @@ Blocked:
 
 Next:
 - Commit the schema evidence update, then continue with unblocked baseline documentation and verification work.
+
+## 2026-05-18 23:03 CEST - Sample Fixture Coverage Report
+
+Changed:
+- Added `dev/modernization/fixture-coverage-report.php`, a read-only Magento database reporter for current fixture matrix coverage.
+- Recorded current Magento sample data coverage in `specs/modernization/data-fixtures.md`.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Escalated Laravel Boost fallback `SearchDocs` succeeded for `database testing` and `console commands` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` fixed and then passed for the new PHP reporter.
+- `php -l dev/modernization/fixture-coverage-report.php` passed.
+- Restricted fixture coverage DB connection failed with `Operation not permitted`; escalated retry passed against `magento1945`.
+- `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento php dev/modernization/fixture-coverage-report.php --format=markdown` reports 14 fixture checks: 6 covered and 8 gaps.
+- `php dev/modernization/markdown-check.php` passed.
+- `php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `bash dev/modernization/gate.sh` passed; Docusaurus browser smoke still skipped inside the sandbox because binding `127.0.0.1:3012` is unavailable there.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Sample data is still not enough for final fixture acceptance; project fixture, media, disabled stores/categories, group prices, backorders, table rates, API/OAuth users, broader admin roles, and cron rows remain missing or incomplete.
+
+Next:
+- Run focused checks and commit the sample fixture coverage reporter and fixture spec update.

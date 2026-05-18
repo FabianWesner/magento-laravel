@@ -49,6 +49,35 @@ The demo fixture must be deterministic and broad enough to exercise every featur
 | Performance | Large catalog slice with at least 10,000 products, 500 categories, 200 attributes, 10,000 customers, and 50,000 orders for performance environments. |
 | Failure and resilience | Invalid coupons, invalid addresses, expired sessions, denied admin roles, failed payments, unavailable shipping methods, missing media, stale indexes, stale cache, failed email queue, failed cron lock, duplicate order submission attempt, and integration timeout mocks. |
 
+## Current Sample Fixture Coverage
+
+Use the read-only coverage reporter to compare any restored Magento database against the matrix above:
+
+```bash
+DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento php dev/modernization/fixture-coverage-report.php --format=markdown
+```
+
+Current Magento sample data result on 2026-05-18:
+
+| Area | Current Evidence | Status |
+| --- | --- | --- |
+| Product types | Bundle, configurable, downloadable, grouped, simple, and virtual products are present. | Covered |
+| Websites and stores | Two websites, two store groups, and four store views are present; no disabled store view is present. | Gap |
+| Categories | 29 categories and one empty category are present; maximum depth is level 3 and no disabled category is present. | Gap |
+| Custom options | Required and optional product custom options are present. | Covered |
+| EAV attributes | All core backend types and global, website, and store scoped catalog attributes are present. | Covered |
+| Pricing and promotions | Special prices, tier prices, catalog rules, and cart rules are present; group prices are missing. | Gap |
+| Inventory | Stock rows and out-of-stock products are present; backorder-enabled products are missing. | Gap |
+| Customers | Registered customers, groups, and addresses are present. | Covered |
+| Sales lifecycle | Orders, invoices, shipments, and credit memos are present. | Covered |
+| Tax and shipping | Tax rates and rules are present; table-rate shipping data is missing. | Gap |
+| Payment and API users | Active payment config exists; SOAP/XML-RPC API users and OAuth consumers are missing. | Gap |
+| CMS and media | CMS pages, blocks, widgets, and product media rows are present. | Covered |
+| Admin users and roles | One admin user and two admin roles are present; role coverage is insufficient. | Gap |
+| Cron and reports | Report aggregates are populated; cron schedule rows are missing. | Gap |
+
+Summary: Magento sample data covers 6 of 14 checked fixture areas and leaves 8 known gaps. It is useful for smoke tests but is not sufficient as the canonical demo fixture.
+
 ## Fixture Traceability
 
 Every fixture record must identify which feature IDs it proves. Use this table shape in the fixture manifest:
