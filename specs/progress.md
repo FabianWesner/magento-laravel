@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:46 CEST - Runtime Tooling Gate
+
+Changed:
+- Added `dev/modernization/validate-runtime-tooling.php` to validate Laravel PHP `8.5` platform config, Composer lock versions, root artisan PHP 8.5 proxy behavior, MCP client configuration, install-verification evidence, and Boost read-only tooling.
+- Wired the runtime/tooling validator into `dev/modernization/gate.sh`; final release mode now verifies this gate as part of the full modernization gate.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `configuration`, `artisan console commands`, and `testing console commands` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-runtime-tooling.php` passed.
+- `php dev/modernization/validate-runtime-tooling.php` passed.
+- `php dev/modernization/validate-runtime-tooling.php --final` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the runtime tooling template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability; the runtime tooling final check passed inside that run.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the runtime tooling gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 00:39 CEST - Production Readiness Gate
 
 Changed:
