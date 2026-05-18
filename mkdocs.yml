@@ -226,6 +226,11 @@ nav:
           - blog/posts/guides/2024-02-17-ddev-windows-10.md
       - 'Documentation':
           - developers/mkdocs.md
+  - 'Modernization':
+      - modernization/index.md
+      - modernization/architecture.md
+      - modernization/technologies.md
+      - modernization/workflows.md
   - 'Modules':
       - users/modules/index.md
       - users/modules/analytics.md
