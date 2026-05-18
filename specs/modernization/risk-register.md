@@ -30,5 +30,6 @@ This register tracks modernization risk. Owners and dates must be filled in once
 
 - P0 and P1 risks require an owner before related implementation starts.
 - P0 and P1 risks require automated verification before release.
+- Any accepted residual P0/P1 risk requires explicit approval in release evidence.
 - Every accepted risk needs a written decision.
 - Every compatibility bridge needs a removal trigger.

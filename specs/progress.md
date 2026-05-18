@@ -30,6 +30,30 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:39 CEST - Production Readiness Gate
+
+Changed:
+- Added `dev/modernization/validate-production-readiness.php` to validate the production-readiness matrix, release gates, risk rules, and final evidence manifest requirement.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires production readiness evidence with category, scope, owner, evidence, and status rows.
+- Added a risk-register rule requiring explicit release-evidence approval for any accepted residual P0/P1 risk.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `testing`, `console commands`, and `validation` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-production-readiness.php` passed.
+- `php dev/modernization/validate-production-readiness.php` passed.
+- `php dev/modernization/validate-production-readiness.php --final` failed as expected because no production readiness evidence file exists yet.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the production readiness template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the production readiness gate, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:31 CEST - Security Accessibility Gate
 
 Changed:
