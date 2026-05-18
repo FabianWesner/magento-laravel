@@ -90,6 +90,14 @@ else
   echo "SKIP: composer validate (composer.json not found at repository root)"
 fi
 
+if [ -f laravel/composer.json ] && command -v composer >/dev/null 2>&1; then
+  run_optional "Laravel composer validate" composer --working-dir=laravel validate --no-check-publish
+elif [ -f laravel/composer.json ]; then
+  echo "SKIP: Laravel composer validate (composer not found)"
+else
+  echo "SKIP: Laravel composer validate (laravel/composer.json not found)"
+fi
+
 mkdocs_bin="${MKDOCS_BIN:-}"
 if [ -z "$mkdocs_bin" ] && command -v mkdocs >/dev/null 2>&1; then
   mkdocs_bin="mkdocs"

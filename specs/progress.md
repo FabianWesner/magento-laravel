@@ -30,6 +30,26 @@ Next:
 
 ## Entries
 
+## 2026-05-18 23:55 CEST - Laravel Composer Gate Validation
+
+Changed:
+- Added `laravel/composer.json` validation to `dev/modernization/gate.sh` so the Laravel target package metadata is checked directly instead of only reporting that the repository root has no `composer.json`.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` returned `isError: false` and reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `installation composer`, `console commands`, and `testing console commands` against Laravel framework `13.x` docs.
+- `composer --working-dir=laravel validate --no-check-publish` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/markdown-check.php` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the new Laravel Composer validation, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel Composer gate validation, then continue with unblocked verification hardening.
+
 ## 2026-05-18 23:52 CEST - Laravel Boost Gate Smoke
 
 Changed:
