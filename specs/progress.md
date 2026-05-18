@@ -30,6 +30,24 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:02 CEST - Strict Final Gate Availability
+
+Changed:
+- Tightened `dev/modernization/gate.sh` so `MODERNIZATION_FINAL=1` treats unavailable checks as failures instead of skips.
+- Made `MODERNIZATION_FINAL=1` automatically run fixture coverage with `--fail-on-gaps`, matching the documented final fixture acceptance check.
+
+Verified:
+- `bash -n dev/modernization/gate.sh` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, preserving ordinary preparation skips for unavailable fixture coverage, schema report, and Docusaurus browser smoke.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected with missing `DB_DSN` fixture/schema failures, final traceability failures, and final-mode Docusaurus browser smoke unavailability in the sandbox.
+- Escalated DB-backed `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` reached the local `magento1945` sample database, failed fixture coverage strictly on the 8 known sample gaps, passed schema report with 362 tables and signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`, failed final traceability on missing final evidence, and passed Docusaurus browser smoke.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, Docusaurus final per-feature evidence rows, strict fixture coverage, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the strict final gate availability change, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:00 CEST - Optional Final Traceability Gate
 
 Changed:

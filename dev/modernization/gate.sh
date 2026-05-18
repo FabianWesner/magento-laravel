@@ -26,7 +26,12 @@ run_maybe_unavailable() {
   else
     code=$?
     if [ "$code" -eq 2 ]; then
-      echo "SKIP: $name (unavailable in this environment)"
+      if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
+        echo "FAIL: $name unavailable in final mode (exit $code)" >&2
+        status=1
+      else
+        echo "SKIP: $name (unavailable in this environment)"
+      fi
     else
       echo "FAIL: $name (exit $code)" >&2
       status=1
@@ -48,7 +53,7 @@ run_fixture_coverage() {
     return 2
   fi
 
-  if [ "${FIXTURE_COVERAGE_STRICT:-0}" = "1" ]; then
+  if [ "${FIXTURE_COVERAGE_STRICT:-0}" = "1" ] || [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
     php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps
   else
     php dev/modernization/fixture-coverage-report.php --format=markdown
