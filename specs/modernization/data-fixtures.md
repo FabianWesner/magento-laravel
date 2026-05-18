@@ -57,6 +57,12 @@ Use the read-only coverage reporter to compare any restored Magento database aga
 DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento php dev/modernization/fixture-coverage-report.php --format=markdown
 ```
 
+Use strict mode for final fixture acceptance:
+
+```bash
+DB_DSN='mysql:host=<host>;dbname=<fixture_db>' DB_USER=<user> DB_PASS=<pass> php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps
+```
+
 Current Magento sample data result on 2026-05-18:
 
 | Area | Current Evidence | Status |

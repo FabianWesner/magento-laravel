@@ -5,15 +5,21 @@ declare(strict_types=1);
 
 function usage(): void
 {
-    echo "Usage: DB_DSN='mysql:host=127.0.0.1;dbname=magento' DB_USER=root DB_PASS=secret php dev/modernization/fixture-coverage-report.php [--format=json|markdown]\n";
+    echo "Usage: DB_DSN='mysql:host=127.0.0.1;dbname=magento' DB_USER=root DB_PASS=secret php dev/modernization/fixture-coverage-report.php [--format=json|markdown] [--fail-on-gaps]\n";
     echo "Optional: DB_TABLE_PREFIX=prefix_\n";
 }
 
 $format = 'markdown';
+$failOnGaps = false;
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--help' || $arg === '-h') {
         usage();
         exit(0);
+    }
+    if ($arg === '--fail-on-gaps') {
+        $failOnGaps = true;
+
+        continue;
     }
     if (str_starts_with($arg, '--format=')) {
         $format = substr($arg, 9);
@@ -325,7 +331,7 @@ $report = [
 
 if ($format === 'json') {
     echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
-    exit(0);
+    exit($failOnGaps && $gaps > 0 ? 1 : 0);
 }
 
 if ($format !== 'markdown') {
@@ -343,3 +349,5 @@ echo "| --- | --- | --- | --- |\n";
 foreach ($report['checks'] as $check) {
     echo "| {$check['area']} | {$check['required']} | {$check['evidence']} | `{$check['status']}` |\n";
 }
+
+exit($failOnGaps && $gaps > 0 ? 1 : 0);

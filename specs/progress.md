@@ -242,3 +242,23 @@ Blocked:
 
 Next:
 - Commit the optional fixture gate update.
+
+## 2026-05-18 23:12 CEST - Strict Fixture Gap Mode
+
+Changed:
+- Added `--fail-on-gaps` to `dev/modernization/fixture-coverage-report.php` for final fixture acceptance checks.
+- Added `FIXTURE_COVERAGE_STRICT=1` support to `dev/modernization/gate.sh` so fixture gaps can fail the standard gate when strict mode is requested.
+- Updated `specs/modernization/data-fixtures.md` and `specs/modernization/test-plan.md` to document strict fixture coverage usage.
+
+Verified:
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php -l dev/modernization/fixture-coverage-report.php` passed.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps` exited `1` as expected because the sample fixture has 8 known gaps.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset.
+
+Blocked:
+- Project overlay, project database fixture, and project media fixture remain unavailable.
+
+Next:
+- Commit strict fixture gap mode.

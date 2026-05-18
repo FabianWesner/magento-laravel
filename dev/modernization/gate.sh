@@ -48,7 +48,11 @@ run_fixture_coverage() {
     return 2
   fi
 
-  php dev/modernization/fixture-coverage-report.php --format=markdown
+  if [ "${FIXTURE_COVERAGE_STRICT:-0}" = "1" ]; then
+    php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps
+  else
+    php dev/modernization/fixture-coverage-report.php --format=markdown
+  fi
 }
 
 run_optional "modernization PHP syntax" run_php_syntax

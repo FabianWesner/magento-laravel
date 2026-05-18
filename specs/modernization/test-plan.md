@@ -121,7 +121,7 @@ The detailed demo matrix is defined in `specs/modernization/data-fixtures.md` an
 Use the read-only fixture coverage reporter as the repeatable local/CI smoke check for fixture breadth:
 
 ```bash
-DB_DSN='mysql:host=<host>;dbname=<fixture_db>' DB_USER=<user> DB_PASS=<pass> php dev/modernization/fixture-coverage-report.php --format=markdown
+DB_DSN='mysql:host=<host>;dbname=<fixture_db>' DB_USER=<user> DB_PASS=<pass> php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps
 ```
 
 The report is a coverage signal, not final proof by itself. Final acceptance still requires per-feature fixture IDs, characterization evidence, Laravel parity tests, visual evidence, and release evidence.
