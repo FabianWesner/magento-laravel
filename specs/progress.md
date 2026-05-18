@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:06 CEST - Magento Docroot Verification Gate
+
+Changed:
+- Added `dev/modernization/verify-magento-docroot.php` to verify the generated Magento runtime docroot against core marker files and any project overlay files.
+- Added the verifier to `dev/modernization/gate.sh`.
+- Final mode now fails if `project/` is still placeholder-only.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` returned `isError: false` and reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `filesystem`, `console commands`, and `testing console commands` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/verify-magento-docroot.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/verify-magento-docroot.php` passed, checking 7 core markers and reporting the current project overlay as placeholder-only.
+- `php dev/modernization/verify-magento-docroot.php --final` failed as expected with `Project overlay is placeholder-only`.
+- `MAGENTO_RUNTIME_ROOT=/tmp/magento-lts-missing-docroot php dev/modernization/verify-magento-docroot.php` exited `2` for unavailable runtime docroot.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including Magento docroot verification.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Real project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, Docusaurus final per-feature evidence rows, strict fixture coverage, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Magento docroot verification gate, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:02 CEST - Strict Final Gate Availability
 
 Changed:

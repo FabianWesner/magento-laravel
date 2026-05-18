@@ -80,9 +80,18 @@ run_laravel_boost_smoke() {
   php artisan boost:execute-tool 'Laravel\Boost\Mcp\Tools\ApplicationInfo' W10= | grep -q '"isError":false' || return 1
 }
 
+run_magento_docroot_verification() {
+  if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
+    php dev/modernization/verify-magento-docroot.php --final
+  else
+    php dev/modernization/verify-magento-docroot.php
+  fi
+}
+
 run_optional "modernization PHP syntax" run_php_syntax
 run_optional "markdown checks" php dev/modernization/markdown-check.php
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
+run_maybe_unavailable "Magento docroot verification" run_magento_docroot_verification
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
 run_maybe_unavailable "fixture coverage report" run_fixture_coverage
 run_maybe_unavailable "schema report" run_schema_report
