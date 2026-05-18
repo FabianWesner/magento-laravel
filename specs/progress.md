@@ -30,6 +30,25 @@ Next:
 
 ## Entries
 
+## 2026-05-18 23:58 CEST - Schema Report In Modernization Gate
+
+Changed:
+- Added `dev/modernization/schema-report.php --format=markdown` to `dev/modernization/gate.sh`, using the same `DB_DSN` availability behavior as fixture coverage.
+
+Verified:
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/schema-report.php --help` showed the expected DB configuration usage.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Restricted DB-backed gate failed on local MySQL with `SQLSTATE[HY000] [2002] Operation not permitted`, confirming the sandbox restriction.
+- Escalated DB-backed `bash dev/modernization/gate.sh` passed against the local `magento1945` sample database, including fixture coverage, schema report, Laravel tests, Docusaurus build, and Docusaurus browser smoke.
+- The schema report in the escalated gate reported 362 tables and schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the schema report gate step, then continue with unblocked verification hardening.
+
 ## 2026-05-18 23:56 CEST - Laravel Tests In Modernization Gate
 
 Changed:

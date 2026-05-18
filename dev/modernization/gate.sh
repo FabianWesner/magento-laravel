@@ -55,6 +55,15 @@ run_fixture_coverage() {
   fi
 }
 
+run_schema_report() {
+  if [ -z "${DB_DSN:-}" ]; then
+    echo "DB_DSN is not set."
+    return 2
+  fi
+
+  php dev/modernization/schema-report.php --format=markdown
+}
+
 run_laravel_boost_smoke() {
   if [ ! -x artisan ]; then
     echo "Repository root artisan proxy is missing or not executable."
@@ -71,6 +80,7 @@ run_optional "markdown checks" php dev/modernization/markdown-check.php
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
 run_maybe_unavailable "fixture coverage report" run_fixture_coverage
+run_maybe_unavailable "schema report" run_schema_report
 run_optional "no-new-xml check for migrated paths" php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs
 run_optional "removed-technology check for Laravel target" php dev/modernization/validate-removed-technologies.php
 if php dev/modernization/validate-removed-technologies.php dev/modernization/fixtures/removed-tech/bad >/dev/null 2>&1; then
