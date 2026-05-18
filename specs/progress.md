@@ -30,6 +30,26 @@ Next:
 
 ## Entries
 
+## 2026-05-18 23:52 CEST - Laravel Boost Gate Smoke
+
+Changed:
+- Added a modernization gate check that proves the repository root `php artisan` proxy boots Laravel, exposes `boost:mcp`, and can run Laravel Boost `ApplicationInfo` successfully.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before tooling edits.
+- Laravel Boost fallback `SearchDocs` had already been run for `filesystem`, `console commands`, and `testing console commands` against Laravel framework `13.x` docs in this increment; sandbox DNS failed and the escalated retry succeeded.
+- `bash -n dev/modernization/gate.sh` passed.
+- Root `php artisan --version` returned Laravel Framework `13.9.0`.
+- Root `php artisan boost:execute-tool 'Laravel\Boost\Mcp\Tools\ApplicationInfo' W10=` returned `isError: false` and reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the new Laravel Boost application smoke, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel Boost gate smoke, then continue with unblocked verification hardening.
+
 ## 2026-05-18 23:49 CEST - Markdown Local Link Guard
 
 Changed:
