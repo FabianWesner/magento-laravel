@@ -34,10 +34,14 @@ This spec defines the security work required for the Laravel modernization.
 | SQL safety | Dynamic queries use bindings or vetted query builders. | Static checks and repository tests. |
 | Secrets | Secrets are not committed and are read from environment/secret stores. | Secret scan and config review. |
 | PHP runtime | Laravel target uses the latest stable PHP branch and does not run new code on unsupported legacy PHP. | `php -v`, Composer platform check, CI matrix, dependency audit. |
+| Removed technologies | Laravel target must not depend on Magento/Zend/Varien/XML/layout/block/resource/Prototype-era runtime technologies. | Removed-technology scan and architecture tests. |
+| Failure-path safety | Invalid input, denied permissions, expired sessions, integration failures, missing media, and stale cache/index states fail safely without leaking data. | Browser, integration, API, and operations tests. |
 
 ## Open Decisions
 
-- Password hash migration strategy.
-- Admin permission manifest format.
-- API authentication compatibility duration.
-- Session sharing between legacy and Laravel during route fallback.
+- Password hash migration strategy. Blocked by ADR 0008.
+- Admin permission manifest format. Blocked by ADR 0008 and admin architecture spec.
+- API authentication compatibility duration. Blocked by ADR 0008 and API compatibility spec.
+- Session sharing between legacy and Laravel during route fallback. Blocked by ADR 0008.
+
+No route fallback implementation may start until ADR 0008 is approved and its cross-runtime auth/session tests are defined.

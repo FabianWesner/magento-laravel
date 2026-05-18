@@ -5,13 +5,14 @@ declare(strict_types=1);
 
 $paths = array_slice($argv, 1);
 if ($paths === []) {
-    $paths = ['docs/content/modernization', 'specs'];
+    $paths = ['docs/content/modernization', 'specs', 'docusaurus/docs'];
 }
 
 $files = [];
 foreach ($paths as $path) {
     if (is_file($path) && str_ends_with($path, '.md')) {
         $files[] = $path;
+
         continue;
     }
     if (is_dir($path)) {
@@ -30,6 +31,7 @@ foreach ($files as $file) {
     $content = file_get_contents($file);
     if ($content === false) {
         $errors[] = "{$file}: unreadable";
+
         continue;
     }
     if (substr_count($content, '```') % 2 !== 0) {
@@ -41,9 +43,8 @@ foreach ($files as $file) {
 }
 
 if ($errors !== []) {
-    fwrite(STDERR, implode("\n", $errors) . "\n");
+    fwrite(STDERR, implode("\n", $errors)."\n");
     exit(1);
 }
 
-echo "Markdown checks passed for " . count($files) . " files.\n";
-
+echo 'Markdown checks passed for '.count($files)." files.\n";

@@ -12,14 +12,14 @@ if ($paths === [] || in_array('--help', $paths, true) || in_array('-h', $paths, 
 
 $violations = [];
 foreach ($paths as $path) {
-    if (!file_exists($path)) {
+    if (! file_exists($path)) {
         continue;
     }
     $iterator = is_dir($path)
         ? new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS))
         : new ArrayIterator([new SplFileInfo($path)]);
     foreach ($iterator as $file) {
-        if (!$file instanceof SplFileInfo || !$file->isFile()) {
+        if (! $file instanceof SplFileInfo || ! $file->isFile()) {
             continue;
         }
         if (strtolower($file->getExtension()) === 'xml') {
@@ -37,4 +37,3 @@ if ($violations !== []) {
 }
 
 echo "No XML files found in modernization paths.\n";
-

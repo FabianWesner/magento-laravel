@@ -1,9 +1,8 @@
 {
     "mcpServers": {
         "laravel-boost": {
-            "command": "php",
+            "command": "/Users/fabianwesner/Herd/magento-lts/artisan",
             "args": [
-                "artisan",
                 "boost:mcp"
             ]
         }

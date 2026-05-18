@@ -10,5 +10,8 @@
 /.venv-mkdocs/
 /.playwright-mcp/
 /site/
+/docusaurus/node_modules/
+/docusaurus/build/
+/docusaurus/.docusaurus/
 /.idea/
 .DS_Store

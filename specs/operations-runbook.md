@@ -8,6 +8,9 @@ This runbook defines the operational requirements for the modernization.
 dev/modernization/gate.sh
 php dev/modernization/inventory.php --format=markdown
 php dev/modernization/markdown-check.php
+php dev/modernization/validate-removed-technologies.php
+npm --prefix docusaurus run build
+node dev/modernization/smoke-docusaurus.mjs
 ```
 
 ## Install Verification
@@ -39,11 +42,19 @@ composer install
 - queue worker status visible
 - logs writable
 - media writable/readable
+- scheduler locks prevent duplicate execution
+- queue retries and failed-job diagnostics are visible
+- external integrations fail safely under timeout/error conditions
+- stale cache and stale index recovery commands are rehearsed
 - rollback command rehearsed
+- removed-technology gate passes for the Laravel target
+- Docusaurus user and developer docs are buildable and published
 
 ## Rollback
 
 Rollback must preserve the existing Magento database schema. Route-level fallback to legacy remains the preferred rollback path until a migrated route is proven stable.
+
+Rollback rehearsal must include failure-path evidence: failed deployment, failed queue worker, failed scheduler, stale cache/index, failed payment/shipping sandbox, and restored fixture/database/media state.
 
 ## Evidence
 

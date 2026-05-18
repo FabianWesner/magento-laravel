@@ -14,8 +14,8 @@ if (args.help || !args.url) {
 
 const out = args.out || '.localdev/visual-baseline';
 const viewports = [
-  { name: 'desktop', width: 1440, height: 1200 },
-  { name: 'laptop', width: 1280, height: 1000 },
+  { name: 'desktop', width: 1440, height: 1000 },
+  { name: 'laptop', width: 1280, height: 900 },
   { name: 'tablet', width: 768, height: 1024 },
   { name: 'mobile', width: 390, height: 844 },
 ];
@@ -41,4 +41,3 @@ try {
 } finally {
   await browser.close();
 }
-

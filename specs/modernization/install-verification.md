@@ -38,6 +38,26 @@ Verified endpoints:
 
 Browser verification was performed through the available Playwright browser automation runtime in Chrome. The runtime loaded storefront pages, loaded the admin login form, submitted the local smoke credentials, reached the dashboard, and reported zero console warnings or errors after the final check.
 
+Current recheck on 2026-05-18:
+
+| Check | Result |
+| --- | --- |
+| Docker services | `magento-nginx-1`, `magento-php-fpm-1`, and `magento-mysql-1` are running. |
+| MySQL health | Container reports `healthy`. |
+| Storefront curl smoke | `http://127.0.0.1:8090/` returns HTTP `200`, `text/html`, and seeded HTML. |
+| Admin curl smoke | `http://127.0.0.1:8090/admin/` returns HTTP `200`. |
+| Magento version | Container bootstrap reports `1.9.4.5`. |
+| Runtime PHP | Magento container uses PHP `7.4.33`; Laravel root artisan proxy uses Herd PHP `8.5.5`. |
+| Generated docroot | `.localdev/magento-docroot/` matches `core/magento-1.9.4.5/` excluding generated local runtime files while `project/` is still placeholder-only. |
+| Playwright browser smoke | Main session Playwright navigation succeeded for storefront home and admin dashboard; screenshots were moved to `.localdev/magento-storefront-home-2026-05-18.png` and `.localdev/magento-admin-dashboard-2026-05-18.png`. |
+| Repo Playwright scripts | Blocked until a local Playwright package is installed; `dev/modernization/*.mjs` imports `playwright`, but this repo currently has no root `node_modules/playwright`. |
+
+Next command once a local Playwright package is installed:
+
+```bash
+node dev/modernization/capture-visual-baseline.mjs --url=http://127.0.0.1:8090/ --out=.localdev/visual-baseline/magento/storefront/home
+```
+
 Local smoke screenshots are ignored by git and stored at:
 
 - `.localdev/magento-storefront-smoke.png`
@@ -88,6 +108,45 @@ Observed local tools:
 | MySQL client | Not on `PATH`; MySQL was used through Docker. |
 | Project Playwright package | Not installed in this repo; browser verification used the available Playwright automation runtime. |
 | Host PHP | PHP `8.4.17` observed locally; target modernization must upgrade to the latest stable PHP, currently PHP `8.5.x` as of 2026-05-18. |
+
+## Laravel Boost MCP Status
+
+Laravel Boost is installed in the parallel Laravel app and the repository root `artisan` proxy reaches it.
+
+Verified on 2026-05-18:
+
+| Check | Result |
+| --- | --- |
+| `boost:mcp` command | Present in `php artisan list --raw`. |
+| MCP config | `.codex/config.toml`, `.mcp.json`, `.cursor/mcp.json`, and `.junie/mcp/mcp.json` point to the absolute repository root `artisan` proxy. |
+| Manual MCP initialize | Succeeds over stdio and reports server `Laravel Boost`. |
+| Manual MCP `tools/list` | Succeeds and returns Boost tools including `application-info`, `database-schema`, `database-query`, `search-docs`, `read-log-entries`, and `tinker`. |
+| Manual MCP `application-info` | Reports PHP `8.5`, Laravel `13.9.0`, Laravel Boost `2.4.7`, and Laravel MCP `0.7.0`. |
+| Manual MCP `search-docs` | Succeeds for query `routing` when network access to `boost.laravel.com` is available; the restricted sandbox attempt failed with DNS resolution before the escalated retry passed. |
+| Manual MCP `database-schema` | Succeeds in summary mode against the Laravel SQLite database. |
+| Manual MCP `database-query` | Succeeds for read-only `select 1 as ok` and returns `[{"ok":1}]`. |
+| `php artisan boost:install --no-interaction` | Succeeds through the repository root artisan proxy and writes agent/MCP configuration for Laravel Boost. |
+| Composer PHP platform | `laravel/composer.json` requires PHP `^8.5` and sets Composer platform PHP `8.5.5`; default Composer setup scripts do not auto-run database migrations. |
+
+If the active Codex session still shows no Laravel Boost tools, restart or reload the client so it reads `.codex/config.toml`; the server itself is working over stdio.
+
+## Docusaurus Documentation Status
+
+Docusaurus is installed under `docusaurus/` for the full user and developer documentation site.
+
+Verified on 2026-05-18:
+
+| Check | Result |
+| --- | --- |
+| Dependencies | `npm install --prefix docusaurus --no-audit --no-fund` completed and created `docusaurus/package-lock.json`. |
+| Build | `npm --prefix docusaurus run build` passed after pinning Docusaurus, React, and Webpack versions. |
+| Browser smoke script | `node dev/modernization/smoke-docusaurus.mjs` verifies `/`, `/user/`, and `/developer/` with Playwright/Chrome. |
+| Static smoke | Built site served locally and returned HTTP `200` for `/`, `/user/`, and `/developer/`. |
+| Browser smoke | Chrome/Playwright loaded `/user/` with title `User Documentation | Magento Laravel Modernization`. |
+| Browser smoke | Chrome/Playwright loaded `/developer/` with title `Developer Documentation | Magento Laravel Modernization`. |
+| Browser console | No warnings or errors were reported after Docusaurus browser verification. |
+
+The Docusaurus static build output remains ignored under `docusaurus/build/`; source docs and lockfile are committed.
 
 ## Install Commands
 
@@ -169,6 +228,14 @@ Smoke check with curl:
 ```bash
 curl --silent --show-error --fail --max-time 20 -I http://127.0.0.1:8090/
 curl --silent --show-error --fail --max-time 20 -I http://127.0.0.1:8090/admin
+```
+
+Install local Playwright support for the repository scripts if the external browser automation runtime is unavailable:
+
+```bash
+npm init -y
+npm install --save-dev playwright
+npx playwright install chromium
 ```
 
 ## Project Install Blocker

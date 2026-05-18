@@ -20,6 +20,9 @@ This register tracks modernization risk. Owners and dates must be filled in once
 | Cron/job duplication | P1 | Open | Scheduler lock tests, idempotency review. | Keep legacy cron dispatcher. |
 | Data fixture gaps | P1 | Open | Fixture strategy and sanitized production-like data. | Block migration of unrepresented domains. |
 | No-XML rule bypass | P2 | Open | Static checks and module review. | Reject PRs adding new XML registration. |
+| Banned technology leakage | P1 | Open | Removed-technology policy, static scan, dependency scan, architecture review. | Block route cutover until leakage is removed or explicitly bridged with expiry. |
+| Happy-path-only verification | P1 | Open | Production-readiness gate requiring edge, failure, resilience, observability, recovery, security, performance, and accessibility coverage. | Keep legacy route until missing scenarios are covered. |
+| Docusaurus docs drift | P2 | Open | Docusaurus build in gate, docs ownership, feature-ID traceability in user and developer docs. | Block release on missing or stale user/developer docs. |
 | Tooling split between legacy and Laravel | P2 | Open | Modernization all-gates workflow. | Keep separate required workflows until unified. |
 | Documentation drift | P2 | Open | Docs ownership and docs build in CI. | Block release on missing docs. |
 
@@ -29,4 +32,3 @@ This register tracks modernization risk. Owners and dates must be filled in once
 - P0 and P1 risks require automated verification before release.
 - Every accepted risk needs a written decision.
 - Every compatibility bridge needs a removal trigger.
-

@@ -49,7 +49,7 @@ The current repository keeps the Magento CE `1.9.4.5` baseline in `core/magento-
 | --- | --- | --- |
 | Database compatibility | Existing database loads without destructive schema migration. Existing EAV data resolves correctly. Original seed/sample data remains usable. | Run install/import fixture, boot app, compare record counts for core entity tables, execute catalog/customer/order smoke tests. |
 | No XML for new architecture | No new feature, module, route, event, UI, or config registration uses XML. Existing XML may be read only by compatibility tooling during transition. | Static search for new XML additions, architecture review, tests proving PHP manifests/providers register modules. |
-| Visual parity | Storefront and admin screens match current layout, typography, spacing, colors, and interaction patterns within agreed tolerance. | Playwright/Cypress screenshots, visual regression snapshots, manual review checklist per screen. |
+| Visual parity | Storefront and admin screens match current layout, typography, spacing, colors, and interaction patterns within `specs/modernization/visual-tolerances.md`. | Playwright/Chrome screenshots, visual regression snapshots, manual review checklist per screen. |
 | Behavior parity | Existing customer, catalog, cart, checkout, order, admin, API, cron, and indexer behavior remains compatible unless intentionally changed. | Characterization tests, API contract tests, fixture-based PHPUnit tests, E2E regression suite. |
 | Performance | New Laravel paths are no slower than current Magento paths for equivalent cached and uncached scenarios, or have documented exceptions. | Baseline and compare p50/p95 response times, query counts, memory usage, cache hit behavior. |
 | PHP runtime | Legacy Magento verification may use an isolated PHP `7.4` container, but all Laravel target code runs on the latest stable PHP and CI enforces that version. | `php -v`, Composer platform checks, CI matrix, dependency audit, Laravel Boost install check. |
@@ -146,10 +146,10 @@ Goal: freeze current behavior before replacing architecture.
 
 ### Tasks
 
-1. Audit existing PHPUnit and Cypress coverage.
+1. Audit existing PHPUnit and Playwright/Chrome browser coverage.
 2. Add missing functional tests for storefront home, category, product, search, cart, checkout, customer login/account, and CMS pages.
 3. Add missing admin tests for login, dashboard, catalog CRUD, customer CRUD, order view, invoice, shipment, credit memo, configuration, cache, indexer, and permissions.
-4. Add API contract tests for REST, JSON-RPC, SOAP if used, and API2 endpoints.
+4. Add API contract tests for REST, XML-RPC, SOAP if used, and API2 endpoints.
 5. Add cron tests for scheduled jobs, dispatch modes, and failure handling.
 6. Add EAV tests for product, category, customer, attribute scope, default/website/store fallback, and option values.
 7. Add configuration tests for XML + DB + environment override behavior.
@@ -213,12 +213,12 @@ Goal: introduce Laravel infrastructure without changing user-visible behavior.
 ### Tasks
 
 1. Add Laravel framework dependencies or create a new Laravel app shell in the repository.
-2. Bootstrap Laravel container from the existing entry point without taking over routing.
+2. Run Laravel as a separate PHP `8.5+` runtime under `laravel/`; do not load Laravel inside Magento's PHP `7.4` process.
 3. Bind core infrastructure contracts: config, database, cache, session, logging, events, filesystem, URL generation, auth, and translation.
 4. Add Laravel service providers for new architecture.
 5. Add a module registry based on PHP manifests.
 6. Add typed configuration objects backed by Laravel config.
-7. Add compatibility adapters that can call legacy Magento services where needed.
+7. Add temporary compatibility adapters only where needed for side-by-side migration, each with owner, expiry phase, tests, and no final-release runtime dependency on Magento/Zend/Varien classes.
 8. Add health checks for Laravel bootstrap, database, cache, session, and module registry.
 9. Add CI jobs for Laravel test, Pint or style tooling, Larastan/PHPStan config, and architecture tests.
 
@@ -230,7 +230,7 @@ Goal: introduce Laravel infrastructure without changing user-visible behavior.
 ### Verification
 
 - Legacy storefront/admin behavior remains unchanged.
-- Laravel container boots during requests and CLI.
+- Laravel container boots in the separate Laravel runtime and CLI.
 - A smoke test can resolve a Laravel service from the container.
 - No new XML files are introduced.
 - CI runs both legacy and Laravel checks.
@@ -355,7 +355,7 @@ Goal: rebuild storefront surfaces in Laravel while preserving current look and f
 ### Verification
 
 - Migrated pages match visual baselines.
-- Existing storefront Cypress tests pass.
+- Storefront Playwright/Chrome tests pass.
 - Livewire interactions are tested.
 - Page performance is equal or better than baseline.
 - No layout XML is used for new storefront surfaces.
@@ -464,7 +464,7 @@ Goal: preserve existing API behavior while adding Laravel-native API implementat
 
 ### Tasks
 
-1. Inventory REST, JSON-RPC, SOAP, and API2 endpoints in use.
+1. Inventory REST, XML-RPC, SOAP, and API2 endpoints in use.
 2. Define required compatibility behavior.
 3. Implement Laravel route groups for migrated endpoints.
 4. Implement request validation and response resources.
@@ -499,7 +499,7 @@ Goal: remove Zend/Magento framework dependencies from migrated runtime paths.
 4. Remove compatibility adapters module by module.
 5. Replace legacy cache/session/logging adapters where safe.
 6. Remove unused legacy libraries after dependency analysis.
-7. Keep an explicit compatibility package only for code that must remain supported.
+7. Keep an explicit final compatibility package only for contracts, documentation, data mappers, and intentionally preserved public interfaces; it must not call Magento/Zend/Varien runtime code.
 8. Update documentation and upgrade guides.
 
 ### Dependencies
@@ -511,6 +511,7 @@ Goal: remove Zend/Magento framework dependencies from migrated runtime paths.
 
 - Runtime route coverage shows no traffic hitting retired legacy paths.
 - Static analysis confirms removed dependencies are unused.
+- Any surviving runtime bridge blocks final cutover unless the feature is explicitly retired or declared outside Laravel scope by ADR.
 - Full regression suite passes.
 - Performance baselines remain acceptable.
 - Deployment rollback has been tested.
@@ -534,15 +535,21 @@ Goal: publish complete documentation for the new architecture and user-facing fe
 11. Document full feature guide for storefront, admin, APIs, and extension points.
 12. Add migration status pages per bounded context.
 13. Add diagrams for runtime, modules, EAV access, request lifecycle, and deployment.
+14. Add Docusaurus user documentation under `docusaurus/docs/user`.
+15. Add Docusaurus developer documentation under `docusaurus/docs/developer`.
+16. Add per-feature user and developer docs mapped to feature IDs.
 
 ### Dependencies
 
 - Specs and implementation phases.
 - MkDocs tooling.
+- Docusaurus tooling.
 
 ### Verification
 
 - `mkdocs build` succeeds.
+- `npm --prefix docusaurus run build` succeeds.
+- Built Docusaurus site serves locally and Chrome/Playwright verifies `/user/` and `/developer/`.
 - Links and navigation are reviewed.
 - Each implemented feature has user-facing and developer-facing documentation.
 - Architecture reasoning is clear enough for a new contributor to build a module.

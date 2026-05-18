@@ -10,6 +10,8 @@ You are working in the Magento 1 modernization repository.
 Objective:
 Prepare the project for a long-running modernization from Magento 1 to Laravel. The legacy runtime baseline is Magento CE / Magento Open Source `1.9.4.5`. The target architecture replaces the Zend/Magento framework runtime with Laravel, uses Livewire for storefront/admin UI implementation, upgrades the target application to the latest stable PHP, keeps the existing database schema including EAV and original seed/sample data, preserves the storefront and admin look and feel, and replaces XML-based extensibility with PHP-based modules, manifests, service providers, policies, events, and typed config.
 
+Also follow the canonical long-running goal in `specs/GOAL.md`.
+
 Important context:
 - The current checkout keeps Magento CE 1.9.4.5 source under `core/magento-1.9.4.5/` and reserves `project/` for the project overlay. Do not assume `project/` contains the real project overlay yet.
 - If the checkout is source-only, identify what is missing and prepare for a two-repository workspace: project code plus Magento CE `1.9.4.5` source. Use existing local remotes/paths if available. If the project repository URL/path is not discoverable, document the blocker clearly and continue with all preparation work that can be done from source alone.
@@ -37,6 +39,8 @@ Primary deliverables:
    - Release and rollback strategy.
    - Documentation structure and feature-guide plan.
    - Comprehensive test plan that defines when the modernization is done.
+   - Technology removal policy that lists all Magento/Zend/Varien/XML/layout/block/resource/Prototype-era runtime technologies banned from the Laravel target.
+   - Docusaurus user and developer documentation site under `docusaurus/`.
 
 3. Add executable preparation tooling under dev/modernization/.
    Include scripts or commands for:
@@ -71,6 +75,10 @@ Execution approach:
 - If sub-agents are available, use them for independent read-only inventory, docs/nav inspection, and tooling/test/CI inspection. Review their findings before editing.
 - Prefer rg/find/jq/php one-liners for inspection.
 - Use apply_patch for manual edits.
+- Commit regularly after coherent, verified increments.
+- Keep progress in specs/progress.md and update it before each commit.
+- Verify normal, edge, failure, invalid input, permission-denied, concurrency, stale cache/index, integration-outage, recovery, rollback, and production-readiness cases. Happy-path smoke tests are not sufficient.
+- Use Laravel Boost MCP tools when available and verify `application-info`, `search-docs`, and read-only database tooling before implementation work.
 - Keep generated scripts portable and safe. Scripts must not delete data by default.
 - If a command fails because a tool is not installed, record that as verification status rather than hiding it.
 - Do not install broad dependencies unless required and approved.
@@ -88,6 +96,9 @@ Acceptance criteria:
 - All new Markdown has balanced code fences and no accidental non-ASCII.
 - all md files that are relevant for the migration are moved to specs/*
 - Magento CE `1.9.4.5` is up and running locally, seeded with sample data, and verified in Chrome using Playwright. You are allowed to delete or move existing non-doc/spec files in this folder and also to install missing dependencies when needed.
+- Removed-technology gate passes for the Laravel target.
+- Docusaurus builds and `/user/` plus `/developer/` render in Chrome/Playwright.
+- Production-readiness gates cover edge cases and failure paths, not just happy paths.
 
 Final response:
 Summarize changed files, what was verified, what could not be verified, and the next blocker if project code/core or install credentials are missing.

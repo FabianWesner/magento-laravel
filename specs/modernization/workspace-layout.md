@@ -19,6 +19,8 @@ magento-laravel/
 
 Runtime composition copies `core/magento-1.9.4.5/` into `.localdev/magento-docroot/` and then overlays `project/` on top.
 
+The old Magento runtime stays in place for the whole modernization. Laravel is built in parallel, and features are compared side-by-side until the final route cutover is approved.
+
 ## Required Inputs
 
 | Input | Required For | Status |
@@ -41,6 +43,21 @@ Runtime composition copies `core/magento-1.9.4.5/` into `.localdev/magento-docro
 6. Restore the sanitized project DB and media into ignored local paths.
 7. Run schema and visual baseline tooling against the project install.
 8. Update `specs/modernization/inventory.md` with project-specific facts.
+
+## Side-By-Side Runtime Model
+
+| Runtime | Directory | URL/Port | Data | Purpose |
+| --- | --- | --- | --- | --- |
+| Magento baseline | `.localdev/magento-docroot/` generated from `core/` plus `project/` | `http://127.0.0.1:8090` in the current Docker setup | Shared restored Magento fixture DB and media | Legacy behavior, screenshots, DB side effects, API responses, cron outputs. |
+| Laravel target | `laravel/` | Developer-selected Laravel port, for example `http://127.0.0.1:8013` | Same restored Magento fixture DB and media, plus approved Laravel infrastructure tables if any | New implementation, Livewire UI, PHP module system, no-new-XML extension model. |
+
+Comparison rules:
+
+- Do not remove the Magento runtime while a feature still needs characterization or parity comparison.
+- Do not mutate the shared fixture in-place during comparison without restoring it before the second runtime executes the same scenario.
+- Prefer a restore-per-scenario workflow for cart, checkout, sales, payment, tax, cron, and report tests.
+- Keep generated runtime files in `.localdev/`; do not commit local credentials, admin passwords, database dumps, media caches, screenshots, or reports unless a spec explicitly says an artifact is public and sanitized.
+- The project overlay owns project-specific customizations. Core Magento remains the upstream baseline; Laravel owns the target architecture.
 
 ## Commands To Run Once Project Access Exists
 

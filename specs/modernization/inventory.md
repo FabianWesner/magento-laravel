@@ -17,7 +17,7 @@ The current repository keeps Magento CE `1.9.4.5` source under `core/magento-1.9
 | Core modules | 67 module directories under `app/code/core/Mage`. |
 | Module declarations | 21 XML files under `app/etc/modules`: Magento declarations plus `Cm_RedisSession` and `Phoenix_Moneybookers`. |
 | Compatibility file | `app/etc/modules/Mage_All.xml` is an empty `<config/>` compatibility file. |
-| Non-core modules | `Cm_RedisSession` and `Phoenix_Moneybookers` are bundled community dependencies in this Magento CE source tree; no project-specific non-`Mage_*` modules were found. |
+| Non-core modules | `Cm_RedisSession` and `Phoenix_Moneybookers` are bundled community dependencies in this Magento CE source tree; no project-specific non-`Mage_*` modules were found. `Cm_RedisSession` maps to `CB-013`; `Phoenix_Moneybookers` maps to `API-004`. |
 | Live local config | `core/magento-1.9.4.5/app/etc/local.xml` exists only for the ignored local smoke install. |
 | Controllers | 232 controller files across the Magento source tree; `Mage_Adminhtml` is the largest controller surface. |
 | Routes | Frontend/admin front names include catalog, customer, checkout, sales, cms, api, api2, admin, and supporting modules. |
@@ -29,7 +29,7 @@ The current repository keeps Magento CE `1.9.4.5` source under `core/magento-1.9
 | Skin packages | Skin packages mirror the design areas. |
 | Browser assets | Legacy assets under `js/calendar`, `js/extjs`, `js/lib/jquery`, `js/mage`, `js/prototype`, `js/scriptaculous`, and `js/varien`. |
 | Shell scripts | `shell/abstract.php`, `shell/indexer.php`, `shell/log.php`, and other Magento shell commands. |
-| Tests | No project PHPUnit or Cypress suite is present in this current source-only checkout. |
+| Tests | No project PHPUnit or Playwright/Chrome browser suite is present in this current source-only checkout. |
 
 ## Local Magento 1.9.4.5 Baseline
 
@@ -64,7 +64,7 @@ Run this inventory against the actual project codebase, not only this source che
 | Admin customizations | Custom admin routes, grids, forms, ACL entries, reports, exports, importers. |
 | Storefront features | Custom category/product/customer/cart/checkout/CMS behavior and frontend JS. |
 | Integrations | Payment, shipping, tax, ERP, PIM, CRM, email, analytics, search, feeds, webhooks. |
-| API consumers | REST, SOAP, JSON-RPC, API2 clients, auth method, endpoints used, payload contracts. |
+| API consumers | REST, SOAP, XML-RPC, API2 clients, auth method, endpoints used, payload contracts. |
 | Cron jobs | All custom cron jobs, schedules, runtime, side effects, failure behavior. |
 | Database | Custom tables, triggers, views, stored procedures, EAV attributes, indexes, data volume. |
 | Media/files | Media paths, protected files, generated images, imports/exports, file storage mode. |

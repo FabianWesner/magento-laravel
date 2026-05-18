@@ -1,0 +1,7 @@
+{
+  "require": {
+    "magento/framework": "*",
+    "openmage/magento-lts": "*",
+    "mage-os/mageos-magento2": "*"
+  }
+}

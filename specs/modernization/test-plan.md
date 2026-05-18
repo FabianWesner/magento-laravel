@@ -14,24 +14,66 @@ The project is not done when the code compiles. It is done when this plan passes
 6. Prove the Laravel target runs on the latest stable PHP and supported Composer dependencies.
 7. Prove security, performance, reliability, accessibility, and operational behavior are production-ready.
 8. Prove documentation is complete enough for users, operators, and module developers.
+9. Prove edge cases, failure paths, resilience, recovery, observability, and production readiness, not only happy-path workflows.
 
 ## Done Definition
 
 The modernization is done only when all of the following are true:
 
+- Every feature ID in `specs/modernization/magento-feature-catalog.md` has final status, owner, fixture coverage, characterization evidence, Laravel evidence, and release evidence.
+- Every visible storefront and admin screen is listed in `specs/modernization/ui-screen-inventory.md` and has screenshots for Magento and Laravel at required viewports and states.
+- Every complex commerce behavior listed in `specs/modernization/complex-feature-reverse-engineering.md` has a reverse-engineered spec before Laravel replacement starts.
+- The canonical demo fixture in `specs/modernization/data-fixtures.md` covers all product types, promotion types, taxes, shipping, payment, admin roles, API users, reports, cron jobs, and edge cases needed by the feature catalog.
+- Every critical feature has normal, edge, failure, invalid input, permission-denied, stale-cache/index, retry, concurrency, and recovery coverage where applicable.
 - All required automated test suites pass in CI.
 - All required manual acceptance scenarios are signed off.
 - All P0 and P1 defects are closed.
 - No P2 defect is open without explicit acceptance.
-- Storefront and admin visual regression results are within the agreed tolerance.
+- Storefront and admin visual regression results meet `specs/modernization/visual-tolerances.md`.
 - Performance budgets pass for all critical journeys.
 - Security checks pass with no unresolved critical/high findings.
 - Existing database schema and EAV data are used without destructive migration.
 - No new architecture feature uses XML registration/configuration.
+- Banned legacy technologies listed in `specs/modernization/technology-removal-policy.md` are removed from the Laravel target runtime.
 - Laravel target CI runs on the latest stable PHP, currently PHP `8.5.x` as of 2026-05-18, while legacy Magento PHP `7.4` remains isolated to baseline smoke verification.
 - Laravel Boost can be installed in the target Laravel application without Composer platform conflicts.
 - Documentation website builds and covers architecture, reasoning, extension points, and feature guides.
+- Docusaurus user and developer documentation builds and renders in Chrome/Playwright.
 - Rollback and recovery procedures have been tested.
+
+## Production Readiness Gate
+
+Happy-path smoke tests are never enough for completion. Each critical feature must prove production readiness across these categories:
+
+| Category | Required Evidence |
+| --- | --- |
+| Normal path | Expected user or system workflow succeeds with fixture data. |
+| Edge cases | Boundary quantities, missing optional data, scoped config, multistore values, product type variants, tax/shipping/payment variants, and empty states behave correctly. |
+| Failure paths | Invalid input, expired session, denied permission, payment failure, unavailable shipping, integration timeout, missing media, stale cache/index, and failed cron/queue job produce safe outcomes. |
+| Data integrity | Database side effects are correct, transactional, idempotent where required, and reversible through documented restore/rollback paths. |
+| Resilience | Retries, locks, duplicate submission protection, concurrent requests, scheduler overlap, and external service outages are tested. |
+| Observability | Logs, metrics, alerts, health checks, and operator diagnostics identify failures without exposing secrets. |
+| Security | Auth, authorization, CSRF, XSS, SQL injection, upload, session, secret, and API abuse checks pass. |
+| Performance | Latency, memory, query count, cache hit ratio, queue runtime, and report/index runtime stay within budgets. |
+| Accessibility | Keyboard, focus, labels, contrast, dialogs, grids, and Livewire updates work for critical flows. |
+| Recovery | Cache flush, reindex, queue retry, fixture restore, backup restore, deploy rollback, and failed release recovery are rehearsed. |
+
+## Feature Traceability Gate
+
+The release gate is feature-ID driven. A feature ID is complete only when the following evidence exists:
+
+| Evidence | Required For | Verification |
+| --- | --- | --- |
+| Inventory row | Every feature ID | `specs/modernization/feature-inventory.md` links the feature to owner, decision, files, routes, cron/API/UI entry points, fixture IDs, risks, acceptance criteria, and verification commands. |
+| Legacy characterization | Every preserved/replaced/bridged feature ID | Dual-run test, captured payload, DB snapshot, screenshot, email/log/event evidence, or approved normalized comparison. |
+| Laravel implementation tests | Every preserved/replaced feature ID | Unit, integration, Livewire, browser, API, scheduler, visual, performance, and security tests as applicable. |
+| UI screenshots | Visible feature IDs | Screenshot manifest entry from `ui-screen-inventory.md` for required roles, states, and viewports. |
+| Complex behavior spec | Cart, checkout, pricing, tax, shipping, payment, EAV, indexing, reports, cron | Reverse-engineered algorithm, fixture matrix, side effects, comparison command, and numeric approved tolerances where comparison is not exact. |
+| Fixture coverage | Every feature ID | Fixture manifest maps data to the feature ID and can be restored locally and in CI. |
+| Release evidence | Every feature ID | CI/report link or local artifact retained under the release evidence path. |
+| Progress and commit evidence | Every backlog item | `specs/progress.md` entry and commit hash or evidence artifact. |
+
+No feature ID may be marked complete by visual approval alone, and no cart/checkout/sales feature may be marked complete without DB side-effect comparison.
 
 ## Quality Gates
 
@@ -74,6 +116,8 @@ flowchart TD
 | Integration fixture | Proves API and external behavior. | API users, OAuth/REST credentials if used, sandbox payment/shipping settings. |
 | Performance fixture | Proves scale behavior. | Large catalog, many attributes, many categories, many customers, meaningful order history. |
 
+The detailed demo matrix is defined in `specs/modernization/data-fixtures.md` and is mandatory for final acceptance. Magento sample data alone is not enough unless it is extended to cover the matrix.
+
 ### Data Rules
 
 - Existing commerce schema must not be destructively altered.
@@ -87,18 +131,19 @@ flowchart TD
 | Layer | Purpose | Tools |
 | --- | --- | --- |
 | Static checks | Enforce code quality, types, architecture boundaries, and no-new-XML rule. | PHPStan/Larastan, PHP-CS-Fixer/Pint, PHPCS, Rector dry run, custom architecture tests. |
-| Unit tests | Prove isolated services, value objects, DTOs, mappers, validators, and policies. | PHPUnit/Pest if adopted. |
+| Unit tests | Prove isolated services, value objects, DTOs, mappers, validators, and policies. | PHPUnit 12. |
 | Integration tests | Prove database, EAV, cache, session, filesystem, config, events, queues, and services together. | PHPUnit with fixture DB. |
 | Contract tests | Prove compatibility of APIs, events, repositories, and module extension points. | PHPUnit, HTTP contract tests, snapshot assertions. |
 | Characterization tests | Prove Laravel behavior matches legacy Magento behavior. | Dual-run tests against legacy and Laravel paths. |
 | Livewire component tests | Prove component state, validation, actions, events, and rendering. | Livewire test utilities. |
-| Browser E2E tests | Prove user journeys. | Cypress or Playwright. |
-| Visual regression | Prove storefront/admin look and feel is preserved. | Playwright/Cypress screenshots and image diff tooling. |
+| Browser E2E tests | Prove user journeys. | Playwright/Chrome. |
+| Visual regression | Prove storefront/admin look and feel is preserved. | Playwright/Chrome screenshots and image diff tooling. |
 | Accessibility tests | Prove keyboard, semantics, contrast, and admin usability. | Axe, Playwright, manual keyboard checks. |
 | Performance tests | Prove latency, query counts, memory, throughput, and cache behavior. | k6, Blackfire/XHProf/SPX, custom query counters. |
 | Security tests | Prove auth, authorization, CSRF, sessions, uploads, file access, dependency safety. | PHPUnit, browser tests, composer audit, static checks, manual review. |
 | Operational tests | Prove deploy, rollback, logs, scheduler, queues, cache, sessions, backups, and recovery. | Staging rehearsal, scripts, runbooks. |
 | Documentation tests | Prove architecture and feature guide are buildable and complete. | MkDocs build, link checks, review checklist. |
+| Docusaurus docs tests | Prove user and developer docs are buildable and browser-rendered. | `npm --prefix docusaurus run build`, `node dev/modernization/smoke-docusaurus.mjs`. |
 | Runtime tests | Prove the target Laravel runtime uses the latest stable PHP and compatible Composer packages. | `php -v`, Composer platform check, CI matrix, Laravel Boost install. |
 
 ## Static And Architecture Tests
@@ -120,9 +165,11 @@ flowchart TD
 | PHP syntax | All PHP files parse on supported PHP versions. | CI syntax job. |
 | PHP version | Laravel target uses the latest stable PHP; legacy Magento PHP `7.4` is isolated to smoke testing. | CI matrix, `php -v`, Composer platform config. |
 | Laravel Boost | `laravel/boost` installs cleanly as a dev dependency in the target Laravel app. | `composer require laravel/boost --dev` in the Laravel workspace. |
+| Laravel Boost MCP | Boost MCP server is available to the active agent/client or a blocker is recorded with exact reload/config steps. | `tools/list`, `application-info`, `search-docs`, and read-only database tool checks. |
 | Static analysis | New Laravel code passes agreed PHPStan/Larastan level with no baseline growth. | `composer run phpstan:test` plus Laravel config. |
 | Coding style | PHP code follows project style. | Existing ECS/PHP-CS-Fixer plus Laravel style command if introduced. |
 | No new XML | New architecture does not add XML module, route, event, layout, ACL, or config registration. | Static search and architecture test fail on forbidden XML paths. |
+| Removed technologies | Laravel target does not depend on Magento/Zend/Varien/XML/layout/block/resource/Prototype-era runtime technologies. | `php dev/modernization/validate-removed-technologies.php`, dependency scan, architecture tests. |
 | Legacy API isolation | Migrated Laravel code does not call `Mage::getModel()`, `Mage::helper()`, Zend controllers, or XML config directly. | Static architecture tests with allowlist for compatibility adapters. |
 | Module boundaries | Modules depend only on declared dependencies and public contracts. | Dependency graph test and module registry diagnostics. |
 | Eloquent policy | Eloquent is used only where approved; EAV access goes through EAV repositories/services. | Static checks and code review. |
@@ -140,6 +187,8 @@ For each migrated feature:
 3. Record observable output: HTTP status, redirect, rendered content, DB state, events, emails, logs, API payloads, and side effects.
 4. Execute the same behavior on the Laravel path.
 5. Compare results with exact or approved normalized matching.
+
+Cart calculation, checkout, pricing, tax, shipping, payment, indexing, EAV writes, reports, and cron jobs must follow the deeper reverse-engineering workflow in `specs/modernization/complex-feature-reverse-engineering.md`.
 
 ### Acceptance Criteria
 
@@ -225,15 +274,16 @@ For each migrated feature:
 
 For each migrated page:
 
-- Desktop, tablet, and mobile screenshots are required.
+- Screenshots are required for the exact viewport matrix in `specs/modernization/ui-screen-inventory.md`: `1440x1000`, `1280x900`, `768x1024`, and `390x844`.
 - Header, navigation, content, forms, messages, buttons, modals, and footer must match baseline.
 - Dynamic states must be captured: loading, validation error, empty state, success, and failure.
+- The screen inventory in `specs/modernization/ui-screen-inventory.md` is authoritative for required URL/state/role/viewport coverage.
 
 ### Acceptance Criteria
 
 - Existing storefront E2E tests pass.
 - New Livewire interactions pass component and browser tests.
-- Visual diffs are within agreed tolerance.
+- Visual diffs meet `specs/modernization/visual-tolerances.md`.
 - Storefront URLs remain compatible.
 - No new layout XML drives migrated pages.
 
@@ -281,7 +331,7 @@ For each migrated page:
 | API Area | Required Tests |
 | --- | --- |
 | REST | Auth, methods, filters, pagination, response formats, status codes. |
-| JSON-RPC | Request/response contracts for supported resources. |
+| XML-RPC | Request/response contracts for supported Magento 1 resources. |
 | SOAP | If still supported, WSDL compatibility and common calls. |
 | API2 | Supported resource behavior and auth. |
 | Error handling | Validation errors, unauthorized, forbidden, not found, server error format. |
@@ -306,6 +356,7 @@ For each migrated page:
 | Failure handling | Failures are logged, visible, and retryable where appropriate. |
 | Commands | Artisan commands validate input, exit codes, output, and side effects. |
 | Queue policy | Sync/Redis/external queue behavior is tested without requiring commerce schema changes unless approved. |
+| Magento cron catalog | Every `CJ-001` through `CJ-025` job in `specs/modernization/magento-feature-catalog.md` is preserved, bridged, replaced, or retired with evidence. |
 
 ### Acceptance Criteria
 
@@ -356,7 +407,7 @@ For each migrated page:
 
 Final budgets must be set from Phase 1 baselines. Until then:
 
-- Migrated path must not exceed legacy p95 latency by more than the approved tolerance.
+- Migrated path must not exceed the numeric baseline-derived p95 latency, query-count, memory, response-size, and cache-hit budgets recorded in `specs/modernization/performance-budgets.md`.
 - Query counts must not grow without documented reason.
 - Memory usage must not grow without documented reason.
 - Cached pages must preserve or improve cache behavior.
@@ -389,30 +440,7 @@ Final budgets must be set from Phase 1 baselines. Until then:
 
 ### Required Screens
 
-Storefront:
-
-- Home page.
-- Category page.
-- Product page for each major product type.
-- Cart.
-- Checkout steps.
-- Customer login/register/account.
-- CMS page.
-- Search results.
-- 404/no-route.
-
-Admin:
-
-- Login.
-- Dashboard.
-- Product grid and edit form.
-- Category tree and edit form.
-- Customer grid and edit form.
-- Order grid and view.
-- Invoice/shipment/credit memo screens.
-- System configuration.
-- Cache/indexer screens.
-- Roles/users.
+The full visual list is maintained in `specs/modernization/ui-screen-inventory.md`. At minimum it covers all visible `SF-` and `AD-` feature IDs from `specs/modernization/magento-feature-catalog.md`, including product-type variants, checkout states, admin forms, permission-denied states, report grids, integrations, and cron/index/cache screens.
 
 ### Required States
 
@@ -423,13 +451,14 @@ Admin:
 - Permission denied.
 - Success message.
 - Failure message.
-- Mobile/tablet/desktop where applicable.
+- Every required viewport in `specs/modernization/ui-screen-inventory.md`.
 
 ### Acceptance Criteria
 
-- Every migrated screen has a baseline.
+- Every migrated screen has a baseline and Laravel comparison screenshot.
 - Diffs are reviewed and approved.
 - Intentional visual changes are documented.
+- The screenshot manifest includes URL, role, fixture ID, viewport, state, timestamp, and artifact path.
 
 ## Operational Test Plan
 
@@ -451,7 +480,7 @@ Admin:
 ### Acceptance Criteria
 
 - Staging deployment rehearsal passes.
-- Rollback completes within agreed time.
+- Rollback completes within the numeric RTO/RPO recorded in `specs/modernization/performance-budgets.md` or the release runbook.
 - Health checks detect app, DB, cache, session, scheduler, and queue failure.
 - Operator runbook is reviewed.
 
@@ -468,10 +497,14 @@ Admin:
 | Developer guide | Covers local setup, tests, coding standards, debugging, and architecture rules. |
 | Operator guide | Covers deployment, rollback, cache, scheduler, logs, backups, and troubleshooting. |
 | Migration status | Shows which bounded contexts are legacy, bridged, or fully Laravel. |
+| Docusaurus user docs | Separate user docs explain retained storefront/admin behavior, screenshots, edge cases, support expectations, and known limitations. |
+| Docusaurus developer docs | Separate developer docs explain architecture, modules, EAV, Livewire, testing, removed technologies, operations, and release workflow. |
 
 ### Verification
 
 - `mkdocs build` succeeds.
+- `npm --prefix docusaurus run build` succeeds.
+- `node dev/modernization/smoke-docusaurus.mjs` opens the built Docusaurus site in Chrome/Playwright and the user and developer docs render.
 - Navigation includes modernization docs.
 - Links are checked.
 - A new developer can follow the module guide to build the sample module.
@@ -497,6 +530,96 @@ Each domain is done only when all columns are complete.
 | Cron/jobs | Required | Required | Required | Smoke | N/A | Required | Required | Required |
 | Media/files | Required | Required | Required | Required | Required | Required | Required | Required |
 | Operations | N/A | Required | N/A | Smoke | N/A | Required | Required | Required |
+
+## Feature ID Traceability Matrix
+
+The final test report must include this matrix populated for every ID in `specs/modernization/magento-feature-catalog.md`.
+
+| Feature ID | Fixture IDs | Legacy Test/Evidence | Laravel Test/Evidence | Visual Evidence | Performance/Security Evidence | Final Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| SF-001 | Required | Required | Required | Required | Required where applicable | Pending |
+| SF-002 | Required | Required | Required | Required | Required where applicable | Pending |
+| SF-003 | Required | Required | Required | Required | Required where applicable | Pending |
+| SF-004 | Required | Required | Required | Required | Required where applicable | Pending |
+| SF-005 | Required | Required | Required | Required | Required where applicable | Pending |
+| SF-006 | Required | Required | Required | Required | Required where applicable | Pending |
+| SF-007 | Required | Required | Required | Required | Required | Pending |
+| SF-008 | Required | Required | Required | Required | Required | Pending |
+| SF-009 | Required | Required | Required | Required | Required | Pending |
+| SF-010 | Required | Required | Required | Required | Required | Pending |
+| SF-011 | Required | Required | Required | Required | Required | Pending |
+| SF-012 | Required | Required | Required | Required | Required | Pending |
+| SF-013 | Required | Required | Required | Required | Required | Pending |
+| SF-014 | Required | Required | Required | Required | Required | Pending |
+| SF-015 | Required | Required | Required | Required | Required | Pending |
+| SF-016 | Required | Required | Required | Required | Required | Pending |
+| AD-001 | Required | Required | Required | Required | Required | Pending |
+| AD-002 | Required | Required | Required | Required | Required | Pending |
+| AD-003 | Required | Required | Required | Required | Required | Pending |
+| AD-004 | Required | Required | Required | Required | Required | Pending |
+| AD-005 | Required | Required | Required | Required | Required | Pending |
+| AD-006 | Required | Required | Required | Required | Required | Pending |
+| AD-007 | Required | Required | Required | Required | Required | Pending |
+| AD-008 | Required | Required | Required | Required | Required | Pending |
+| AD-009 | Required | Required | Required | Required | Required | Pending |
+| AD-010 | Required | Required | Required | Required | Required | Pending |
+| AD-011 | Required | Required | Required | Required | Required | Pending |
+| AD-012 | Required | Required | Required | Required | Required | Pending |
+| AD-013 | Required | Required | Required | Required | Required | Pending |
+| AD-014 | Required | Required | Required | Required | Required | Pending |
+| AD-015 | Required | Required | Required | Required | Required | Pending |
+| AD-016 | Required | Required | Required | Required | Required | Pending |
+| AD-017 | Required | Required | Required | Required | Required | Pending |
+| AD-018 | Required | Required | Required | Required | Required | Pending |
+| CB-001 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-002 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-003 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-004 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-005 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-006 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-007 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-008 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-009 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-010 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-011 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-012 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-013 | Required | Required | Required | N/A unless visible | Required | Pending |
+| CB-014 | Required | Required | Required | N/A unless visible | Required | Pending |
+| API-001 | Required | Required | Required | N/A | Required | Pending |
+| API-002 | Required | Required | Required | N/A | Required | Pending |
+| API-003 | Required | Required | Required | N/A | Required | Pending |
+| API-004 | Required | Required | Required | N/A | Required | Pending |
+| API-005 | Required | Required | Required | N/A | Required | Pending |
+| API-006 | Required | Required | Required | N/A | Required | Pending |
+| CJ-001 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-002 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-003 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-004 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-005 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-006 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-007 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-008 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-009 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-010 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-011 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-012 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-013 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-014 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-015 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-016 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-017 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-018 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-019 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-020 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-021 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-022 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-023 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-024 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| CJ-025 | Required | Required | Required | N/A | Operational evidence required | Pending |
+
+The final report must keep one row per `SF-*`, `AD-*`, `CB-*`, `API-*`, and `CJ-*` ID from `specs/modernization/magento-feature-catalog.md`; grouped ranges are not accepted in the final release report.
+
+Preparation verification uses `php dev/modernization/validate-feature-traceability.php --strict` as a template coverage check. Final release verification must use `php dev/modernization/validate-feature-traceability.php --final`, which fails while placeholder evidence such as `TBD`, `Required`, or `Pending` remains in the traceability artifacts.
 
 ## Release Readiness Checklist
 

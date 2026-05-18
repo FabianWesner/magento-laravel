@@ -23,6 +23,7 @@ if (PHP_VERSION_ID < 80500) {
         }
 
         $args = array_map('escapeshellarg', array_slice($argv, 1));
+        chdir($root . '/laravel');
         $command = escapeshellarg($php85) . ' ' . escapeshellarg($laravelArtisan);
         if ($args !== []) {
             $command .= ' ' . implode(' ', $args);

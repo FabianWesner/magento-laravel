@@ -9,11 +9,12 @@ These spikes are required before committing to the full modernization path.
 
 ## POC 1: Laravel Bootstrap Beside Magento
 
-Goal: prove Laravel can boot in the existing runtime without changing user-visible behavior.
+Goal: prove Laravel can boot beside Magento in the parallel PHP `8.5+` runtime without changing user-visible Magento behavior.
 
 Acceptance criteria:
 
-- Laravel container resolves services during web and CLI requests.
+- Laravel container resolves services during Laravel web and CLI requests.
+- Laravel is not loaded inside Magento's PHP `7.4` process.
 - Legacy `index.php`, `api.php`, `cron.php`, and shell scripts still work.
 - No routes are moved yet.
 - Tests show no behavior change.
@@ -92,12 +93,14 @@ Goal: prove Laravel can own selected routes while legacy handles unmigrated rout
 
 Acceptance criteria:
 
+- ADR 0008 is implemented by an approved auth/session boundary spec before coding starts.
 - Laravel route group and legacy route group coexist.
-- Store scope, URL rewrites, sessions, cookies, and errors behave correctly.
+- Store scope, URL rewrites, customer sessions, admin sessions, cookies, CSRF/form keys, password hashes, and errors behave correctly.
+- Rollback behavior is explicit for each moved route.
 - Route ownership is observable in logs.
 
 Verification:
 
 - Route compatibility tests.
+- Cross-runtime authenticated storefront, admin, cart, checkout, API, and permission-denied tests.
 - E2E tests across Laravel and legacy pages.
-

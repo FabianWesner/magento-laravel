@@ -26,3 +26,9 @@ The legacy Magento install is used as a baseline for characterization, visual co
 - Existing EAV and commerce tables remain the source of truth.
 - New modules register through PHP manifests, service providers, routes, events, policies, and typed config.
 - Migration proceeds route by route with fallback until parity is proven.
+
+## Documentation Targets
+
+- MkDocs provides concise public modernization notes.
+- Docusaurus provides the full user documentation and developer documentation for the final system.
+- Final documentation must cover production-ready behavior, including edge cases, failure paths, operational recovery, and known limitations.

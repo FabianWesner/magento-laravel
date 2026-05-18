@@ -17,9 +17,36 @@ run_optional() {
   echo
 }
 
+run_maybe_unavailable() {
+  name="$1"
+  shift
+  echo "==> $name"
+  if "$@"; then
+    echo "PASS: $name"
+  else
+    code=$?
+    if [ "$code" -eq 2 ]; then
+      echo "SKIP: $name (unavailable in this environment)"
+    else
+      echo "FAIL: $name (exit $code)" >&2
+      status=1
+    fi
+  fi
+  echo
+}
+
 run_optional "markdown checks" php dev/modernization/markdown-check.php
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
-run_optional "no-new-xml check for specs" php dev/modernization/validate-no-new-xml.php specs
+run_optional "no-new-xml check for migrated paths" php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs
+run_optional "removed-technology check for Laravel target" php dev/modernization/validate-removed-technologies.php
+if php dev/modernization/validate-removed-technologies.php dev/modernization/fixtures/removed-tech/bad >/dev/null 2>&1; then
+  echo "FAIL: removed-technology fixture should fail but passed" >&2
+  status=1
+else
+  echo "PASS: removed-technology fixture rejects banned references"
+fi
+echo
+run_optional "feature traceability template check" php dev/modernization/validate-feature-traceability.php --strict
 
 if [ -f composer.json ] && command -v composer >/dev/null 2>&1; then
   run_optional "composer validate" composer validate --no-check-publish
@@ -43,6 +70,15 @@ elif [ -f mkdocs.yml ]; then
   echo "SKIP: mkdocs strict build (mkdocs not found)"
 else
   echo "SKIP: mkdocs strict build (mkdocs.yml not found)"
+fi
+
+if [ -f docusaurus/package.json ] && command -v npm >/dev/null 2>&1; then
+  run_optional "docusaurus build" npm --prefix docusaurus run build
+  run_maybe_unavailable "docusaurus browser smoke" node dev/modernization/smoke-docusaurus.mjs
+elif [ -f docusaurus/package.json ]; then
+  echo "SKIP: docusaurus build (npm not found)"
+else
+  echo "SKIP: docusaurus build (docusaurus/package.json not found)"
 fi
 
 exit "$status"
