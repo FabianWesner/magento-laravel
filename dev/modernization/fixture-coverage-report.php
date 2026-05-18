@@ -111,10 +111,11 @@ function implodeCounts(array $counts): string
     return implode('; ', $parts);
 }
 
-function addCheck(array &$checks, string $area, string $required, string $evidence, bool $covered): void
+function addCheck(array &$checks, string $area, array $featureIds, string $required, string $evidence, bool $covered): void
 {
     $checks[] = [
         'area' => $area,
+        'feature_ids' => $featureIds,
         'required' => $required,
         'evidence' => $evidence,
         'status' => $covered ? 'covered' : 'gap',
@@ -129,6 +130,7 @@ $missingProductTypes = array_diff($requiredProductTypes, array_keys($productType
 addCheck(
     $checks,
     'Product types',
+    ['SF-005', 'CB-002', 'AD-002'],
     'Simple, virtual, grouped, configurable, bundle, and downloadable products.',
     'Observed '.implodeCounts($productTypes).($missingProductTypes === [] ? '' : '; missing: '.implode(', ', $missingProductTypes)),
     $missingProductTypes === [],
@@ -143,6 +145,7 @@ $disabledStores = tableExists($pdo, 'core_store')
 addCheck(
     $checks,
     'Websites and stores',
+    ['SF-012', 'AD-017'],
     'At least 2 websites, 2 store groups, 3 store views, and 1 disabled store view.',
     "websites: {$websites}; store groups: {$storeGroups}; store views: {$stores}; disabled store views: {$disabledStores}",
     $websites >= 2 && $storeGroups >= 2 && $stores >= 3 && $disabledStores >= 1,
@@ -168,6 +171,7 @@ $emptyCategories = (int) scalar(
 addCheck(
     $checks,
     'Categories',
+    ['SF-003', 'AD-003'],
     'Nested categories at least 4 levels deep, disabled category, and empty category.',
     "categories: {$categoryCount}; max level: {$maxCategoryLevel}; disabled: {$disabledCategories}; empty: {$emptyCategories}",
     $maxCategoryLevel >= 4 && $disabledCategories >= 1 && $emptyCategories >= 1,
@@ -182,6 +186,7 @@ $optionalOptions = tableExists($pdo, 'catalog_product_option')
 addCheck(
     $checks,
     'Custom options',
+    ['SF-005', 'CB-002'],
     'Products with required and optional custom options.',
     "required options: {$requiredOptions}; optional options: {$optionalOptions}",
     $requiredOptions >= 1 && $optionalOptions >= 1,
@@ -196,6 +201,7 @@ $attributeScopes = tableExists($pdo, 'catalog_eav_attribute')
 addCheck(
     $checks,
     'EAV attributes',
+    ['CB-011', 'AD-004'],
     'Every backend type and global, website, and store scope coverage.',
     'backend types: '.implodeCounts($attributeBackendTypes).'; scopes: '.implodeCounts($attributeScopes).($missingBackendTypes === [] ? '' : '; missing backend types: '.implode(', ', $missingBackendTypes)),
     $missingBackendTypes === [] && isset($attributeScopes['0'], $attributeScopes['1'], $attributeScopes['2']),
@@ -216,6 +222,7 @@ $cartRules = countTable($pdo, 'salesrule');
 addCheck(
     $checks,
     'Pricing and promotions',
+    ['CB-003', 'CB-004', 'CB-005', 'AD-008'],
     'Special price, tier price, group price, catalog rule, and cart rule data.',
     "special-price products: {$specialPriceProducts}; tier prices: {$tierPrices}; group prices: {$groupPrices}; catalog rules: {$catalogRules}; cart rules: {$cartRules}",
     $specialPriceProducts >= 1 && $tierPrices >= 1 && $groupPrices >= 1 && $catalogRules >= 1 && $cartRules >= 1,
@@ -231,6 +238,7 @@ $backorders = tableExists($pdo, 'cataloginventory_stock_item')
 addCheck(
     $checks,
     'Inventory',
+    ['CB-009', 'AD-002'],
     'In-stock, out-of-stock, and backorder product coverage.',
     "stock items: {$stockItems}; out of stock: {$outOfStock}; backorder-enabled: {$backorders}",
     $stockItems >= 1 && $outOfStock >= 1 && $backorders >= 1,
@@ -242,6 +250,7 @@ $addresses = countTable($pdo, 'customer_address_entity');
 addCheck(
     $checks,
     'Customers',
+    ['SF-010', 'AD-007'],
     'Registered customers, customer groups, and customer addresses.',
     "customers: {$customers}; customer groups: {$customerGroups}; addresses: {$addresses}",
     $customers >= 1 && $customerGroups >= 2 && $addresses >= 1,
@@ -254,6 +263,7 @@ $creditMemos = countTable($pdo, 'sales_flat_creditmemo');
 addCheck(
     $checks,
     'Sales lifecycle',
+    ['CB-010', 'AD-005', 'AD-006'],
     'Orders, invoices, shipments, and credit memos.',
     "orders: {$orders}; invoices: {$invoices}; shipments: {$shipments}; credit memos: {$creditMemos}",
     $orders >= 1 && $invoices >= 1 && $shipments >= 1 && $creditMemos >= 1,
@@ -265,6 +275,7 @@ $tableRates = countTable($pdo, 'shipping_tablerate');
 addCheck(
     $checks,
     'Tax and shipping',
+    ['CB-006', 'CB-007', 'AD-016', 'API-005'],
     'Multiple tax rates/rules and table-rate shipping data.',
     "tax rates: {$taxRates}; tax rules: {$taxRules}; table rates: {$tableRates}",
     $taxRates >= 2 && $taxRules >= 1 && $tableRates >= 1,
@@ -278,6 +289,7 @@ $oauthConsumers = countTable($pdo, 'oauth_consumer');
 addCheck(
     $checks,
     'Payment and API users',
+    ['CB-008', 'API-001', 'API-002', 'API-003', 'API-004', 'AD-012'],
     'Active payment method config plus SOAP/XML-RPC API users and OAuth consumers.',
     "active payment configs: {$activePaymentConfig}; API users: {$apiUsers}; OAuth consumers: {$oauthConsumers}",
     $activePaymentConfig >= 1 && $apiUsers >= 1 && $oauthConsumers >= 1,
@@ -290,6 +302,7 @@ $mediaGallery = countTable($pdo, 'catalog_product_entity_media_gallery');
 addCheck(
     $checks,
     'CMS and media',
+    ['SF-002', 'SF-005', 'AD-009'],
     'CMS pages, blocks, widgets, and product media gallery references.',
     "CMS pages: {$cmsPages}; CMS blocks: {$cmsBlocks}; widgets: {$widgets}; product media rows: {$mediaGallery}",
     $cmsPages >= 1 && $cmsBlocks >= 1 && $widgets >= 1 && $mediaGallery >= 1,
@@ -300,6 +313,7 @@ $adminRoles = countTable($pdo, 'admin_role');
 addCheck(
     $checks,
     'Admin users and roles',
+    ['AD-001', 'AD-012'],
     'Full, partial, denied, and API/admin role fixtures.',
     "admin users: {$adminUsers}; admin roles: {$adminRoles}",
     $adminUsers >= 2 && $adminRoles >= 4,
@@ -312,6 +326,7 @@ $reportRows = countTable($pdo, 'sales_order_aggregated_created')
 addCheck(
     $checks,
     'Cron and reports',
+    ['CJ-001 through CJ-025', 'AD-014'],
     'Cron schedule rows and populated report aggregate tables.',
     "cron rows: {$cronRows}; selected report aggregate rows: {$reportRows}",
     $cronRows >= 1 && $reportRows >= 1,
@@ -344,10 +359,10 @@ echo "- Database: `{$report['database']}`\n";
 echo "- Checks: {$report['summary']['total']}\n";
 echo "- Covered: {$report['summary']['covered']}\n";
 echo "- Gaps: {$report['summary']['gaps']}\n\n";
-echo "| Area | Required Coverage | Current Evidence | Status |\n";
-echo "| --- | --- | --- | --- |\n";
+echo "| Area | Feature IDs | Required Coverage | Current Evidence | Status |\n";
+echo "| --- | --- | --- | --- | --- |\n";
 foreach ($report['checks'] as $check) {
-    echo "| {$check['area']} | {$check['required']} | {$check['evidence']} | `{$check['status']}` |\n";
+    echo "| {$check['area']} | ".implode(', ', $check['feature_ids'])." | {$check['required']} | {$check['evidence']} | `{$check['status']}` |\n";
 }
 
 exit($failOnGaps && $gaps > 0 ? 1 : 0);

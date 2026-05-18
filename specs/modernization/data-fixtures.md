@@ -65,22 +65,22 @@ DB_DSN='mysql:host=<host>;dbname=<fixture_db>' DB_USER=<user> DB_PASS=<pass> php
 
 Current Magento sample data result on 2026-05-18:
 
-| Area | Current Evidence | Status |
-| --- | --- | --- |
-| Product types | Bundle, configurable, downloadable, grouped, simple, and virtual products are present. | Covered |
-| Websites and stores | Two websites, two store groups, and four store views are present; no disabled store view is present. | Gap |
-| Categories | 29 categories and one empty category are present; maximum depth is level 3 and no disabled category is present. | Gap |
-| Custom options | Required and optional product custom options are present. | Covered |
-| EAV attributes | All core backend types and global, website, and store scoped catalog attributes are present. | Covered |
-| Pricing and promotions | Special prices, tier prices, catalog rules, and cart rules are present; group prices are missing. | Gap |
-| Inventory | Stock rows and out-of-stock products are present; backorder-enabled products are missing. | Gap |
-| Customers | Registered customers, groups, and addresses are present. | Covered |
-| Sales lifecycle | Orders, invoices, shipments, and credit memos are present. | Covered |
-| Tax and shipping | Tax rates and rules are present; table-rate shipping data is missing. | Gap |
-| Payment and API users | Active payment config exists; SOAP/XML-RPC API users and OAuth consumers are missing. | Gap |
-| CMS and media | CMS pages, blocks, widgets, and product media rows are present. | Covered |
-| Admin users and roles | One admin user and two admin roles are present; role coverage is insufficient. | Gap |
-| Cron and reports | Report aggregates are populated; cron schedule rows are missing. | Gap |
+| Area | Feature IDs | Current Evidence | Status |
+| --- | --- | --- | --- |
+| Product types | SF-005, CB-002, AD-002 | Bundle, configurable, downloadable, grouped, simple, and virtual products are present. | Covered |
+| Websites and stores | SF-012, AD-017 | Two websites, two store groups, and four store views are present; no disabled store view is present. | Gap |
+| Categories | SF-003, AD-003 | 29 categories and one empty category are present; maximum depth is level 3 and no disabled category is present. | Gap |
+| Custom options | SF-005, CB-002 | Required and optional product custom options are present. | Covered |
+| EAV attributes | CB-011, AD-004 | All core backend types and global, website, and store scoped catalog attributes are present. | Covered |
+| Pricing and promotions | CB-003, CB-004, CB-005, AD-008 | Special prices, tier prices, catalog rules, and cart rules are present; group prices are missing. | Gap |
+| Inventory | CB-009, AD-002 | Stock rows and out-of-stock products are present; backorder-enabled products are missing. | Gap |
+| Customers | SF-010, AD-007 | Registered customers, groups, and addresses are present. | Covered |
+| Sales lifecycle | CB-010, AD-005, AD-006 | Orders, invoices, shipments, and credit memos are present. | Covered |
+| Tax and shipping | CB-006, CB-007, AD-016, API-005 | Tax rates and rules are present; table-rate shipping data is missing. | Gap |
+| Payment and API users | CB-008, API-001, API-002, API-003, API-004, AD-012 | Active payment config exists; SOAP/XML-RPC API users and OAuth consumers are missing. | Gap |
+| CMS and media | SF-002, SF-005, AD-009 | CMS pages, blocks, widgets, and product media rows are present. | Covered |
+| Admin users and roles | AD-001, AD-012 | One admin user and two admin roles are present; role coverage is insufficient. | Gap |
+| Cron and reports | CJ-001 through CJ-025, AD-014 | Report aggregates are populated; cron schedule rows are missing. | Gap |
 
 Summary: Magento sample data covers 6 of 14 checked fixture areas and leaves 8 known gaps. It is useful for smoke tests but is not sufficient as the canonical demo fixture.
 

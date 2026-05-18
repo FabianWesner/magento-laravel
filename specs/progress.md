@@ -262,3 +262,26 @@ Blocked:
 
 Next:
 - Commit strict fixture gap mode.
+
+## 2026-05-18 23:15 CEST - Fixture Coverage Feature IDs
+
+Changed:
+- Added feature ID mappings to each fixture coverage check in `dev/modernization/fixture-coverage-report.php`.
+- Added a feature ID column to the current sample fixture coverage table in `specs/modernization/data-fixtures.md`.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Escalated Laravel Boost fallback `SearchDocs` succeeded for `console commands` and `database testing` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/fixture-coverage-report.php` passed.
+- `php dev/modernization/markdown-check.php` passed.
+- Escalated fixture coverage Markdown report against `magento1945` includes feature ID mappings for all 14 checks.
+- Escalated fixture coverage JSON report against `magento1945` includes `feature_ids` arrays.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and browser smoke skipped where the sandbox does not expose those services.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento bash dev/modernization/gate.sh` passed, including fixture coverage and Docusaurus browser smoke.
+
+Blocked:
+- Project overlay, project database fixture, and project media fixture remain unavailable.
+
+Next:
+- Commit the feature-ID fixture coverage mapping.
