@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:53 CEST - Livewire Target Gate
+
+Changed:
+- Added `dev/modernization/validate-livewire-target.php` to validate the Livewire ADR, architecture specs, POC plan, test plan, backlog, and Docusaurus developer references.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires the `livewire/livewire` package, component files, Livewire Blade views, Livewire tests, and Livewire UI evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `livewire components`, `testing livewire`, and `blade components` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-livewire-target.php` passed.
+- `php dev/modernization/validate-livewire-target.php` passed.
+- `php dev/modernization/validate-livewire-target.php --final` failed as expected because the Laravel target does not yet install `livewire/livewire`, include Livewire component/view files, include Livewire tests, or include Livewire UI evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the Livewire target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Livewire target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 00:50 CEST - Documentation Content Gate
 
 Changed:

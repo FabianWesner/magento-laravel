@@ -115,6 +115,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "security/accessibility final check" php dev/modernization/validate-security-accessibility.php --final
   run_optional "production readiness final check" php dev/modernization/validate-production-readiness.php --final
   run_optional "runtime tooling final check" php dev/modernization/validate-runtime-tooling.php --final
+  run_optional "Livewire target final check" php dev/modernization/validate-livewire-target.php --final
 else
   run_optional "UI screen inventory template check" php dev/modernization/validate-ui-screen-inventory.php
   run_optional "visual tolerances template check" php dev/modernization/validate-visual-tolerances.php
@@ -124,6 +125,7 @@ else
   run_optional "security/accessibility template check" php dev/modernization/validate-security-accessibility.php
   run_optional "production readiness template check" php dev/modernization/validate-production-readiness.php
   run_optional "runtime tooling template check" php dev/modernization/validate-runtime-tooling.php
+  run_optional "Livewire target template check" php dev/modernization/validate-livewire-target.php
 fi
 run_maybe_unavailable "Magento docroot verification" run_magento_docroot_verification
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
