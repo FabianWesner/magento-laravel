@@ -183,6 +183,13 @@ if ($final) {
         'Docusaurus user feature coverage' => 'docusaurus/docs/user/feature-coverage.md',
         'Docusaurus developer testing evidence' => 'docusaurus/docs/developer/testing-and-verification.md',
     ];
+    $finalDocumentationPlaceholderPatterns = [
+        '/\bTBD\b/',
+        '/\bPending\b/',
+        '/\bTo inventory\b/',
+        '/\bRequired where applicable\b/',
+        '/\bOperational evidence required\b/',
+    ];
 
     foreach ($finalCatalogEvidenceFiles as $label => $path) {
         if (! is_file($path)) {
@@ -197,6 +204,13 @@ if ($final) {
         $missing = array_values(array_diff($featureIds, featureIdsFromContent($content)));
         if ($missing !== []) {
             $warnings[] = "Final documentation missing catalog IDs in {$label}: ".summarizeMissingIds($missing);
+        }
+
+        foreach ($finalDocumentationPlaceholderPatterns as $placeholderPattern) {
+            if (preg_match($placeholderPattern, $content)) {
+                $warnings[] = "Final documentation still contains placeholder evidence in {$label}: {$path}";
+                break;
+            }
         }
     }
 }
