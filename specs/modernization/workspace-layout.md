@@ -1,28 +1,30 @@
 # Project And Core Workspace Layout
 
-The current root checkout is Magento CE `1.9.4.5` source only. The modernization work still needs a two-repository workspace once the real project repository is available.
+The current repository is split into a Magento CE `1.9.4.5` source tree, an overlay placeholder, and the Laravel target app. The modernization work still needs the real project repository or overlay files.
 
 ## Recommended Layout
 
 Use sibling directories under one workspace root:
 
 ```text
-modernization-workspace/
-|-- magento-core-1.9.4.5/ # Magento CE 1.9.4.5 source checkout
-|-- modernization-specs/  # This preparation repo/docs/specs if kept separate
-|-- project/            # Real project overlay/application checkout
-|-- artifacts/          # Ignored local DB, media, screenshots, performance reports
-`-- notes/              # Optional local operator notes
+magento-laravel/
+|-- core/magento-1.9.4.5/ # Magento CE 1.9.4.5 source checkout
+|-- project/              # Real project overlay/application files
+|-- laravel/              # Target Laravel app
+|-- .localdev/            # Ignored runtime docroot, DB, media, screenshots, reports
+|-- docs/                 # Public docs
+|-- specs/                # Migration execution specs
+`-- dev/                  # Tooling and local runtime scripts
 ```
 
-The current repository should remain intact until the project repository URL or local path is known. Do not delete or move core files just to force the desired shape; create the sibling project checkout and point inventory tooling at both roots.
+Runtime composition copies `core/magento-1.9.4.5/` into `.localdev/magento-docroot/` and then overlays `project/` on top.
 
 ## Required Inputs
 
 | Input | Required For | Status |
 | --- | --- | --- |
 | Magento CE 1.9.4.5 source checkout | Source inventory and previous preparation context | Present. |
-| Magento CE `1.9.4.5` source checkout | Magento 1 runtime baseline and smoke verification | Present at the repository root. |
+| Magento CE `1.9.4.5` source checkout | Magento 1 runtime baseline and smoke verification | Present under `core/magento-1.9.4.5/`. |
 | Project repository | Custom modules, themes, integrations, deployment scripts | Missing. |
 | Project database fixture | EAV attributes, config, store scopes, real data shape | Missing. |
 | Project media fixture | Product/category/CMS visuals and file-storage behavior | Missing. |
@@ -31,9 +33,9 @@ The current repository should remain intact until the project repository URL or 
 
 ## Inventory Flow
 
-1. Keep `magento-laravel/` intact as the preparation repository until the project repository path is known.
-2. Keep the repository root as the Magento CE baseline for local smoke checks.
-3. Checkout the project into `project/`.
+1. Keep `core/magento-1.9.4.5/` as the Magento CE baseline for local smoke checks.
+2. Checkout or copy the real project overlay into `project/`.
+3. Run `dev/magento/build-docroot.sh` to generate `.localdev/magento-docroot/`.
 4. Record remotes, branches, commit SHAs, and Composer lock hashes for all relevant roots.
 5. Run `dev/modernization/inventory.php` against core and project roots.
 6. Restore the sanitized project DB and media into ignored local paths.

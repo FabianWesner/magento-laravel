@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$root = __DIR__;
+$laravelArtisan = $root . '/laravel/artisan';
+
+if (!is_file($laravelArtisan)) {
+    fwrite(STDERR, "Laravel artisan not found at laravel/artisan.\n");
+    exit(1);
+}
+
+$php85Candidates = array_filter([
+    getenv('PHP85_BIN') ?: null,
+    '/Users/fabianwesner/Library/Application Support/Herd/bin/php85',
+]);
+
+if (PHP_VERSION_ID < 80500) {
+    foreach ($php85Candidates as $php85) {
+        if (!is_executable($php85)) {
+            continue;
+        }
+
+        $args = array_map('escapeshellarg', array_slice($argv, 1));
+        $command = escapeshellarg($php85) . ' ' . escapeshellarg($laravelArtisan);
+        if ($args !== []) {
+            $command .= ' ' . implode(' ', $args);
+        }
+
+        passthru($command, $exitCode);
+        exit($exitCode);
+    }
+}
+
+chdir($root . '/laravel');
+require $laravelArtisan;

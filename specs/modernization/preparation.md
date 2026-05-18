@@ -10,7 +10,7 @@ This checklist covers the 13 preparation areas required before replacing the Mag
 | # | Area | Status | Required Work |
 | --- | --- | --- | --- |
 | 1 | MkDocs integration | Prepared | Modernization docs now live under `docs/content/modernization` and need to remain in `mkdocs.yml` navigation. |
-| 2 | Actual custom-code inventory | Partially known | Current root checkout is core-only, and the local runtime baseline is Magento CE `1.9.4.5`. Run the inventory against the real project overlay, including local/community modules, themes, config, database, media, and integrations. |
+| 2 | Actual custom-code inventory | Partially known | Magento CE `1.9.4.5` source is under `core/magento-1.9.4.5/`, and `project/` is reserved for the real project overlay. Run the inventory against the real project overlay, including local/community modules, themes, config, database, media, and integrations. |
 | 3 | Compatibility policy | Drafted | Approve which legacy contracts remain compatible and which are intentionally retired. |
 | 4 | Feature inventory | Drafted | Complete the feature matrix with project-specific storefront, admin, API, cron, integration, and reporting behavior. |
 | 5 | Architecture specs | Drafted structure | Write and approve individual specs before implementation. |

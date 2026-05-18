@@ -1,10 +1,10 @@
-/app/etc/local.xml
-/media/catalog/product/cache/
-/media/tmp/
-/var/*
-!/var/.htaccess
-!/var/package/
-!/var/package/tmp/
+/core/magento-1.9.4.5/app/etc/local.xml
+/core/magento-1.9.4.5/media/catalog/product/cache/
+/core/magento-1.9.4.5/media/tmp/
+/core/magento-1.9.4.5/var/*
+!/core/magento-1.9.4.5/var/.htaccess
+!/core/magento-1.9.4.5/var/package/
+!/core/magento-1.9.4.5/var/package/tmp/
 /vendor/
 /.localdev/
 /.venv-mkdocs/

@@ -9,4 +9,4 @@ php dev/modernization/inventory.php --format=markdown
 php dev/modernization/inventory.php --format=json
 ```
 
-The current root checkout is expected to be Magento source-only unless a project overlay is added. The local Magento CE `1.9.4.5` baseline is documented in `specs/modernization/install-verification.md`.
+The current repository keeps Magento CE `1.9.4.5` source under `core/magento-1.9.4.5/` and reserves `project/` for the project overlay. The local Magento baseline is documented in `specs/modernization/install-verification.md`.

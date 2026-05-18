@@ -19,7 +19,8 @@ Local source checkout:
 | Package | Magento CE / Magento Open Source |
 | Tag | `1.9.4.5` |
 | Checked out commit | `98da842ef7aa59b8b8fee642de8b0b6deec55c31` |
-| Installed root | repository root |
+| Source root | `core/magento-1.9.4.5/` |
+| Runtime document root | `.localdev/magento-docroot/` |
 
 ## Status
 
@@ -46,17 +47,18 @@ Admin credentials are stored only in `.localdev/magento-smoke.env`, which is ign
 
 ## What Was Installed
 
-This is a fresh Magento CE `1.9.4.5` install from a Magento CE source mirror, not the real project install.
+This is a fresh Magento CE `1.9.4.5` install from the Magento CE source tree, not the real project install.
 
 Installed locally:
 
-- Magento CE source tag `1.9.4.5` in the repository root.
+- Magento CE source tag `1.9.4.5` in `core/magento-1.9.4.5/`.
+- Runtime document root generated at `.localdev/magento-docroot/`.
 - Docker services in `dev/magento/docker-compose.yml`.
 - PHP-FPM/CLI runtime built from `php:7.4-fpm` for legacy Magento 1 verification only.
 - MySQL `5.7` database named `magento1945`.
 - Nginx `1.25` on `http://127.0.0.1:8090/`.
 - Magento sample data `1.9.2.4` SQL, media, and skin assets.
-- Generated ignored Magento local config at `app/etc/local.xml`.
+- Generated ignored Magento local config at `.localdev/magento-docroot/app/etc/local.xml`.
 
 Seed verification:
 
@@ -92,6 +94,7 @@ Observed local tools:
 Start the local Magento stack:
 
 ```bash
+dev/magento/build-docroot.sh
 docker compose -f dev/magento/docker-compose.yml up -d --build mysql php-fpm nginx
 ```
 
@@ -108,11 +111,12 @@ ADMIN_USERNAME=admin
 ADMIN_PASSWORD=<local-only-password>
 ```
 
-Download and unpack sample data into `.localdev/sample-data/`, then copy media and skin assets into the Magento root:
+Download and unpack sample data into `.localdev/sample-data/`, then copy media and skin assets into the Magento source root:
 
 ```bash
-cp -R .localdev/sample-data/magento-sample-data-1.9.2.4/media/. media/
-cp -R .localdev/sample-data/magento-sample-data-1.9.2.4/skin/. skin/
+cp -R .localdev/sample-data/magento-sample-data-1.9.2.4/media/. core/magento-1.9.4.5/media/
+cp -R .localdev/sample-data/magento-sample-data-1.9.2.4/skin/. core/magento-1.9.4.5/skin/
+dev/magento/build-docroot.sh
 ```
 
 Import sample data SQL:
@@ -177,7 +181,7 @@ The real project cannot be installed yet because this checkout still does not co
 - Project secrets and integration credentials.
 - Project-specific Composer repositories or package credentials, if any.
 
-Once those are available, repeat this install verification against the project workspace and replace this core-only smoke result with project smoke evidence.
+Once those are available, repeat this install verification against the generated project-overlaid runtime and replace this source-only smoke result with project smoke evidence.
 
 ## Acceptance For This Preparation Step
 

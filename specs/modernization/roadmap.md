@@ -4,7 +4,7 @@ This roadmap describes how to modernize the current Magento 1 codebase into a La
 
 The target is not a cosmetic Laravel wrapper around Magento. The target is a modular Laravel application with modern PHP patterns, Livewire-powered UI surfaces, clean extension points, and no XML-based configuration for new architecture.
 
-The current repository scan is source-only. The local smoke baseline is Magento CE `1.9.4.5`. Before implementation starts, repeat the [inventory](inventory.md) against the actual project overlay, database, media, integrations, and deployment configuration.
+The current repository keeps the Magento CE `1.9.4.5` baseline in `core/magento-1.9.4.5/` and reserves `project/` for the real project overlay. Before implementation starts, repeat the [inventory](inventory.md) against the actual project overlay, database, media, integrations, and deployment configuration.
 
 ## Target Outcomes
 

@@ -11,7 +11,7 @@ Objective:
 Prepare the project for a long-running modernization from Magento 1 to Laravel. The legacy runtime baseline is Magento CE / Magento Open Source `1.9.4.5`. The target architecture replaces the Zend/Magento framework runtime with Laravel, uses Livewire for storefront/admin UI implementation, upgrades the target application to the latest stable PHP, keeps the existing database schema including EAV and original seed/sample data, preserves the storefront and admin look and feel, and replaces XML-based extensibility with PHP-based modules, manifests, service providers, policies, events, and typed config.
 
 Important context:
-- The current root checkout may be Magento CE 1.9.4.5 source-only. Do not assume it contains the real project overlay.
+- The current checkout keeps Magento CE 1.9.4.5 source under `core/magento-1.9.4.5/` and reserves `project/` for the project overlay. Do not assume `project/` contains the real project overlay yet.
 - If the checkout is source-only, identify what is missing and prepare for a two-repository workspace: project code plus Magento CE `1.9.4.5` source. Use existing local remotes/paths if available. If the project repository URL/path is not discoverable, document the blocker clearly and continue with all preparation work that can be done from source alone.
 - Keep user changes safe. Do not revert unrelated work. Do not use destructive git commands.
 - This is preparation work, not the Laravel rewrite itself.
@@ -78,7 +78,7 @@ Execution approach:
 Acceptance criteria:
 - docs/content/modernization exists and is linked from mkdocs.yml.
 - specs/ exists and contains migration execution instructions, templates, ADRs, and runbooks.
-- docs distinguish known facts from this core-only checkout versus project-specific work still requiring the project overlay.
+- docs distinguish known facts from `core/magento-1.9.4.5/` versus project-specific work still requiring the project overlay.
 - dev/modernization contains safe executable tooling with usage text.
 - The test plan defines a concrete done gate.
 - The compatibility policy explicitly covers database/EAV preservation, visual parity, APIs, URLs, modules, legacy XML bridge duration, and no-new-XML for new code.

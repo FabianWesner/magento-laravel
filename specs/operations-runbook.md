@@ -15,6 +15,7 @@ php dev/modernization/markdown-check.php
 Preferred local install path for this core checkout is Docker Compose once Docker is running:
 
 ```bash
+dev/magento/build-docroot.sh
 docker compose -f dev/magento/docker-compose.yml up -d --build mysql php-fpm nginx
 docker compose -f dev/magento/docker-compose.yml run --rm cli -r "require 'app/Mage.php'; echo Mage::getVersion(), PHP_EOL;"
 ```

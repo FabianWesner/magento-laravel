@@ -12,6 +12,13 @@ The legacy Magento install is used as a baseline for characterization, visual co
 - The legacy baseline runs in an isolated PHP `7.4` Docker runtime because Magento 1 is not compatible with current PHP.
 - The Laravel target must run on the latest stable PHP branch, currently PHP `8.5.x`.
 
+## Repository Layout
+
+- `core/magento-1.9.4.5/` contains the Magento CE baseline.
+- `project/` is reserved for the real project overlay.
+- `.localdev/magento-docroot/` is generated from core plus project overlay for local verification.
+- `laravel/` contains the target Laravel application.
+
 ## Target Outcomes
 
 - Laravel replaces the Zend/Magento runtime.

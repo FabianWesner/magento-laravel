@@ -8,7 +8,8 @@ function usage(): void
     echo "Usage: php dev/modernization/inventory.php [--root=/path] [--format=json|markdown]\n";
 }
 
-$root = getcwd();
+$cwd = getcwd();
+$root = is_dir($cwd . '/app/code') ? $cwd : $cwd . '/core/magento-1.9.4.5';
 $format = 'markdown';
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--help' || $arg === '-h') {

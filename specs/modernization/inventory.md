@@ -9,7 +9,7 @@ This inventory records what is known from the current repository and what must s
 
 ## Current Repository Findings
 
-The current root checkout is Magento CE `1.9.4.5` source plus local modernization preparation files. It is not yet a project-specific Magento installation.
+The current repository keeps Magento CE `1.9.4.5` source under `core/magento-1.9.4.5/` plus local modernization preparation files at the root. `project/` is reserved for the project overlay, but it does not yet contain the real project-specific Magento installation.
 
 | Area | Finding |
 | --- | --- |
@@ -18,7 +18,7 @@ The current root checkout is Magento CE `1.9.4.5` source plus local modernizatio
 | Module declarations | 21 XML files under `app/etc/modules`: Magento declarations plus `Cm_RedisSession` and `Phoenix_Moneybookers`. |
 | Compatibility file | `app/etc/modules/Mage_All.xml` is an empty `<config/>` compatibility file. |
 | Non-core modules | `Cm_RedisSession` and `Phoenix_Moneybookers` are bundled community dependencies in this Magento CE source tree; no project-specific non-`Mage_*` modules were found. |
-| Live local config | `app/etc/local.xml` exists only for the ignored local smoke install. |
+| Live local config | `core/magento-1.9.4.5/app/etc/local.xml` exists only for the ignored local smoke install. |
 | Controllers | 232 controller files across the Magento source tree; `Mage_Adminhtml` is the largest controller surface. |
 | Routes | Frontend/admin front names include catalog, customer, checkout, sales, cms, api, api2, admin, and supporting modules. |
 | Cron | Core cron jobs are declared in module config XML and must be inventoried into scheduler tasks before migration. |
@@ -73,7 +73,7 @@ Run this inventory against the actual project codebase, not only this source che
 
 ## Inventory Commands
 
-Use these as starting points in the real project checkout:
+Use these from inside the Magento source root or the generated runtime document root:
 
 ```bash
 find app/code -maxdepth 3 -type d | sort
