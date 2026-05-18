@@ -27,11 +27,18 @@ else
   echo "SKIP: composer validate (composer not found)"
 fi
 
-if command -v mkdocs >/dev/null 2>&1; then
-  run_optional "mkdocs strict build" mkdocs build --strict
+mkdocs_bin="${MKDOCS_BIN:-}"
+if [ -z "$mkdocs_bin" ] && command -v mkdocs >/dev/null 2>&1; then
+  mkdocs_bin="mkdocs"
+fi
+if [ -z "$mkdocs_bin" ] && [ -x ".venv-mkdocs/bin/mkdocs" ]; then
+  mkdocs_bin=".venv-mkdocs/bin/mkdocs"
+fi
+
+if [ -n "$mkdocs_bin" ]; then
+  run_optional "mkdocs strict build" env DISABLE_MKDOCS_2_WARNING=true "$mkdocs_bin" build --strict
 else
   echo "SKIP: mkdocs strict build (mkdocs not found)"
 fi
 
 exit "$status"
-
