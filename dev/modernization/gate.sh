@@ -125,6 +125,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "auth/security target final check" php dev/modernization/validate-auth-security-target.php --final
   run_optional "report target final check" php dev/modernization/validate-report-target.php --final
   run_optional "domain target final check" php dev/modernization/validate-domain-target.php --final
+  run_optional "integration target final check" php dev/modernization/validate-integration-target.php --final
 else
   run_optional "UI screen inventory template check" php dev/modernization/validate-ui-screen-inventory.php
   run_optional "visual tolerances template check" php dev/modernization/validate-visual-tolerances.php
@@ -144,6 +145,7 @@ else
   run_optional "auth/security target template check" php dev/modernization/validate-auth-security-target.php
   run_optional "report target template check" php dev/modernization/validate-report-target.php
   run_optional "domain target template check" php dev/modernization/validate-domain-target.php
+  run_optional "integration target template check" php dev/modernization/validate-integration-target.php
 fi
 run_maybe_unavailable "Magento docroot verification" run_magento_docroot_verification
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
