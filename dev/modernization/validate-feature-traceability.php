@@ -206,6 +206,11 @@ if ($final) {
             $warnings[] = "Final documentation missing catalog IDs in {$label}: ".summarizeMissingIds($missing);
         }
 
+        $unknown = array_values(array_diff(featureIdsFromContent($content), $featureIds));
+        if ($unknown !== []) {
+            $warnings[] = "Final documentation contains IDs outside the catalog in {$label}: ".implode(', ', $unknown);
+        }
+
         $missingRows = array_values(array_diff($featureIds, featureIdsFromFirstColumn($content)));
         if ($missingRows !== []) {
             $warnings[] = "Final documentation missing per-feature rows in {$label}: ".summarizeMissingIds($missingRows);

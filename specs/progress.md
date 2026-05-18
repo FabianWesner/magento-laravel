@@ -450,3 +450,27 @@ Blocked:
 
 Next:
 - Commit the Docusaurus final evidence row requirement, then continue with unblocked verification hardening.
+
+## 2026-05-18 23:43 CEST - Docusaurus Final Unknown-ID Guard
+
+Changed:
+- Tightened `dev/modernization/validate-feature-traceability.php --final` so Docusaurus final evidence docs fail if they mention `SF-*`, `AD-*`, `CB-*`, `API-*`, or `CJ-*` IDs that are not present in `specs/modernization/magento-feature-catalog.md`.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console commands`, `testing console commands`, and `documentation` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-feature-traceability.php` passed.
+- `php dev/modernization/validate-feature-traceability.php --strict` passed for 79 catalog IDs.
+- `php dev/modernization/validate-feature-traceability.php --final` still fails as expected for missing final evidence.
+- Temporary negative probe adding `SF-999` to `docusaurus/docs/user/feature-coverage.md` made final mode report `Final documentation contains IDs outside the catalog in Docusaurus user feature coverage: SF-999`; the temporary probe was removed.
+- `php dev/modernization/markdown-check.php` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Docusaurus final unknown-ID guard, then continue with unblocked verification hardening.
