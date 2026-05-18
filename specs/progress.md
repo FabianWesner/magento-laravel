@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 01:13 CEST - Cron Job Target Gate
+
+Changed:
+- Added `dev/modernization/validate-cron-job-target.php` to validate the cron/job requirements in `specs/GOAL.md`, architecture specs, roadmap, test plan, complex-feature reverse-engineering plan, fixture matrix, backlog, risk register, Magento cron catalog, and Docusaurus references.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires Laravel scheduler entries, duplicate-execution controls, schedule diagnostics, Artisan command classes, job classes, event/listener replacements, queue/retry/failure controls, scheduler/queue/command tests, all `CJ-001` through `CJ-025` evidence, and report snapshots.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost fallback `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `task scheduling`, `queues jobs`, `console tests`, and `events listeners` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-cron-job-target.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-cron-job-target.php` passed.
+- `php dev/modernization/validate-cron-job-target.php --final` failed as expected because the Laravel target does not yet include scheduler entries, command/job/event/listener artifacts, queue controls, cron parity tests, or cron/job evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the cron/job target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, missing module implementation/evidence, missing route fallback approval/implementation/evidence, missing cron/job implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php`, `bash -n dev/modernization/gate.sh`, `php -l dev/modernization/validate-cron-job-target.php`, and `git diff --check` passed.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, module manifest/provider/policy/event/job/config/contract implementation and evidence, approved ADR 0008 route fallback boundary, route ownership/fallback implementation and evidence, cron scheduler/command/job/event implementation and evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the cron/job target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 01:08 CEST - Route Fallback Target Gate
 
 Changed:

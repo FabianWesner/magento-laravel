@@ -119,6 +119,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "EAV target final check" php dev/modernization/validate-eav-target.php --final
   run_optional "module target final check" php dev/modernization/validate-module-target.php --final
   run_optional "route fallback target final check" php dev/modernization/validate-route-fallback-target.php --final
+  run_optional "cron/job target final check" php dev/modernization/validate-cron-job-target.php --final
 else
   run_optional "UI screen inventory template check" php dev/modernization/validate-ui-screen-inventory.php
   run_optional "visual tolerances template check" php dev/modernization/validate-visual-tolerances.php
@@ -132,6 +133,7 @@ else
   run_optional "EAV target template check" php dev/modernization/validate-eav-target.php
   run_optional "module target template check" php dev/modernization/validate-module-target.php
   run_optional "route fallback target template check" php dev/modernization/validate-route-fallback-target.php
+  run_optional "cron/job target template check" php dev/modernization/validate-cron-job-target.php
 fi
 run_maybe_unavailable "Magento docroot verification" run_magento_docroot_verification
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
