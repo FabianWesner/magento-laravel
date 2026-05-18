@@ -30,6 +30,31 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:09 CEST - UI Screen Inventory Gate
+
+Changed:
+- Added a modernization validator for `specs/modernization/ui-screen-inventory.md` so normal gate mode checks the required UI evidence template, screenshot storage layout, required viewport matrix, and visible `SF-001` through `SF-016` / `AD-001` through `AD-018` scope.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode will require a screenshot manifest table with Magento and Laravel rows, catalog feature IDs, roles, fixtures, states, viewports, timestamps, artifact paths, and parity decisions.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `testing console commands`, `console commands`, and `filesystem` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-ui-screen-inventory.php` passed.
+- `php dev/modernization/validate-ui-screen-inventory.php` passed for 34 visible feature IDs.
+- `php dev/modernization/validate-ui-screen-inventory.php --final` failed as expected because the screenshot manifest has not been captured yet.
+- `php dev/modernization/markdown-check.php` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the new UI screen inventory template check, with fixture coverage and schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on missing UI screenshot manifest, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the UI screen inventory gate, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:06 CEST - Magento Docroot Verification Gate
 
 Changed:
