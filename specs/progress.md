@@ -173,3 +173,20 @@ Blocked:
 
 Next:
 - Run focused checks and commit the sample fixture coverage reporter and fixture spec update.
+
+## 2026-05-18 23:06 CEST - Gate PHP Syntax Check
+
+Changed:
+- Recorded fixture coverage commit `cd0daae2c6`.
+- Added a modernization PHP syntax check to `dev/modernization/gate.sh` so all `dev/modernization/*.php` utilities are linted by the standard gate.
+
+Verified:
+- `bash -n dev/modernization/gate.sh` passed.
+- `bash dev/modernization/gate.sh` passed and now includes `modernization PHP syntax`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, and project media fixture remain unavailable.
+
+Next:
+- Commit the gate hardening increment.

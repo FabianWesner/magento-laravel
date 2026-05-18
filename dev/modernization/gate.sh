@@ -35,6 +35,14 @@ run_maybe_unavailable() {
   echo
 }
 
+run_php_syntax() {
+  local file
+  for file in dev/modernization/*.php; do
+    php -l "$file" >/dev/null || return 1
+  done
+}
+
+run_optional "modernization PHP syntax" run_php_syntax
 run_optional "markdown checks" php dev/modernization/markdown-check.php
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
 run_optional "no-new-xml check for migrated paths" php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs
