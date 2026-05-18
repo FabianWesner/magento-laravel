@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:31 CEST - Security Accessibility Gate
+
+Changed:
+- Added `dev/modernization/validate-security-accessibility.php` to validate the security and accessibility test-plan sections, coverage areas, and acceptance criteria.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires security review evidence and accessibility report evidence with no placeholders.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `security testing`, `accessibility testing`, and `console commands` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` fixed `dev/modernization/validate-security-accessibility.php`.
+- `php -l dev/modernization/validate-security-accessibility.php` passed.
+- `php dev/modernization/validate-security-accessibility.php` passed.
+- `php dev/modernization/validate-security-accessibility.php --final` failed as expected because no security review evidence or accessibility report evidence exists yet.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the security/accessibility template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the security/accessibility gate, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:28 CEST - Operations Readiness Gate
 
 Changed:
