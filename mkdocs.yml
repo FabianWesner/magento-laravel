@@ -1,0 +1,17 @@
+site_name: Magento Laravel Modernization
+site_description: Public architecture notes for the Magento 1 to Laravel modernization.
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Modernization:
+      - Overview: content/modernization/index.md
+      - Architecture: content/modernization/architecture.md
+      - Compatibility: content/modernization/compatibility.md
+      - Testing: content/modernization/testing.md
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences

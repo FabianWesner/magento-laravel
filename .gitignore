@@ -1,0 +1,14 @@
+/app/etc/local.xml
+/media/catalog/product/cache/
+/media/tmp/
+/var/*
+!/var/.htaccess
+!/var/package/
+!/var/package/tmp/
+/vendor/
+/.localdev/
+/.venv-mkdocs/
+/.playwright-mcp/
+/site/
+/.idea/
+.DS_Store
