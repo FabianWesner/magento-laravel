@@ -190,3 +190,20 @@ Blocked:
 
 Next:
 - Commit the gate hardening increment.
+
+## 2026-05-18 23:07 CEST - Fixture Coverage Test Plan Link
+
+Changed:
+- Recorded gate hardening commit `f14a136799`.
+- Linked `dev/modernization/fixture-coverage-report.php` from `specs/modernization/test-plan.md` as the repeatable fixture breadth check for restored fixture databases.
+
+Verified:
+- `php dev/modernization/markdown-check.php` passed.
+- `bash dev/modernization/gate.sh` passed.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, and project media fixture remain unavailable.
+
+Next:
+- Commit the test-plan update.

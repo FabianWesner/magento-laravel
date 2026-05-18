@@ -69,7 +69,7 @@ The release gate is feature-ID driven. A feature ID is complete only when the fo
 | Laravel implementation tests | Every preserved/replaced feature ID | Unit, integration, Livewire, browser, API, scheduler, visual, performance, and security tests as applicable. |
 | UI screenshots | Visible feature IDs | Screenshot manifest entry from `ui-screen-inventory.md` for required roles, states, and viewports. |
 | Complex behavior spec | Cart, checkout, pricing, tax, shipping, payment, EAV, indexing, reports, cron | Reverse-engineered algorithm, fixture matrix, side effects, comparison command, and numeric approved tolerances where comparison is not exact. |
-| Fixture coverage | Every feature ID | Fixture manifest maps data to the feature ID and can be restored locally and in CI. |
+| Fixture coverage | Every feature ID | Fixture manifest maps data to the feature ID, can be restored locally and in CI, and `php dev/modernization/fixture-coverage-report.php --format=markdown` reports no fixture matrix gaps for the canonical demo fixture. |
 | Release evidence | Every feature ID | CI/report link or local artifact retained under the release evidence path. |
 | Progress and commit evidence | Every backlog item | `specs/progress.md` entry and commit hash or evidence artifact. |
 
@@ -117,6 +117,14 @@ flowchart TD
 | Performance fixture | Proves scale behavior. | Large catalog, many attributes, many categories, many customers, meaningful order history. |
 
 The detailed demo matrix is defined in `specs/modernization/data-fixtures.md` and is mandatory for final acceptance. Magento sample data alone is not enough unless it is extended to cover the matrix.
+
+Use the read-only fixture coverage reporter as the repeatable local/CI smoke check for fixture breadth:
+
+```bash
+DB_DSN='mysql:host=<host>;dbname=<fixture_db>' DB_USER=<user> DB_PASS=<pass> php dev/modernization/fixture-coverage-report.php --format=markdown
+```
+
+The report is a coverage signal, not final proof by itself. Final acceptance still requires per-feature fixture IDs, characterization evidence, Laravel parity tests, visual evidence, and release evidence.
 
 ### Data Rules
 
