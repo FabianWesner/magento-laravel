@@ -31,6 +31,30 @@ preg_match_all('/\b(?:SF|AD|CB|API|CJ)-\d{3}\b/', $catalogContent, $matches);
 $featureIds = array_values(array_unique($matches[0]));
 sort($featureIds);
 
+/**
+ * @return list<string>
+ */
+function featureIdsFromFirstColumn(string $content): array
+{
+    preg_match_all('/^\|\s*((?:SF|AD|CB|API|CJ)-\d{3})\s*\|/m', $content, $matches);
+    $ids = array_values(array_unique($matches[1] ?? []));
+    sort($ids);
+
+    return $ids;
+}
+
+/**
+ * @param  list<string>  $featureIds
+ */
+function summarizeMissingIds(array $featureIds): string
+{
+    $count = count($featureIds);
+    $sample = array_slice($featureIds, 0, 10);
+    $suffix = $count > count($sample) ? ', ...' : '';
+
+    return "{$count} missing: ".implode(', ', $sample).$suffix;
+}
+
 $errors = [];
 $warnings = [];
 foreach ($requiredFiles as $label => $path) {
@@ -49,6 +73,32 @@ foreach ($requiredFiles as $label => $path) {
 
     if (! preg_match('/\b(?:SF|AD|CB|API|CJ)-\d{3}\b|ALL|ARCH|DOC|OPS|TOOL/', $content)) {
         $errors[] = "{$path}: no feature IDs or approved cross-cutting scopes found";
+    }
+}
+
+$perFeatureTraceabilityFiles = [
+    'feature inventory worksheet' => 'specs/modernization/feature-inventory.md',
+    'test plan traceability matrix' => 'specs/modernization/test-plan.md',
+];
+
+if ($strict) {
+    foreach ($perFeatureTraceabilityFiles as $label => $path) {
+        $content = file_get_contents($path);
+        if ($content === false) {
+            continue;
+        }
+
+        $rowFeatureIds = featureIdsFromFirstColumn($content);
+        $missing = array_values(array_diff($featureIds, $rowFeatureIds));
+        $unknown = array_values(array_diff($rowFeatureIds, $featureIds));
+
+        if ($missing !== []) {
+            $warnings[] = "Strict traceability missing per-feature rows in {$label}: ".summarizeMissingIds($missing);
+        }
+
+        if ($unknown !== []) {
+            $warnings[] = "Strict traceability contains IDs outside the catalog in {$label}: ".implode(', ', $unknown);
+        }
     }
 }
 
