@@ -30,6 +30,32 @@ Next:
 
 ## Entries
 
+## 2026-05-19 01:08 CEST - Route Fallback Target Gate
+
+Changed:
+- Added `dev/modernization/validate-route-fallback-target.php` to validate the route strangler ADRs, ADR 0008 auth/session boundary, architecture specs, route fallback POC, roadmap, release strategy, and user/developer documentation references.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires approved ADR 0008 status, Laravel route ownership metadata, `Route::fallback` registration, fallback/ownership app artifacts, logging context, route fallback tests, and route fallback evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `routing fallback`, `routing middleware`, `http tests`, and `logging context` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-route-fallback-target.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-route-fallback-target.php` passed.
+- `php dev/modernization/validate-route-fallback-target.php --final` failed as expected because ADR 0008 is not approved and the Laravel target does not yet include route ownership metadata, fallback route registration, fallback app artifacts, route fallback tests, or route fallback evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the route fallback target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, missing module implementation/evidence, missing route fallback approval/implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php`, `bash -n dev/modernization/gate.sh`, `php -l dev/modernization/validate-route-fallback-target.php`, and `git diff --check` passed.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, module manifest/provider/policy/event/job/config/contract implementation and evidence, approved ADR 0008 route fallback boundary, route ownership/fallback implementation and evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the route fallback target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 01:03 CEST - Module Target Gate
 
 Changed:
