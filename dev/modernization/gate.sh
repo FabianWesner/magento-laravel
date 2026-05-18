@@ -100,6 +100,11 @@ run_visual_baseline_capture_syntax() {
 run_optional "modernization PHP syntax" run_php_syntax
 run_maybe_unavailable "visual baseline capture syntax" run_visual_baseline_capture_syntax
 run_optional "markdown checks" php dev/modernization/markdown-check.php
+if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
+  run_optional "documentation content final check" php dev/modernization/validate-docs-content.php --final
+else
+  run_optional "documentation content template check" php dev/modernization/validate-docs-content.php
+fi
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
 if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "UI screen inventory final check" php dev/modernization/validate-ui-screen-inventory.php --final

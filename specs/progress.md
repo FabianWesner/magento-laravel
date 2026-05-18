@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:50 CEST - Documentation Content Gate
+
+Changed:
+- Added `dev/modernization/validate-docs-content.php` to validate MkDocs modernization content, public-doc checklist separation, and Docusaurus user/developer documentation coverage.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now fails while Docusaurus docs still contain planning-language placeholders instead of completed user/developer evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `testing console commands`, `filesystem`, and `strings` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-docs-content.php` passed.
+- `php dev/modernization/validate-docs-content.php` passed.
+- `php dev/modernization/validate-docs-content.php --final` failed as expected because Docusaurus user/developer docs still contain planning-language sections such as required topics, required coverage, and completion rules.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the documentation content template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the documentation content gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 00:46 CEST - Runtime Tooling Gate
 
 Changed:
