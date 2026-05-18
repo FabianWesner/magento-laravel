@@ -112,3 +112,24 @@ Blocked:
 
 Next:
 - Continue with the first unblocked preparation increment: improve baseline/inventory evidence around the core-only Magento source while waiting for project overlay, DB fixture, and media.
+
+## 2026-05-18 22:57 CEST - Inventory Script Evidence
+
+Changed:
+- Extended `dev/modernization/inventory.php` to parse Magento config XML for route front names, cron job declarations, and event observer declaration counts.
+- Updated `specs/modernization/inventory.md` so the known route list and current findings match generated inventory evidence.
+
+Verified:
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/inventory.php` passed.
+- `php dev/modernization/inventory.php --format=markdown` reports 34 route front names, 25 cron jobs, and 252 event observer declarations for the core-only Magento CE baseline.
+- `php dev/modernization/markdown-check.php` passed.
+- `php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `bash dev/modernization/gate.sh` passed after the inventory enhancement; Docusaurus browser smoke still skipped inside the sandbox because binding `127.0.0.1:3012` is unavailable there.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, and project media fixture remain unavailable, so generated project-specific inventory is still blocked.
+
+Next:
+- Commit the verified inventory increment.

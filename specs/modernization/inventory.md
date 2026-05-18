@@ -20,9 +20,9 @@ The current repository keeps Magento CE `1.9.4.5` source under `core/magento-1.9
 | Non-core modules | `Cm_RedisSession` and `Phoenix_Moneybookers` are bundled community dependencies in this Magento CE source tree; no project-specific non-`Mage_*` modules were found. `Cm_RedisSession` maps to `CB-013`; `Phoenix_Moneybookers` maps to `API-004`. |
 | Live local config | `core/magento-1.9.4.5/app/etc/local.xml` exists only for the ignored local smoke install. |
 | Controllers | 232 controller files across the Magento source tree; `Mage_Adminhtml` is the largest controller surface. |
-| Routes | Frontend/admin front names include catalog, customer, checkout, sales, cms, api, api2, admin, and supporting modules. |
-| Cron | Core cron jobs are declared in module config XML and must be inventoried into scheduler tasks before migration. |
-| Events/observers | Core event/observer declarations are currently XML-backed and must be replaced by PHP event/listener registration for migrated code. |
+| Routes | Generated inventory reports 34 route front names, including catalog, customer, checkout, sales, cms, api, admin, payment-provider route names, and supporting modules. |
+| Cron | Generated inventory reports 25 core cron jobs declared in module config XML; each must map to a Laravel scheduler task or approved retirement before migration. |
+| Events/observers | Generated inventory reports 252 core event observer declarations; XML-backed observers must be replaced by PHP event/listener registration for migrated code. |
 | API declarations | API-related XML exists under core modules: `api.xml`, `api2.xml`, `wsdl.xml`, and `wsi.xml`. |
 | Setup scripts | 775 SQL setup files and 33 data setup files under core modules. |
 | Design packages | Adminhtml `default/default`; frontend `base/default`, `default/blank`, `default/default`, `default/iphone`, `default/modern`, and `rwd/default`; install `default/default`. |
@@ -48,7 +48,7 @@ See `specs/modernization/install-verification.md` for the full local setup recor
 
 Known front names include:
 
-`admin`, `api`, `authorizenet`, `captcha`, `catalog`, `catalogsearch`, `centinel`, `checkout`, `cms`, `contacts`, `core`, `customer`, `directory`, `downloadable`, `giftmessage`, `install`, `media`, `newsletter`, `oauth`, `payflow`, `paygate`, `paypal`, `persistent`, `productalert`, `review`, `rss`, `sales`, `shipping`, `tag`, `usa`, `wishlist`.
+`admin`, `api`, `authorizenet`, `captcha`, `catalog`, `catalogsearch`, `centinel`, `checkout`, `cms`, `contacts`, `core`, `customer`, `directory`, `downloadable`, `giftmessage`, `install`, `media`, `moneybookers`, `newsletter`, `oauth`, `payflow`, `paygate`, `paypal`, `persistent`, `poll`, `productalert`, `review`, `rss`, `sales`, `sendfriend`, `shipping`, `tag`, `wishlist`, `xmlconnect`.
 
 ## Project-Specific Inventory Required
 
@@ -84,6 +84,7 @@ find app/code -path '*/sql/*/*.php' -o -path '*/data/*/*.php'
 find app/design skin js -maxdepth 4 -type f | sort
 rg -n '<rewrite>|<events>|<observers>|<crontab>|<routers>|<adminhtml>|<frontend>|<api>|<api2>' app/code app/etc
 rg -n 'Mage::getModel|Mage::helper|Mage::dispatchEvent|Zend_|Varien_' app/code app/design shell
+php dev/modernization/inventory.php --format=json
 ```
 
 ## Inventory Acceptance Criteria

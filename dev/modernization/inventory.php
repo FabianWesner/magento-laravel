@@ -67,6 +67,28 @@ function countFind(string $root, string $path, string $suffix = ''): int
     return $count;
 }
 
+function findNamedFiles(string $root, string $path, string $filename): array
+{
+    $base = $root.DIRECTORY_SEPARATOR.$path;
+    if (! is_dir($base)) {
+        return [];
+    }
+
+    $matches = [];
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS));
+    foreach ($iterator as $file) {
+        if (! $file->isFile()) {
+            continue;
+        }
+        if ($file->getFilename() === $filename) {
+            $matches[] = $file->getPathname();
+        }
+    }
+    sort($matches);
+
+    return $matches;
+}
+
 function countPathContains(string $root, string $path, string $contains, string $suffix = ''): int
 {
     $base = $root.DIRECTORY_SEPARATOR.$path;
@@ -140,6 +162,94 @@ function countCommunityProjectFiles(string $root): int
     return $count;
 }
 
+function moduleNameFromConfigPath(string $root, string $file): string
+{
+    $relative = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($root.DIRECTORY_SEPARATOR, '', $file));
+    $parts = explode('/', $relative);
+
+    if (count($parts) >= 5 && $parts[0] === 'app' && $parts[1] === 'code') {
+        return $parts[3].'_'.$parts[4];
+    }
+
+    return $relative;
+}
+
+function loadXml(string $file): ?SimpleXMLElement
+{
+    $previous = libxml_use_internal_errors(true);
+    $xml = simplexml_load_file($file);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous);
+
+    return $xml instanceof SimpleXMLElement ? $xml : null;
+}
+
+function collectRouteFrontNames(string $root): array
+{
+    $frontNames = [];
+    foreach (findNamedFiles($root, 'app/code', 'config.xml') as $file) {
+        $xml = loadXml($file);
+        if (! $xml instanceof SimpleXMLElement) {
+            continue;
+        }
+
+        foreach ($xml->xpath('//routers/*/args/frontName') ?: [] as $node) {
+            $frontName = trim((string) $node);
+            if ($frontName !== '') {
+                $frontNames[] = $frontName;
+            }
+        }
+    }
+
+    $frontNames = array_values(array_unique($frontNames));
+    sort($frontNames);
+
+    return $frontNames;
+}
+
+function collectCronJobs(string $root): array
+{
+    $jobs = [];
+    foreach (findNamedFiles($root, 'app/code', 'config.xml') as $file) {
+        $xml = loadXml($file);
+        if (! $xml instanceof SimpleXMLElement) {
+            continue;
+        }
+
+        foreach ($xml->xpath('//crontab/jobs/*') ?: [] as $job) {
+            $schedule = trim((string) ($job->schedule->cron_expr ?? ''));
+            $configPath = trim((string) ($job->schedule->config_path ?? ''));
+            $jobs[] = [
+                'code' => $job->getName(),
+                'module' => moduleNameFromConfigPath($root, $file),
+                'schedule' => $schedule !== '' ? $schedule : null,
+                'config_path' => $configPath !== '' ? $configPath : null,
+                'run_model' => trim((string) ($job->run->model ?? '')),
+                'source' => str_replace($root.'/', '', $file),
+            ];
+        }
+    }
+
+    usort($jobs, static fn (array $left, array $right): int => $left['code'] <=> $right['code']);
+
+    return $jobs;
+}
+
+function countObserverDeclarations(string $root): int
+{
+    $count = 0;
+    foreach (findNamedFiles($root, 'app/code', 'config.xml') as $file) {
+        $xml = loadXml($file);
+        if (! $xml instanceof SimpleXMLElement) {
+            continue;
+        }
+
+        $count += count($xml->xpath('//events/*/observers/*') ?: []);
+    }
+
+    return $count;
+}
+
 $moduleFiles = files($root.'/app/etc/modules/*.xml');
 $nonMageModuleFiles = array_values(array_filter($moduleFiles, static fn (string $file): bool => ! str_starts_with(basename($file), 'Mage_')));
 $knownPlatformModuleFiles = [
@@ -151,6 +261,8 @@ $unknownNonMageModuleFiles = array_values(array_filter(
     static fn (string $file): bool => ! in_array(basename($file), $knownPlatformModuleFiles, true)
 ));
 $communityProjectSourceFiles = countCommunityProjectFiles($root);
+$routeFrontNames = collectRouteFrontNames($root);
+$cronJobs = collectCronJobs($root);
 
 $report = [
     'root' => $root,
@@ -172,6 +284,9 @@ $report = [
         'wsi_xml' => countFiles($root, 'app/code/core/Mage/*/etc/wsi.xml'),
         'sql_setup_files' => countFiles($root, 'app/code/core/Mage/*/sql/*/*.php'),
         'data_setup_files' => countFiles($root, 'app/code/core/Mage/*/data/*/*.php'),
+        'route_front_names' => count($routeFrontNames),
+        'cron_jobs' => count($cronJobs),
+        'observer_declarations' => countObserverDeclarations($root),
         'unit_tests' => countFind($root, 'tests/unit', 'Test.php'),
         'browser_specs' => countFind($root, 'tests/browser', '.php') + countFind($root, 'playwright', '.spec.ts'),
     ],
@@ -179,6 +294,8 @@ $report = [
     'design_areas' => immediateDirs($root.'/app/design'),
     'skin_areas' => immediateDirs($root.'/skin'),
     'entrypoints' => array_values(array_filter(['index.php', 'api.php', 'get.php', 'install.php', 'cron.php', 'cron.sh'], static fn (string $file): bool => is_file($root.'/'.$file))),
+    'route_front_names' => $routeFrontNames,
+    'cron_jobs' => $cronJobs,
     'missing_project_overlay_items' => [
         'app/code/local project modules',
         'app/code/community project modules',
@@ -207,11 +324,26 @@ echo "- Community project source files: {$report['core_only_assessment']['app_co
 echo "- Core modules: {$report['counts']['core_modules']}\n";
 echo "- Module declarations: {$report['counts']['module_declarations']}\n";
 echo "- Controller files: {$report['counts']['controller_files']}\n";
+echo "- Route front names: {$report['counts']['route_front_names']}\n";
+echo "- Cron jobs: {$report['counts']['cron_jobs']}\n";
+echo "- Event observer declarations: {$report['counts']['observer_declarations']}\n";
 echo "- SQL setup files: {$report['counts']['sql_setup_files']}\n";
 echo "- Data setup files: {$report['counts']['data_setup_files']}\n";
 echo "- Unit tests: {$report['counts']['unit_tests']}\n";
 echo "- Browser specs: {$report['counts']['browser_specs']}\n";
+echo '- Entrypoints: `'.implode('`, `', $report['entrypoints'])."`\n";
 echo '- Live local config: '.($report['core_only_assessment']['has_local_xml'] ? 'yes' : 'no')."\n\n";
+echo "## Route Front Names\n\n";
+echo '`'.implode('`, `', $report['route_front_names'])."`\n\n";
+echo "## Cron Jobs Found\n\n";
+echo "| Job | Schedule | Config Path | Run Model | Source |\n";
+echo "| --- | --- | --- | --- | --- |\n";
+foreach ($report['cron_jobs'] as $job) {
+    $schedule = $job['schedule'] ?? '';
+    $configPath = $job['config_path'] ?? '';
+    echo "| `{$job['code']}` | `{$schedule}` | `{$configPath}` | `{$job['run_model']}` | `{$job['source']}` |\n";
+}
+echo "\n";
 echo "## Core-Only Assessment\n\n";
 if (
     ! $report['core_only_assessment']['has_app_code_local']
