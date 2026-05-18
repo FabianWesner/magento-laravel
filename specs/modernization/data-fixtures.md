@@ -80,7 +80,7 @@ Current Magento sample data result on 2026-05-18:
 | Payment and API users | CB-008, API-001, API-002, API-003, API-004, AD-012 | Active payment config exists; SOAP/XML-RPC API users and OAuth consumers are missing. | Gap |
 | CMS and media | SF-002, SF-005, AD-009 | CMS pages, blocks, widgets, and product media rows are present. | Covered |
 | Admin users and roles | AD-001, AD-012 | One admin user and two admin roles are present; role coverage is insufficient. | Gap |
-| Cron and reports | CJ-001 through CJ-025, AD-014 | Report aggregates are populated; cron schedule rows are missing. | Gap |
+| Cron and reports | CJ-001, CJ-002, CJ-003, CJ-004, CJ-005, CJ-006, CJ-007, CJ-008, CJ-009, CJ-010, CJ-011, CJ-012, CJ-013, CJ-014, CJ-015, CJ-016, CJ-017, CJ-018, CJ-019, CJ-020, CJ-021, CJ-022, CJ-023, CJ-024, CJ-025, AD-014 | Report aggregates are populated; cron schedule rows are missing. | Gap |
 
 Summary: Magento sample data covers 6 of 14 checked fixture areas and leaves 8 known gaps. It is useful for smoke tests but is not sufficient as the canonical demo fixture.
 

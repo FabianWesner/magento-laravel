@@ -122,6 +122,17 @@ function addCheck(array &$checks, string $area, array $featureIds, string $requi
     ];
 }
 
+/**
+ * @return list<string>
+ */
+function numberedFeatureIds(string $prefix, int $start, int $end): array
+{
+    return array_map(
+        fn (int $number): string => sprintf('%s-%03d', $prefix, $number),
+        range($start, $end),
+    );
+}
+
 $checks = [];
 
 $productTypes = groupCounts($pdo, 'SELECT type_id AS label, COUNT(*) AS total FROM '.quoteTable('catalog_product_entity').' GROUP BY type_id');
@@ -326,7 +337,7 @@ $reportRows = countTable($pdo, 'sales_order_aggregated_created')
 addCheck(
     $checks,
     'Cron and reports',
-    ['CJ-001 through CJ-025', 'AD-014'],
+    [...numberedFeatureIds('CJ', 1, 25), 'AD-014'],
     'Cron schedule rows and populated report aggregate tables.',
     "cron rows: {$cronRows}; selected report aggregate rows: {$reportRows}",
     $cronRows >= 1 && $reportRows >= 1,

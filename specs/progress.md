@@ -307,3 +307,28 @@ Blocked:
 
 Next:
 - Commit the traceability row audit hardening, then continue unblocked verification/tooling work without claiming final modernization completion.
+
+## 2026-05-18 23:36 CEST - Fixture Cron Feature ID Expansion
+
+Changed:
+- Expanded the fixture coverage reporter's cron/report feature mapping from the range text `CJ-001 through CJ-025` to explicit `CJ-001` through `CJ-025` IDs plus `AD-014`.
+- Updated the sample fixture coverage table in `specs/modernization/data-fixtures.md` to use the same explicit cron feature IDs.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console commands`, `collections`, and `testing console commands` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/fixture-coverage-report.php` passed.
+- `php dev/modernization/markdown-check.php` passed.
+- Escalated fixture coverage JSON report against `magento1945` lists `CJ-001` through `CJ-025` as separate `feature_ids` entries in the cron/report check.
+- Escalated fixture coverage Markdown report against `magento1945` lists `CJ-001` through `CJ-025` explicitly in the cron/report row.
+- `php dev/modernization/validate-feature-traceability.php --strict` passed for 79 catalog IDs.
+- `php dev/modernization/validate-feature-traceability.php --final` still fails as expected because required final traceability evidence remains placeholder or missing.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento bash dev/modernization/gate.sh` passed, including fixture coverage and Docusaurus browser smoke.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the fixture cron feature ID expansion, then continue with unblocked traceability and verification hardening.
