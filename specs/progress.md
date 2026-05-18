@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:57 CEST - EAV Target Gate
+
+Changed:
+- Added `dev/modernization/validate-eav-target.php` to validate the EAV preservation ADRs, architecture specs, POC plan, test plan, backlog, and Docusaurus developer references.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires EAV repository/service files, EAV parity tests, EAV query-count coverage, no direct EAV value-table writes, and EAV parity evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `database queries`, `testing database`, and `eloquent repositories` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-eav-target.php` passed.
+- `php dev/modernization/validate-eav-target.php` passed.
+- `php dev/modernization/validate-eav-target.php --final` failed as expected because the Laravel target does not yet include EAV repository/service files, EAV parity tests, query-count coverage, or EAV parity evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the EAV target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the EAV target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 00:53 CEST - Livewire Target Gate
 
 Changed:
