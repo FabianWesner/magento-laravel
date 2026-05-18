@@ -133,6 +133,44 @@ function numberedFeatureIds(string $prefix, int $start, int $end): array
     );
 }
 
+/**
+ * @return list<string>
+ */
+function catalogFeatureIds(string $path): array
+{
+    if (! is_file($path)) {
+        throw new RuntimeException("Missing feature catalog: {$path}");
+    }
+
+    $content = file_get_contents($path);
+    if ($content === false) {
+        throw new RuntimeException("Unable to read feature catalog: {$path}");
+    }
+
+    preg_match_all('/\b(?:SF|AD|CB|API|CJ)-\d{3}\b/', $content, $matches);
+    $ids = array_values(array_unique($matches[0] ?? []));
+    sort($ids);
+
+    return $ids;
+}
+
+/**
+ * @param  list<array{area: string, feature_ids: list<string>, required: string, evidence: string, status: string}>  $checks
+ * @param  list<string>  $catalogFeatureIds
+ * @return list<string>
+ */
+function unknownCheckFeatureIds(array $checks, array $catalogFeatureIds): array
+{
+    $unknown = [];
+    foreach ($checks as $check) {
+        foreach (array_diff($check['feature_ids'], $catalogFeatureIds) as $featureId) {
+            $unknown[] = "{$check['area']}: {$featureId}";
+        }
+    }
+
+    return array_values(array_unique($unknown));
+}
+
 $checks = [];
 
 $productTypes = groupCounts($pdo, 'SELECT type_id AS label, COUNT(*) AS total FROM '.quoteTable('catalog_product_entity').' GROUP BY type_id');
@@ -342,6 +380,19 @@ addCheck(
     "cron rows: {$cronRows}; selected report aggregate rows: {$reportRows}",
     $cronRows >= 1 && $reportRows >= 1,
 );
+
+try {
+    $unknownFeatureIds = unknownCheckFeatureIds($checks, catalogFeatureIds('specs/modernization/magento-feature-catalog.md'));
+} catch (Throwable $throwable) {
+    fwrite(STDERR, "Fixture coverage feature ID validation failed: {$throwable->getMessage()}\n");
+    exit(1);
+}
+
+if ($unknownFeatureIds !== []) {
+    fwrite(STDERR, "Fixture coverage report contains feature IDs outside the catalog:\n");
+    fwrite(STDERR, '- '.implode("\n- ", $unknownFeatureIds)."\n");
+    exit(1);
+}
 
 $covered = count(array_filter($checks, static fn (array $check): bool => $check['status'] === 'covered'));
 $gaps = count($checks) - $covered;

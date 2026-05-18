@@ -356,3 +356,27 @@ Blocked:
 
 Next:
 - Commit the traceability catalog membership check, then continue with unblocked verification hardening.
+
+## 2026-05-18 23:30 CEST - Fixture Reporter Catalog Guard
+
+Changed:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Added catalog-backed feature ID validation inside `dev/modernization/fixture-coverage-report.php` so every generated fixture coverage `feature_ids` value must exist in `specs/modernization/magento-feature-catalog.md` before the report is emitted.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console commands`, `database testing`, and `collections` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/fixture-coverage-report.php` passed.
+- `php dev/modernization/markdown-check.php` passed.
+- Escalated fixture coverage JSON report against `magento1945` passed with catalog-backed feature ID validation enabled.
+- Temporary negative probe changing the reporter's cron/report mapping to `AD-999` made the DB-backed fixture report fail with `Fixture coverage report contains feature IDs outside the catalog: Cron and reports: AD-999`; the valid `AD-014` mapping was restored.
+- Escalated fixture coverage Markdown report against `magento1945` passed again after restoring the valid feature ID mapping.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento bash dev/modernization/gate.sh` passed, including fixture coverage and Docusaurus browser smoke.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the fixture reporter catalog guard, then continue with unblocked verification hardening.
