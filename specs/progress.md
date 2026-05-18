@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-18 23:49 CEST - Markdown Local Link Guard
+
+Changed:
+- Tightened `dev/modernization/markdown-check.php` so modernization Markdown docs now fail on broken relative local links while ignoring external URLs, site-root links, anchors, and query or fragment suffixes.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` works when run with Herd PHP `8.5` and reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `filesystem`, `console commands`, and `testing console commands` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed through Herd PHP `8.5`.
+- `php -l dev/modernization/markdown-check.php` passed through Herd PHP `8.5`.
+- `php dev/modernization/markdown-check.php` passed through Herd PHP `8.5`.
+- Temporary negative probe adding `missing-link-probe.md` to `specs/modernization/roadmap.md` made the markdown checker report `specs/modernization/roadmap.md: broken local link missing-link-probe.md`; the temporary probe was removed.
+- `git diff --check` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Markdown local link guard, then continue with unblocked verification hardening.
+
 ## 2026-05-18 21:30 Europe/Berlin - Preparation Baseline
 
 Changed:

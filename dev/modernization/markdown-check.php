@@ -40,6 +40,7 @@ foreach ($files as $file) {
     if (preg_match('/[^\x00-\x7F]/', $content) === 1) {
         $errors[] = "{$file}: contains non-ASCII characters";
     }
+    array_push($errors, ...collectLocalLinkErrors($file, $content));
 }
 
 if ($errors !== []) {
@@ -48,3 +49,53 @@ if ($errors !== []) {
 }
 
 echo 'Markdown checks passed for '.count($files)." files.\n";
+
+/**
+ * @return list<string>
+ */
+function collectLocalLinkErrors(string $file, string $content): array
+{
+    $linkCount = preg_match_all('/!?\[[^\]\n]*\]\((?<target>[^)\s]+)(?:\s+["\'][^"\']*["\'])?\)/', $content, $matches);
+    if ($linkCount === false || $linkCount === 0) {
+        return [];
+    }
+
+    $errors = [];
+    foreach ($matches['target'] as $target) {
+        $localPath = normalizeMarkdownLinkTarget($target);
+        if ($localPath === null) {
+            continue;
+        }
+
+        $resolvedPath = dirname($file).DIRECTORY_SEPARATOR.$localPath;
+        if (! file_exists($resolvedPath)) {
+            $errors[] = "{$file}: broken local link {$target}";
+        }
+    }
+
+    return $errors;
+}
+
+function normalizeMarkdownLinkTarget(string $target): ?string
+{
+    $target = trim($target);
+    if ($target === '') {
+        return null;
+    }
+
+    $target = trim($target, '<>');
+    if ($target === '' || str_starts_with($target, '#') || str_starts_with($target, '/')) {
+        return null;
+    }
+
+    if (preg_match('/^[a-z][a-z0-9+.-]*:/i', $target) === 1) {
+        return null;
+    }
+
+    $path = preg_split('/[#?]/', $target, 2)[0] ?? '';
+    if ($path === '') {
+        return null;
+    }
+
+    return rawurldecode($path);
+}
