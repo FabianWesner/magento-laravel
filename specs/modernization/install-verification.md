@@ -49,6 +49,7 @@ Current recheck on 2026-05-18:
 | Magento version | Container bootstrap reports `1.9.4.5`. |
 | Runtime PHP | Magento container uses PHP `7.4.33`; Laravel root artisan proxy uses Herd PHP `8.5.5`. |
 | Generated docroot | `.localdev/magento-docroot/` matches `core/magento-1.9.4.5/` excluding generated local runtime files while `project/` is still placeholder-only. |
+| Sample schema report | Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento php dev/modernization/schema-report.php --format=markdown` reports 362 tables and schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`. |
 | Playwright browser smoke | Main session Playwright navigation succeeded for storefront home and admin dashboard; screenshots were moved to `.localdev/magento-storefront-home-2026-05-18.png` and `.localdev/magento-admin-dashboard-2026-05-18.png`. |
 | Repo Playwright scripts | Blocked until a local Playwright package is installed; `dev/modernization/*.mjs` imports `playwright`, but this repo currently has no root `node_modules/playwright`. |
 

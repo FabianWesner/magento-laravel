@@ -133,3 +133,19 @@ Blocked:
 
 Next:
 - Commit the verified inventory increment.
+
+## 2026-05-18 22:59 CEST - Sample Schema Evidence
+
+Changed:
+- Recorded the inventory evidence commit `e9eda9c7c1` and added the local Magento sample database schema report result to `specs/modernization/install-verification.md`.
+
+Verified:
+- `docker ps --format '{{.Names}} {{.Status}}'` confirmed `magento-mysql-1` is running and healthy after sandbox escalation.
+- Restricted `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento php dev/modernization/schema-report.php --format=markdown` failed with `Operation not permitted`.
+- Escalated schema report against the local Magento sample database passed with 362 tables and schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`.
+
+Blocked:
+- This is only sample baseline schema evidence; project database fixture evidence remains blocked until a sanitized project dump is available.
+
+Next:
+- Commit the schema evidence update, then continue with unblocked baseline documentation and verification work.
