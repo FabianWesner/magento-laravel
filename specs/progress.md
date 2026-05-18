@@ -30,6 +30,34 @@ Next:
 
 ## Entries
 
+## 2026-05-19 01:23 CEST - Commerce Target Gate
+
+Changed:
+- Added `dev/modernization/validate-commerce-target.php` to validate commerce parity requirements in `specs/GOAL.md`, the Magento feature catalog, complex feature reverse-engineering plan, test plan, roadmap, backlog, risk register, visual tolerance rules, and user/developer docs.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires Laravel commerce domain/service coverage for quotes, carts, totals, product types, pricing, promotions, tax, shipping, payment, inventory, orders, invoices, shipments, credit memos, refunds, indexes, cache, and email queues.
+- Added final checks for commerce DTOs/contracts, transaction policy, locking/idempotency, external integration retries, domain events/jobs, `CB-001` through `CB-014` PHPUnit coverage, DB side-effect snapshots, dual-runtime parity, and commerce evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost fallback `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `database transactions`, `database testing`, `http client retry`, `queue jobs testing`, and `cache locks` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-commerce-target.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-commerce-target.php` passed.
+- `php dev/modernization/validate-commerce-target.php --final` failed as expected because the Laravel target does not yet include commerce domain/services, DTO/value objects, transaction policy, locking/idempotency controls, integration retry controls, domain events/jobs, commerce PHPUnit coverage, or commerce evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the commerce target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, missing module implementation/evidence, missing route fallback approval/implementation/evidence, missing cron/job implementation/evidence, missing API implementation/evidence, missing commerce implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php`, `bash -n dev/modernization/gate.sh`, `php -l dev/modernization/validate-commerce-target.php`, and `git diff --check` passed.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, completed user/developer documentation evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, module manifest/provider/policy/event/job/config/contract implementation and evidence, approved ADR 0008 route fallback boundary, route ownership/fallback implementation and evidence, cron scheduler/command/job/event implementation and evidence, API route/controller/resource/request/auth implementation and contract evidence, commerce domain/services/contracts/DTOs/transaction/locking/retry implementation and evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the commerce target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 01:17 CEST - API Target Gate
 
 Changed:
