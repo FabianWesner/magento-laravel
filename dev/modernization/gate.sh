@@ -115,6 +115,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "security/accessibility final check" php dev/modernization/validate-security-accessibility.php --final
   run_optional "production readiness final check" php dev/modernization/validate-production-readiness.php --final
   run_optional "runtime tooling final check" php dev/modernization/validate-runtime-tooling.php --final
+  run_optional "bootstrap target final check" php dev/modernization/validate-bootstrap-target.php --final
   run_optional "Livewire target final check" php dev/modernization/validate-livewire-target.php --final
   run_optional "EAV target final check" php dev/modernization/validate-eav-target.php --final
   run_optional "module target final check" php dev/modernization/validate-module-target.php --final
@@ -136,6 +137,7 @@ else
   run_optional "security/accessibility template check" php dev/modernization/validate-security-accessibility.php
   run_optional "production readiness template check" php dev/modernization/validate-production-readiness.php
   run_optional "runtime tooling template check" php dev/modernization/validate-runtime-tooling.php
+  run_optional "bootstrap target template check" php dev/modernization/validate-bootstrap-target.php
   run_optional "Livewire target template check" php dev/modernization/validate-livewire-target.php
   run_optional "EAV target template check" php dev/modernization/validate-eav-target.php
   run_optional "module target template check" php dev/modernization/validate-module-target.php
