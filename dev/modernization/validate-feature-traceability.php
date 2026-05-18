@@ -34,6 +34,18 @@ sort($featureIds);
 /**
  * @return list<string>
  */
+function featureIdsFromContent(string $content): array
+{
+    preg_match_all('/\b(?:SF|AD|CB|API|CJ)-\d{3}\b/', $content, $matches);
+    $ids = array_values(array_unique($matches[0] ?? []));
+    sort($ids);
+
+    return $ids;
+}
+
+/**
+ * @return list<string>
+ */
 function featureIdsFromFirstColumn(string $content): array
 {
     preg_match_all('/^\|\s*((?:SF|AD|CB|API|CJ)-\d{3})\s*\|/m', $content, $matches);
@@ -82,6 +94,18 @@ $perFeatureTraceabilityFiles = [
 ];
 
 if ($strict) {
+    foreach ($requiredFiles as $label => $path) {
+        $content = file_get_contents($path);
+        if ($content === false) {
+            continue;
+        }
+
+        $unknown = array_values(array_diff(featureIdsFromContent($content), $featureIds));
+        if ($unknown !== []) {
+            $warnings[] = "Strict traceability contains IDs outside the catalog in {$label}: ".implode(', ', $unknown);
+        }
+    }
+
     foreach ($perFeatureTraceabilityFiles as $label => $path) {
         $content = file_get_contents($path);
         if ($content === false) {

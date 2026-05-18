@@ -332,3 +332,27 @@ Blocked:
 
 Next:
 - Commit the fixture cron feature ID expansion, then continue with unblocked traceability and verification hardening.
+
+## 2026-05-18 23:27 CEST - Traceability Catalog Membership Check
+
+Changed:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Tightened `dev/modernization/validate-feature-traceability.php --strict` so every `SF-*`, `AD-*`, `CB-*`, `API-*`, and `CJ-*` ID mentioned in required modernization specs must exist in `specs/modernization/magento-feature-catalog.md`.
+
+Verified:
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console commands`, `testing console commands`, and `collections` against Laravel framework `13.x` docs.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-feature-traceability.php` passed.
+- `php dev/modernization/validate-feature-traceability.php --strict` passed for 79 catalog IDs.
+- Temporary negative probe with `SF-999` in `specs/modernization/data-fixtures.md` made `php dev/modernization/validate-feature-traceability.php --strict` fail with `Strict traceability contains IDs outside the catalog in fixtures: SF-999`; the temporary probe was removed.
+- `php dev/modernization/validate-feature-traceability.php --final` still fails as expected because required final traceability evidence remains placeholder or missing.
+- `php dev/modernization/markdown-check.php` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the traceability catalog membership check, then continue with unblocked verification hardening.
