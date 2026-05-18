@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:18 CEST - Visual Tolerances Gate
+
+Changed:
+- Added `dev/modernization/validate-visual-tolerances.php` to verify the visual tolerance spec has required threshold, allowed-mask, override-manifest, and approval-rule structure.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now rejects placeholder visual override approval evidence.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `SearchDocs` succeeded via escalation for `console commands`, `filesystem`, and `testing console commands` against Laravel framework `13.x` docs before this increment.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-visual-tolerances.php` passed.
+- `php dev/modernization/validate-visual-tolerances.php` passed.
+- `php dev/modernization/validate-visual-tolerances.php --final` failed as expected because the current override manifest still contains placeholder evidence.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the visual tolerances template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on missing UI screenshot manifest, placeholder visual override evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the visual tolerances gate, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:15 CEST - Visual Baseline Manifest Capture
 
 Changed:

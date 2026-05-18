@@ -103,8 +103,10 @@ run_optional "markdown checks" php dev/modernization/markdown-check.php
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
 if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "UI screen inventory final check" php dev/modernization/validate-ui-screen-inventory.php --final
+  run_optional "visual tolerances final check" php dev/modernization/validate-visual-tolerances.php --final
 else
   run_optional "UI screen inventory template check" php dev/modernization/validate-ui-screen-inventory.php
+  run_optional "visual tolerances template check" php dev/modernization/validate-visual-tolerances.php
 fi
 run_maybe_unavailable "Magento docroot verification" run_magento_docroot_verification
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
