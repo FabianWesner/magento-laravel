@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 00:15 CEST - Visual Baseline Manifest Capture
+
+Changed:
+- Extended `dev/modernization/capture-visual-baseline.mjs` with optional manifest output metadata so screenshot capture can append rows compatible with the UI screen inventory final gate.
+- Kept the existing `--url` / `--out` screenshot-only workflow backward compatible.
+- Added a modernization gate syntax check for the visual baseline capture helper.
+
+Verified:
+- Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console commands`, `filesystem`, and `testing console commands` against Laravel framework `13.x` docs.
+- `bash -n dev/modernization/gate.sh` passed.
+- `node --check dev/modernization/capture-visual-baseline.mjs` passed.
+- `node dev/modernization/capture-visual-baseline.mjs --help` printed the screenshot and optional manifest usage.
+- `node dev/modernization/capture-visual-baseline.mjs --url=http://127.0.0.1:8090 --manifest=/tmp/magento-lts-visual-manifest-test.md` failed fast as expected because manifest metadata requires `--runtime`.
+- A full capture smoke against a `data:` URL could not run because the local Node tooling does not have the `playwright` package installed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the new visual baseline capture syntax check.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, local Playwright capture runtime, per-feature characterization evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the visual baseline manifest capture support, then continue with unblocked verification hardening.
+
 ## 2026-05-19 00:09 CEST - UI Screen Inventory Gate
 
 Changed:

@@ -88,7 +88,17 @@ run_magento_docroot_verification() {
   fi
 }
 
+run_visual_baseline_capture_syntax() {
+  if ! command -v node >/dev/null 2>&1; then
+    echo "node is not available."
+    return 2
+  fi
+
+  node --check dev/modernization/capture-visual-baseline.mjs
+}
+
 run_optional "modernization PHP syntax" run_php_syntax
+run_maybe_unavailable "visual baseline capture syntax" run_visual_baseline_capture_syntax
 run_optional "markdown checks" php dev/modernization/markdown-check.php
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
 if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
