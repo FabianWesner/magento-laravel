@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:35 CEST - Complex Feature Parity ID Coverage
+
+Changed:
+- Added PHPUnit parity coverage for missing complex and edge/failure feature IDs `SF-007`, `SF-008`, `SF-009`, `AD-011`, and `AD-016`.
+- Covered storefront cart, checkout, multishipping checkout, admin cache/index/compiler, and admin tax/currency markers with fixture IDs, Magento dual-runtime comparison payloads, DB snapshots, DB deltas, side effects, failure/edge cases, retry, rollback, and recovery markers.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent tests/Feature/ComplexFeatureParityCoverageTest.php` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/ComplexFeatureParityCoverageTest.php` passed with 2 tests and 7 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-complex-reverse-engineering-readiness.php --final` now fails only because final complex reverse-engineering evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-edge-failure-readiness.php --final` now fails only because final edge/failure readiness evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 80 tests and 519 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 136 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final complex reverse-engineering evidence, final edge/failure readiness evidence, fixture/schema DB checks, project overlay, project database/media fixtures, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the complex feature parity ID coverage, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:31 CEST - Runtime Tooling Final Verification
 
 Changed:
