@@ -44,6 +44,8 @@ class DomainFoundationTest extends TestCase
         'AD-002',
         'AD-003',
         'AD-004',
+        'AD-005',
+        'AD-006',
         'AD-007',
         'AD-009',
         'AD-010',
@@ -52,11 +54,13 @@ class DomainFoundationTest extends TestCase
         'AD-015',
         'AD-016',
         'AD-017',
-        'CB-014',
         'CB-006',
+        'CB-008',
+        'CB-010',
         'CB-011',
         'CB-012',
         'CB-013',
+        'CB-014',
         'CJ-001',
         'CJ-002',
         'CJ-016',
@@ -771,6 +775,110 @@ class DomainFoundationTest extends TestCase
         ]);
     }
 
+    public function test_domain_fact_seeder_provides_admin_sales_fulfillment_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $queryService = $this->app->make(DomainQueryService::class);
+        $defaultOrderSnapshot = $queryService->snapshot('sales_order', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deOrderSnapshot = $queryService->snapshot('sales_order', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultInvoiceSnapshot = $queryService->snapshot('sales_invoice', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $defaultShipmentSnapshot = $queryService->snapshot('sales_shipment', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deShipmentSnapshot = $queryService->snapshot('sales_shipment', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultCreditMemoSnapshot = $queryService->snapshot('sales_credit_memo', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $defaultTransactionSnapshot = $queryService->snapshot('sales_transaction', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $defaultOrderPayloads = array_column($defaultOrderSnapshot['payload']['rows'], 'payload');
+        $deOrderPayloads = array_column($deOrderSnapshot['payload']['rows'], 'payload');
+        $defaultInvoicePayloads = array_column($defaultInvoiceSnapshot['payload']['rows'], 'payload');
+        $defaultShipmentPayloads = array_column($defaultShipmentSnapshot['payload']['rows'], 'payload');
+        $deShipmentPayloads = array_column($deShipmentSnapshot['payload']['rows'], 'payload');
+        $defaultCreditMemoPayloads = array_column($defaultCreditMemoSnapshot['payload']['rows'], 'payload');
+        $defaultTransactionPayloads = array_column($defaultTransactionSnapshot['payload']['rows'], 'payload');
+
+        $this->assertContains('SalesOrder', $this->domainContexts());
+        $this->assertContains('SalesInvoice', $this->domainContexts());
+        $this->assertContains('SalesShipment', $this->domainContexts());
+        $this->assertContains('SalesCreditMemo', $this->domainContexts());
+        $this->assertContains('SalesTransaction', $this->domainContexts());
+
+        $this->assertSame('SalesOrder', $defaultOrderSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultOrderSnapshot['payload']['count']);
+        $this->assertSame(['processing', 'payment_review', 'complete'], array_column($defaultOrderPayloads, 'status'));
+        $this->assertSame('100000002', $defaultOrderPayloads[1]['increment_id']);
+        $this->assertSame('fraud_review', $defaultOrderPayloads[1]['review_reason']);
+        $this->assertTrue($defaultOrderPayloads[1]['is_problem']);
+        $this->assertTrue($defaultOrderPayloads[0]['guards']['can_hold']);
+        $this->assertSame(1, $deOrderSnapshot['payload']['count']);
+        $this->assertSame('holded', $deOrderPayloads[0]['status']);
+        $this->assertTrue($deOrderPayloads[0]['guards']['can_unhold']);
+
+        $this->assertSame('SalesInvoice', $defaultInvoiceSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultInvoiceSnapshot['payload']['count']);
+        $this->assertSame(['paid', 'paid'], array_column($defaultInvoicePayloads, 'status'));
+        $this->assertSame('online', $defaultInvoicePayloads[1]['capture_type']);
+        $this->assertTrue($defaultInvoicePayloads[1]['pdf_available']);
+
+        $this->assertSame('SalesShipment', $defaultShipmentSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultShipmentSnapshot['payload']['count']);
+        $this->assertSame(['TRACK1001', '1Z999AA10123456784'], array_column($defaultShipmentPayloads, 'tracking_number'));
+        $this->assertSame('tracking_pending', $deShipmentPayloads[0]['status']);
+        $this->assertSame('tracking_number_missing', $deShipmentPayloads[0]['problem']);
+        $this->assertTrue($deShipmentPayloads[0]['is_problem']);
+
+        $this->assertSame('SalesCreditMemo', $defaultCreditMemoSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultCreditMemoSnapshot['payload']['count']);
+        $this->assertSame(['refunded', 'failed'], array_column($defaultCreditMemoPayloads, 'status'));
+        $this->assertSame('gateway_refund_timeout', $defaultCreditMemoPayloads[1]['failure_reason']);
+        $this->assertTrue($defaultCreditMemoPayloads[1]['is_problem']);
+
+        $this->assertSame('SalesTransaction', $defaultTransactionSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultTransactionSnapshot['payload']['count']);
+        $this->assertSame(['captured', 'payment_review', 'refunded'], array_column($defaultTransactionPayloads, 'status'));
+        $this->assertSame('paypal', $defaultTransactionPayloads[1]['gateway']);
+        $this->assertTrue($defaultTransactionPayloads[1]['is_problem']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'sales_order',
+            'entity_id' => 12004,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'sales_shipment',
+            'entity_id' => 12203,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'sales_transaction',
+            'entity_id' => 12402,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+    }
+
     public function test_domain_fact_seeder_provides_tax_currency_rate_rule_job_and_problem_snapshots(): void
     {
         $this->seed(DomainFactSeeder::class);
@@ -1382,6 +1490,7 @@ class DomainFoundationTest extends TestCase
         $policy = new DomainPolicy;
 
         $this->assertTrue($policy->viewDiagnostics($this->userWithRole('catalog')), 'authorized catalog admin can inspect domain diagnostics');
+        $this->assertTrue($policy->viewDiagnostics($this->userWithRole('sales')), 'authorized sales admin can inspect sales fulfillment diagnostics');
         $this->assertFalse($policy->viewDiagnostics($this->userWithRole('denied')));
         $this->assertSame(self::DOMAIN_FEATURE_IDS, [
             'SF-001',
@@ -1399,6 +1508,8 @@ class DomainFoundationTest extends TestCase
             'AD-002',
             'AD-003',
             'AD-004',
+            'AD-005',
+            'AD-006',
             'AD-007',
             'AD-009',
             'AD-010',
@@ -1407,11 +1518,13 @@ class DomainFoundationTest extends TestCase
             'AD-015',
             'AD-016',
             'AD-017',
-            'CB-014',
             'CB-006',
+            'CB-008',
+            'CB-010',
             'CB-011',
             'CB-012',
             'CB-013',
+            'CB-014',
             'CJ-001',
             'CJ-002',
             'CJ-016',

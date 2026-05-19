@@ -30,6 +30,44 @@ Next:
 
 ## Entries
 
+## 2026-05-19 17:43 CEST - Admin Sales Fulfillment Workbench Implementation
+
+Changed:
+- Added the `/_modernization/admin/sales-fulfillment` Livewire workbench to inspect deterministic sales order, invoice, shipment, credit memo, payment transaction, and fulfillment problem rows.
+- Added `sales_order`, `sales_invoice`, `sales_shipment`, `sales_credit_memo`, and `sales_transaction` domain features and deterministic facts across default and DE store views.
+- Covered order state guards, payment review, invoice capture and PDF/email availability, shipment tracking, failed refund, offline refund, transaction gateway state, and disabled read-only inspection actions.
+- Added the admin sales fulfillment route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/domain coverage, modernization module manifest references, and ignored local admin-sales-fulfillment Playwright screenshots.
+- Extended the domain diagnostics policy to allow the `sales` role for local/testing diagnostics only.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after Chrome verification and the normal gate.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied legacy Magento order/invoice/shipment/credit memo/payment constraints, Laravel workbench implementation patterns, and project rule constraints before finalizing the slice.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/AdminSalesFulfillmentWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationAdminSalesFulfillmentRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/DomainFoundationTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l routes/web.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Domain/DomainCatalog.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Policies/Modernization/Domain/DomainPolicy.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l config/modernization.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/ModernizationAdminSalesFulfillmentRouteTest.php tests/Feature/CommerceFoundationTest.php tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationModuleRegistryTest.php tests/Feature/ModernizationAdminReportsRouteTest.php` passed with 35 tests and 966 assertions before and after Pint.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/admin/sales-fulfillment` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/admin-sales-fulfillment.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for order counts, payment-review filtering, invoice partial filtering, shipment tracking-pending filtering, failed credit memo filtering, DE transaction store-view filtering, aggregated problem rows, empty query state, denied role state, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, wrapped summary counts, readable problem cards, disabled actions, and clean current console output.
+- Screenshots were captured as `admin-sales-fulfillment-desktop-2026-05-19.png` and `admin-sales-fulfillment-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 168 tests and 2216 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final sales admin and fulfillment parity still need real project order/payment/shipment/refund fixtures, write-operation characterization, admin ACL integration, payment gateway sandbox evidence, hosted CI, manual acceptance, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Commit this verified admin sales fulfillment implementation slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 17:24 CEST - Admin Store Operations Workbench Implementation
 
 Changed:

@@ -166,6 +166,16 @@ Route::get('/_modernization/assets/admin-store-operations.css', function () {
     ]);
 })->name('modernization.assets.admin-store-operations');
 
+Route::get('/_modernization/admin/sales-fulfillment', function () {
+    return view('modernization.admin-sales-fulfillment');
+})->name('modernization.admin.sales-fulfillment');
+
+Route::get('/_modernization/assets/admin-sales-fulfillment.css', function () {
+    return response()->file(public_path('modernization/admin-sales-fulfillment.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-sales-fulfillment');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

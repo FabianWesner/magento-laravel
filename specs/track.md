@@ -2,6 +2,23 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 17:43 CEST - Why The Admin Sales Fulfillment Workbench Exists
+
+The admin sales fulfillment slice exists because Magento sales administration is where read-only inspection and money-moving operations sit next to each other. Orders, invoices, shipments, credit memos, transactions, comments, email flags, PDFs, and payment review states all share a screen family, but their write paths have very different risks. A final replacement cannot safely start by enabling cancel, hold, invoice, ship, capture, refund, reorder, label, transaction fetch, or email actions without canonical order/payment fixtures and gateway evidence.
+
+I implemented this as a read-only workbench under `/_modernization/admin/sales-fulfillment`. It exposes the shape of the behavior in Chrome: order guard flags, payment review, invoice capture metadata, shipment tracking gaps, online and offline refunds, failed refund diagnostics, gateway transaction state, DE store-view rows, empty states, denied role behavior, and disabled inspection buttons.
+
+The legacy scan shaped the scope:
+
+- Magento order actions are controlled by both ACL and model guard methods, so the workbench shows guard outcomes instead of trying to infer permissions from a single status.
+- Invoice, shipment, and credit memo creation are transactional workflows tied to payment capture, stock/item quantities, email flags, comments, PDFs, and totals. This slice keeps them visible but non-mutating.
+- Credit memo and transaction behavior can call payment gateways and update money-facing state, so failed refund and payment-review rows are diagnostics only.
+- Transaction fetch and PDF generation have side effects or rendering dependencies; the workbench exposes availability and state without fetching, generating, or downloading.
+- Fulfillment problems need to be aggregated across orders, shipments, credit memos, and transactions because operators debug them across tabs, not one table at a time.
+- The `sales` diagnostics role was added narrowly for local/testing parity work so admin sales behavior can be inspected without weakening production route boundaries.
+
+The tradeoff is intentional: this gives the migration a browser-verifiable surface for `AD-005`, `AD-006`, `CB-008`, `CB-010`, and `CB-014`, but it is not sales cutover. Real project order/payment fixtures, write characterization, admin ACL integration, gateway sandbox evidence, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
 ## 2026-05-19 17:24 CEST - Why The Admin Store Operations Workbench Exists
 
 The admin store operations slice exists because Magento's store operations are a cluster of unrelated-looking screens that share operational risk: System > Manage Stores, backups, transactional email templates, URL rewrite management, Google Sitemap, RSS feeds, and store-scoped configuration. Treating them as one diagnostic workbench makes the migration risk visible without pretending the final admin tools are ready.
