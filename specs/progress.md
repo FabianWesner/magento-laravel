@@ -30,6 +30,42 @@ Next:
 
 ## Entries
 
+## 2026-05-19 15:32 CEST - Admin Integrations API Workbench Implementation
+
+Changed:
+- Added `IntegrationDiagnosticsCatalog` to combine existing API contract records and integration adapter config into browser-ready rows for `AD-018`, `API-001` through `API-006`, and related storefront/cron integration features.
+- Added `IntegrationPolicy` and the `/_modernization/admin/integration-api` Livewire workbench with contract, adapter, callback/OAuth, problem, search, status, kind, feature, empty-state, read-only-role, and denied-role states.
+- Added the integrations/API route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/catalog coverage, and modernization module manifest references for the new route/view/policy.
+- Fixed a sidecar review finding so integration adapters without sandbox metadata are labeled `mock-required` and attention-worthy instead of healthy.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after browser verification.
+- Ignored local integrations/API Playwright screenshots.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel integrations/workbench pattern review and legacy Magento API/integration behavior context before integration; a later sidecar review found the missing-sandbox status bug before the slice was finalized.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Integrations/IntegrationDiagnosticsCatalog.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/IntegrationApiWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Policies/Modernization/Integrations/IntegrationPolicy.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationIntegrationApiRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/IntegrationFoundationTest.php tests/Feature/ApiContractFoundationTest.php tests/Feature/ModernizationIntegrationApiRouteTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 24 tests and 177 assertions.
+- `curl -I http://magento-lts.test/_modernization/admin/integration-api` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/integration-api.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial contract counts, adapters, callbacks/OAuth, problems, `AD-018` problem filtering, PayPal search, empty query state, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, initial contract cards, `API-004` problem filtering, disabled actions, and clean current console output.
+- Chrome/Playwright post-fix desktop verification passed for the `Needs attention` status filter and clean current console output.
+- Screenshots were captured as `integration-api-desktop-2026-05-19.png` and `integration-api-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `git diff --check` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 137 tests and 1759 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final API/integration parity still needs real API payload snapshots, OAuth exchanges, payment callbacks, carrier responses, currency imports, admin ACL mapping, sandbox credentials, outage drills, hosted CI, security review, production runbook, rollback rehearsal, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Commit this verified admin integrations/API workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 15:12 CEST - Admin Cron Jobs Workbench Implementation
 
 Changed:

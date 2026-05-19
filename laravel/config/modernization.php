@@ -10,6 +10,7 @@ use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
 use App\Modernization\Config\ScopedConfig;
 use App\Policies\LegacyApiContractPolicy;
 use App\Policies\Modernization\Cron\CronPolicy;
+use App\Policies\Modernization\Integrations\IntegrationPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use App\Providers\ModernizationServiceProvider;
 
@@ -40,6 +41,7 @@ return [
                 '/api/v1/contracts',
                 '/_modernization/modules',
                 '/_modernization/admin/cron-jobs',
+                '/_modernization/admin/integration-api',
             ],
             'commands' => [
                 'modernization:modules',
@@ -57,12 +59,15 @@ return [
             'config' => [
                 'api_contracts.contracts',
                 'cron_jobs.jobs',
+                'integrations.adapters',
                 'modernization.modules',
                 'scoped_config.implementation',
             ],
             'views' => [
                 'modernization.cron-jobs',
                 'livewire.cron-jobs-workbench',
+                'modernization.integration-api',
+                'livewire.integration-api-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,
@@ -71,6 +76,7 @@ return [
             'policies' => [
                 LegacyApiContractPolicy::class,
                 CronPolicy::class,
+                IntegrationPolicy::class,
                 ModuleRegistryPolicy::class,
             ],
             'api' => [

@@ -13,13 +13,14 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Status | Task | Why It Matters | Verification |
 | --- | --- | --- | --- |
+| In progress | Commit the verified admin integrations/API diagnostics workbench. | Makes SOAP/XML-RPC/REST/OAuth, payment/shipping/currency adapters, callbacks, secrets, retry, timeout, rollback, and attention states browser-visible without invoking live external services. | Focused PHPUnit, Chrome desktop/mobile, post-fix Chrome status filtering, markdown checks, diff check, and normal gate passed; commit is pending. |
 | Pending | Pick the next low-risk, browser-verifiable Magento domain slice. | Keeps implementation moving while avoiding checkout, payment, order writes, and destructive schema changes until release blockers are reduced. | Not started. |
-| Pending | Expand deterministic domain facts where the next slice needs them. | Keeps the next workbench testable in PHPUnit and Chrome before final parity replacement work. | Not started. |
 
 ## Recently Completed Local Slices
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Admin integrations/API workbench | `/_modernization/admin/integration-api`, focused PHPUnit, Chrome desktop/mobile, status/feature/query/role filters. | Not release-ready. |
 | 2026-05-19 | Admin cron/job operations workbench | `/_modernization/admin/cron-jobs`, focused PHPUnit, Chrome desktop/mobile, job/config/report/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin tax/currency workbench | `/_modernization/admin/tax-currency`, focused PHPUnit, Chrome desktop/mobile, tax/rate/rule/currency/job/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin system configuration and multistore scope workbench | `/_modernization/admin/system-config`, focused PHPUnit, Chrome desktop/mobile, config/scope/validation/secret/cache filters. | Not release-ready. |

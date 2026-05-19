@@ -96,6 +96,16 @@ Route::get('/_modernization/assets/cron-jobs.css', function () {
     ]);
 })->name('modernization.assets.cron-jobs');
 
+Route::get('/_modernization/admin/integration-api', function () {
+    return view('modernization.integration-api');
+})->name('modernization.admin.integration-api');
+
+Route::get('/_modernization/assets/integration-api.css', function () {
+    return response()->file(public_path('modernization/integration-api.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.integration-api');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

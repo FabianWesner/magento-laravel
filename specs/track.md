@@ -2,6 +2,24 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 15:32 CEST - Why The Integrations/API Workbench Exists
+
+The integrations/API slice exists because Magento's external surface is not one API. The legacy application has classic SOAP and XML-RPC entrypoints, REST/API2 with OAuth and guest behavior, admin-managed API users and roles, payment redirects and callbacks, shipping and currency service calls, webhook-style integrations, retry/timeout behavior, secrets, and rollback concerns. Replacing any of that without a visible diagnostic layer would hide the highest-risk parts of the cutover.
+
+I implemented a read-only workbench instead of calling live integrations from the browser. The route does not call `IntegrationGateway`, send HTTP requests, dispatch recovery jobs, rotate tokens, save credentials, or trigger callbacks. The useful increment is that operators can inspect the mapped contracts and adapters in Chrome: SOAP, XML-RPC, REST/API2, payment, shipping, external services, OAuth, webhooks, sandbox status, config paths, providers, secrets-by-reference, retry, timeout, rollback, attention rows, empty states, and denied roles.
+
+The legacy scan shaped the scope:
+
+- Classic API behavior includes SOAP, XML-RPC, WSDL, admin API credentials, roles, and fault formats.
+- REST/API2 behavior includes OAuth, possible guest fallback, content negotiation, HTTP error statuses, and role/attribute permissions.
+- Payment callback paths such as IPN, silent posts, and direct-post flows need retained payload and signature comparison before cutover.
+- Shipping, currency, feed, email, ERP, PIM, CRM, and other service adapters need sandbox, outage, retry, timeout, and rollback evidence.
+- Admin Web Services settings are part of `AD-018`, so API contracts and integration configuration have to be visible together.
+
+A sidecar review found a useful latent bug: an adapter without sandbox metadata would have been labeled healthy if it was not OAuth or webhook-based. I changed that to `mock-required` and attention-worthy, then added focused PHPUnit coverage and rechecked the affected status filter in Chrome. That is exactly why the workbench exists: it lets us reason about operational readiness before any destructive integration behavior is enabled.
+
+The tradeoff remains explicit. This creates local inspection and traceability for `AD-018`, `API-001` through `API-006`, and related integration-facing storefront/cron features, but it is not final parity. Real API payload snapshots, OAuth exchanges, payment callbacks, carrier responses, currency imports, admin ACL mapping, sandbox credentials, outage drills, hosted CI, security review, production runbook, rollback rehearsal, and final Magento/Laravel screenshot evidence remain release work.
+
 ## 2026-05-19 15:12 CEST - Why The Cron Jobs Workbench Exists
 
 The cron/job slice exists because Magento cron is not a single scheduler table. Legacy jobs are declared in module XML, config-driven jobs only become schedulable when a cron expression exists in scoped config, and `cron_schedule` rows are materialized later by the Magento cron observer. A Laravel replacement needs to preserve the operational meaning of missing schedules, bridge decisions, cleanup windows, aggregation windows, and high-risk side effects before it starts running jobs.

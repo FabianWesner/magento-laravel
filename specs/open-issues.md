@@ -2,7 +2,7 @@
 
 This file is the human-readable open-issues backlog for ongoing execution. The canonical release-blocking defect register remains `specs/modernization/defect-register.md`; this file summarizes active blockers and working issues so they are easy to review.
 
-Last reviewed: 2026-05-19 15:12 CEST after admin cron/job operations Chrome verification. No release-blocking issue was closed by this local workbench slice.
+Last reviewed: 2026-05-19 15:32 CEST after admin integrations/API Chrome verification. No release-blocking issue was closed by this local workbench slice.
 
 ## Maintenance Rules
 
@@ -36,4 +36,5 @@ Last reviewed: 2026-05-19 15:12 CEST after admin cron/job operations Chrome veri
 
 | Issue | Date | Evidence |
 | --- | --- | --- |
+| Unsandboxed integration adapters could be labeled healthy in local diagnostics. | 2026-05-19 | Fixed `IntegrationDiagnosticsCatalog` so missing sandbox metadata becomes `mock-required` and attention-worthy; covered by focused PHPUnit. |
 | Browser favicon 404 polluted current Chrome console checks. | 2026-05-19 | Added a lightweight `/favicon.ico` 204 route and rechecked Playwright console output with no current warnings/errors. |
