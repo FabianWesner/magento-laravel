@@ -2598,3 +2598,19 @@ Blocked:
 
 Next:
 - Commit the sample schema report evidence artifact, then continue with the next release blocker that has real local evidence available.
+
+## 2026-05-19 10:29 CEST - Fixture Defect Evidence Linkage
+
+Changed:
+- Updated `DEF-002` in `specs/modernization/defect-register.md` to link the retained sample fixture coverage and schema report evidence artifacts.
+- Kept `DEF-002` open and explicitly recorded that the sample artifacts are not canonical project fixture evidence.
+
+Verified:
+- The fixture restore check currently has no real project dump/media path to validate; no restore evidence was fabricated.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 72 files.
+
+Blocked:
+- Project overlay, sanitized project DB/media, fixture manifest, restore evidence, CI restore, and final DB-backed reports remain absent.
+
+Next:
+- Commit the fixture defect evidence linkage.
