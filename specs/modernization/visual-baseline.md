@@ -32,6 +32,8 @@ Adjust or add breakpoints if the production analytics show materially different 
 
 `specs/modernization/magento-home-visual-smoke-evidence.md` records a local Magento storefront home smoke capture for `SF-001` and `SF-002` against the sample data runtime at `http://127.0.0.1:8090/`. The screenshots are local artifacts under `.localdev/visual-baseline/magento/storefront/SF-HOME/home-default/` for desktop, laptop, tablet, and mobile viewports.
 
+`specs/modernization/magento-admin-login-visual-smoke-evidence.md` records a local Magento admin login smoke capture for `AD-001` against the sample data runtime at `http://127.0.0.1:8090/admin`. The screenshots are local artifacts under `.localdev/visual-baseline/magento/admin/AD-LOGIN/login-default/` for desktop, laptop, tablet, and mobile viewports.
+
 This is not the final screenshot manifest. It does not include Laravel comparison screenshots, all storefront/admin screens, required roles, all UI states, visual diff approval, accessibility review, or manual acceptance.
 
 ## Admin Screens

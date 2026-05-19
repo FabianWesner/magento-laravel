@@ -30,6 +30,23 @@ Next:
 
 ## Entries
 
+## 2026-05-19 10:38 CEST - Magento Admin Login Visual Smoke
+
+Changed:
+- Added retained local Magento admin login smoke evidence at `specs/modernization/magento-admin-login-visual-smoke-evidence.md` for `AD-001`.
+- Linked the admin login smoke evidence from the visual baseline strategy and DEF-003 without treating it as final visual manifest evidence.
+
+Verified:
+- Escalated `node dev/modernization/capture-visual-baseline.mjs --url=http://127.0.0.1:8090/admin --out=.localdev/visual-baseline/magento/admin/AD-LOGIN/login-default --runtime=magento --screen-id=AD-LOGIN --feature-ids=AD-001 --role=admin-anonymous --fixture-id=sample-data --state=login-default --parity-decision=preserve --evidence=specs/modernization/magento-admin-login-visual-smoke-evidence.md` captured desktop, laptop, tablet, and mobile PNG artifacts with HTTP 200 and page title `Log into Magento Admin Page`.
+- `file .localdev/visual-baseline/magento/admin/AD-LOGIN/login-default/*.png` reported valid PNG screenshots for all four captured artifacts.
+
+Blocked:
+- The final visual screenshot manifest remains absent.
+- Laravel comparison screenshots, all storefront/admin screens, required roles, all UI states, visual diff approval, accessibility review, and manual acceptance remain incomplete.
+
+Next:
+- Run markdown checks and the normal modernization gate, then commit the retained admin login smoke evidence.
+
 ## 2026-05-19 09:13 CEST - Boost MCP Evidence
 
 Changed:
