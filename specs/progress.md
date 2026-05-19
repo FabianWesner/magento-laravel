@@ -1871,3 +1871,33 @@ Blocked:
 
 Next:
 - Commit the Laravel integration foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:57 CEST - Laravel Report Foundation
+
+Changed:
+- Added `ReportDefinition`, `ReportResult`, `ReportCatalog`, and `ReportQuery` for report value objects, report family registration, aggregate query snapshots, date/store/currency filters, grid metadata, and CSV export.
+- Added report coverage for sales, tax, shipping, invoiced, refunded, coupon, product, customer, search, cart, review, tag, bestseller, and low-stock reports.
+- Added `AggregateReportTables` queued job for report aggregation reads and report table logging.
+- Added `ReportDiagnosticsController` as the report admin surface and `ReportPolicy`/`viewReports` gate for report permissions.
+- Added PHPUnit coverage for report family registration, before/after aggregation behavior, report table parity snapshots, `assertDatabaseHas` checks, dual-runtime report comparison labels, filters, export/empty/performance states, permissions, and all report feature IDs.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits; applied query builder, policy, controller, and PHPUnit guidance locally because sub-agents require an explicit user request.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `query builder aggregates group by`, `database testing assert database`, `authorization policies`, and `http tests json` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:class` generated the report value/service classes, `make:job Modernization/Reports/AggregateReportTables --no-interaction` generated the aggregation job, `make:controller Modernization/ReportDiagnosticsController --no-interaction` generated the controller, `make:policy Modernization/Reports/ReportPolicy --no-interaction` generated the policy, and `make:test ReportFoundationTest --phpunit --no-interaction` generated the PHPUnit test before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/ReportFoundationTest.php` passed with 6 tests and 37 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 59 tests and 360 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Reports app/Jobs/Modernization/Reports/AggregateReportTables.php app/Http/Controllers/Modernization/ReportDiagnosticsController.php app/Policies/Modernization/Reports/ReportPolicy.php app/Providers/ModernizationServiceProvider.php tests/Feature/ReportFoundationTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-report-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-report-target.php --final` now fails only for missing final report parity evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 113 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final report parity evidence, integration matrix, final integration parity evidence, ADR 0008 approval, final auth/security evidence, final config parity evidence, OpenAPI documentation, final API contract evidence, final cron/job evidence, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel report foundation, then continue with the next unblocked Laravel foundation gap.
