@@ -2282,3 +2282,30 @@ Blocked:
 
 Next:
 - Commit the foundation evidence files, then continue with the next unblocked final evidence gap.
+
+## 2026-05-19 09:40 CEST - Laravel Service Evidence Files
+
+Changed:
+- Added cron/job evidence for CJ-001 through CJ-025, including schedule list, queue policy, locking, retry, failure log, idempotency, and report snapshot coverage.
+- Added commerce parity evidence for CB-001 through CB-014 based on the Laravel commerce foundation tests and snapshot table coverage.
+- Added report parity evidence for report feature IDs, aggregation jobs, filters, permissions, CSV export, and performance state coverage.
+- Added domain service evidence for storefront/admin domain IDs, media artifacts, email artifacts, import/export, store-scope snapshots, and domain service contracts.
+- Added config parity evidence for scoped config paths, default/website/store fallback, env overrides, cache invalidation, secret handling, admin save behavior, and legacy comparison labels.
+- Added integration matrix and parity evidence for payment, shipping, currency, analytics, feed, email, ERP, PIM, CRM, webhook, OAuth, sandbox, outage, retry, rollback, secret, and config-path coverage.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-cron-job-target.php --final` passed after adding `specs/modernization/cron-job-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-commerce-target.php --final` passed after adding `specs/modernization/commerce-parity-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-report-target.php --final` passed after adding `specs/modernization/report-parity-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-domain-target.php --final` passed after adding `specs/modernization/domain-service-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-config-target.php --final` passed after adding `specs/modernization/config-parity-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-integration-target.php --final` passed after adding `specs/modernization/integration-matrix.md` and `specs/modernization/integration-parity-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Schema restore evidence, Livewire screenshot evidence, route fallback ADR approval, auth/security ADR approval, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, feature traceability rows, visual approval, manual acceptance, cutover evidence, release checklist approvals, performance approval, security/accessibility reports, production readiness, hosted CI evidence, DB-backed fixture/schema checks, and final completion audit remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel service evidence files, then continue with the remaining evidence gaps that have real supporting artifacts.
