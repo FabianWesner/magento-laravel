@@ -2330,3 +2330,23 @@ Blocked:
 
 Next:
 - Commit the feature inventory traceability update, then continue filling traceability rows in the remaining files.
+
+## 2026-05-19 10:12 CEST - Backlog Per-Feature Traceability Rows
+
+Changed:
+- Added a canonical per-feature backlog matrix to `specs/modernization/backlog.md` with one row for every feature ID in `specs/modernization/magento-feature-catalog.md`.
+- Each backlog row records phase, domain, task, dependencies, risk, owner, status, evidence reference, acceptance criteria, and verification path.
+- Rows intentionally remain `Not release-ready` until fixture, screenshot, characterization, documentation, and release evidence are available.
+
+Verified:
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|" specs/modernization/backlog.md | wc -l` returned 79.
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|.*\\b(TBD|Pending|To inventory|Required|Required where applicable|Operational evidence required)\\b" specs/modernization/backlog.md` returned no matches.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-feature-traceability.php --final` no longer reports missing per-feature rows in `specs/modernization/backlog.md`; it still fails for test-plan placeholders, fixture rows, UI rows, complex reverse-engineering rows, and Docusaurus per-feature documentation rows.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final traceability still requires per-feature rows in data fixtures, UI inventory, complex reverse engineering, Docusaurus user feature coverage, and Docusaurus developer testing evidence, plus test-plan row cleanup.
+
+Next:
+- Commit the backlog traceability update, then continue filling traceability rows in fixture, UI, complex behavior, and Docusaurus docs.
