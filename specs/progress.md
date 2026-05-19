@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:42 CEST - Livewire Foundation
+
+Changed:
+- Added `livewire/livewire` `^4.3` to the Laravel target and completed Composer package discovery under PHP `8.5`.
+- Added class-based Livewire components for storefront parity and admin parity under `laravel/app/Livewire`, with Blade views under `laravel/resources/views/livewire`.
+- Added PHPUnit Livewire component coverage for storefront cart/checkout/multishipping feature states and admin cache/index/compiler plus tax/currency states.
+
+Verified:
+- Official Livewire 4.x docs were checked for installation prerequisites and component testing APIs before adding the dependency and components.
+- `composer require livewire/livewire --no-interaction` resolved `livewire/livewire` `v4.3.0`; default PHP `8.4` failed Composer platform scripts, then `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 /Users/fabianwesner/Library/Application Support/Herd/bin/composer install --no-interaction` completed package discovery successfully.
+- Escalated `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 /Users/fabianwesner/Library/Application Support/Herd/bin/composer require livewire/livewire:^4.3 --no-interaction` tightened the Composer requirement with no lockfile package changes.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Livewire tests/Feature/LivewireParityFoundationTest.php` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/LivewireParityFoundationTest.php` passed with 2 tests and 19 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-livewire-target.php --final` now fails only because final Livewire UI evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 82 tests and 538 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 140 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final Livewire UI evidence, browser/visual screenshot evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Livewire foundation, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:35 CEST - Complex Feature Parity ID Coverage
 
 Changed:
