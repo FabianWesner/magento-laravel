@@ -2,6 +2,22 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 15:12 CEST - Why The Cron Jobs Workbench Exists
+
+The cron/job slice exists because Magento cron is not a single scheduler table. Legacy jobs are declared in module XML, config-driven jobs only become schedulable when a cron expression exists in scoped config, and `cron_schedule` rows are materialized later by the Magento cron observer. A Laravel replacement needs to preserve the operational meaning of missing schedules, bridge decisions, cleanup windows, aggregation windows, and high-risk side effects before it starts running jobs.
+
+I implemented a read-only workbench instead of dispatching scheduler work from the browser. The useful increment is that every `CJ-001` through `CJ-025` mapping is inspectable in Chrome with feature ID, domain, schedule, legacy run model, replacement decision, risk, last-run/next-run diagnostic text, and attention state. Config-driven jobs, bridge decisions, pending XmlConnect decisions, catalog rule application, and price reindexing are deliberately highlighted instead of hidden in a generic job list.
+
+The legacy scan shaped the scope:
+
+- Config-driven jobs such as backup, currency, PayPal reports, log cleanup, product alerts, and sitemap generation may be declared but unscheduled when the cron expression is empty.
+- Magento has scheduler windows for generate-ahead, lifetime, success history, and failure history, so a final implementation needs cron-schedule fixture states rather than only config rows.
+- Report aggregation jobs use a roughly 25-hour lookback and read aggregate tables, so the workbench separates report jobs from general operations.
+- Some legacy jobs swallow or email warnings internally, while scheduler-level failures represent different failure modes.
+- Catalog rule application and price reindexing are high-risk because they can change storefront prices; the workbench marks them blocked until commerce fixtures and stale-index parity are accepted.
+
+The tradeoff is intentional: this creates a browser-verifiable local operations surface for all cron feature IDs, not final scheduler parity. Real `cron_schedule` fixtures, scoped config fixtures, queue history, cleanup target tables, integration warning artifacts, report aggregate comparisons, hosted CI, monitoring, rollback, and production runbook evidence remain release work.
+
 ## 2026-05-19 14:55 CEST - Why The Tax/Currency Workbench Exists
 
 The tax/currency slice exists because Magento tax and currency behavior is both high-risk and heavily operational. Tax classes, tax rates, rule combinations, calculation settings, cross-border trade, report aggregation, currency rates, symbol overrides, and scheduled imports all influence money-facing behavior. Starting with a final write-capable admin replacement would be premature without canonical fixtures and final parity evidence.

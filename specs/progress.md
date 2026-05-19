@@ -30,6 +30,40 @@ Next:
 
 ## Entries
 
+## 2026-05-19 15:12 CEST - Admin Cron Jobs Workbench Implementation
+
+Changed:
+- Added `CronJobCatalog` to decorate the existing `cron_jobs.jobs` config into browser-ready rows for `CJ-001` through `CJ-025`, with schedule type, legacy model, migration decision, domain, risk, run diagnostics, and attention status.
+- Added `CronPolicy` and the `/_modernization/admin/cron-jobs` Livewire workbench with job, config-driven, report, problem, search, status, decision, domain, empty-state, and denied-role states.
+- Added the cron jobs route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/catalog coverage, and modernization module manifest references for the new route/view/policy.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after browser verification.
+- Ignored local cron-jobs Playwright screenshots.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel cron/workbench pattern review and Magento cron behavior context before integration.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Cron/CronJobCatalog.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/CronJobsWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Policies/Modernization/Cron/CronPolicy.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationCronJobsRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/CronJobSchedulerTest.php tests/Feature/ModernizationCronJobsRouteTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 14 tests and 162 assertions.
+- `curl -I http://magento-lts.test/_modernization/admin/cron-jobs` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/cron-jobs.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial counts, all-job rows, config-driven rows, report rows, problem rows, bridge decision filtering, captcha search, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, problem section filtering to communications, disabled actions, and clean current console output.
+- Screenshots were captured as `cron-jobs-desktop-2026-05-19.png` and `cron-jobs-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `git diff --check` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 131 tests and 1693 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final Magento/Laravel cron parity still needs real `cron_schedule` fixtures, scoped config fixtures, queue history, cleanup target tables, integration warning artifacts, report aggregate comparisons, hosted CI, monitoring, rollback, production runbook, and cutover evidence.
+
+Next:
+- Commit this verified admin cron/job operations workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 14:55 CEST - Admin Tax Currency Workbench Implementation
 
 Changed:

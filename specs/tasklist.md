@@ -20,12 +20,14 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Admin cron/job operations workbench | `/_modernization/admin/cron-jobs`, focused PHPUnit, Chrome desktop/mobile, job/config/report/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin tax/currency workbench | `/_modernization/admin/tax-currency`, focused PHPUnit, Chrome desktop/mobile, tax/rate/rule/currency/job/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin system configuration and multistore scope workbench | `/_modernization/admin/system-config`, focused PHPUnit, Chrome desktop/mobile, config/scope/validation/secret/cache filters. | Not release-ready. |
 | 2026-05-19 | Admin import/export dataflow workbench | `/_modernization/admin/import-export`, focused PHPUnit, Chrome desktop/mobile, import/export/profile/file filters. | Not release-ready. |
 | 2026-05-19 | Admin cache/index workbench | `/_modernization/admin/cache-index`, focused PHPUnit, Chrome desktop/mobile, cache/index/cron/lock filters. | Not release-ready. |
 | 2026-05-19 | Storefront communications workbench | `/_modernization/storefront/communications`, focused PHPUnit, Chrome desktop/mobile, markdown check, normal gate. | Not release-ready. |
 | 2026-05-19 | Storefront CMS/SEO workbench | `/_modernization/storefront/cms-seo`, focused PHPUnit, Chrome desktop/mobile, normal gate, commit `810785d4cd`. | Not release-ready. |
+| 2026-05-19 | Admin reports workbench | `/_modernization/admin/reports`, focused PHPUnit, Chrome desktop/mobile, report/date/store/currency/CSV filters. | Not release-ready. |
 | 2026-05-19 | Customer commerce workbench | `/_modernization/customer/commerce`, focused PHPUnit, Chrome desktop/mobile. | Not release-ready. |
 | 2026-05-19 | Storefront search workbench | `/_modernization/storefront/search`, focused PHPUnit, Chrome desktop/mobile. | Not release-ready. |
 | 2026-05-19 | Product detail workbench | `/_modernization/storefront/product-detail`, focused PHPUnit, Chrome desktop/mobile. | Not release-ready. |

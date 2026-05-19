@@ -86,6 +86,16 @@ Route::get('/_modernization/assets/tax-currency.css', function () {
     ]);
 })->name('modernization.assets.tax-currency');
 
+Route::get('/_modernization/admin/cron-jobs', function () {
+    return view('modernization.cron-jobs');
+})->name('modernization.admin.cron-jobs');
+
+Route::get('/_modernization/assets/cron-jobs.css', function () {
+    return response()->file(public_path('modernization/cron-jobs.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.cron-jobs');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');
