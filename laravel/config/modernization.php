@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\Modernization\Modules\ModuleRegistryChecked;
+use App\Jobs\Modernization\Cron\CaptureCronParitySnapshot;
 use App\Jobs\Modernization\Modules\VerifyModuleRegistry;
 use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
@@ -34,6 +35,7 @@ return [
             ],
             'commands' => [
                 'modernization:modules',
+                'modernization:cron-status',
             ],
             'events' => [
                 ModuleRegistryChecked::class,
@@ -45,10 +47,12 @@ return [
                 'modernization.modules.view',
             ],
             'config' => [
+                'cron_jobs.jobs',
                 'modernization.modules',
             ],
             'views' => [],
             'jobs' => [
+                CaptureCronParitySnapshot::class,
                 VerifyModuleRegistry::class,
             ],
             'policies' => [

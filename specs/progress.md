@@ -1715,3 +1715,35 @@ Blocked:
 
 Next:
 - Commit the Laravel route fallback boundary foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:15 CEST - Laravel Cron And Scheduler Foundation
+
+Changed:
+- Added `laravel/config/cron_jobs.php` with one PHP mapping for every Magento cron feature ID `CJ-001` through `CJ-025`, including schedule source, legacy model, and bridge/replace/retire decision.
+- Added `modernization:cron-status` as a scheduler diagnostics/status Artisan command that reports all tracked cron jobs and can dispatch a queued parity snapshot job.
+- Added `CaptureCronParitySnapshot` with `ShouldQueue`, `ShouldBeUnique`, retry/backoff controls, unique lock policy, retry window, success logging, and failure logging.
+- Registered a Laravel scheduler entry for `modernization:cron-status --dispatch` with `withoutOverlapping`, `onOneServer`, named diagnostics status, and persistent output.
+- Extended the module manifest metadata to include the cron diagnostics command, cron config, and parity snapshot job.
+- Added PHPUnit coverage for scheduler registration, command exit code and output, queue dispatch, locking/idempotency controls, retry/failure logging, all `CJ-*` feature IDs, and report table snapshot expectations.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `task scheduling`, `schedule command without overlapping`, `artisan commands testing`, `queue jobs unique backoff failed`, `bus fake jobs`, and `schedule list` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:command ModernizationCronStatusCommand --no-interaction`, `make:job Modernization/Cron/CaptureCronParitySnapshot --no-interaction`, and `make:test CronJobSchedulerTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/CronJobSchedulerTest.php` passed with 4 tests and 96 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 29 tests and 180 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Console/Commands/ModernizationCronStatusCommand.php app/Jobs/Modernization/Cron/CaptureCronParitySnapshot.php config/cron_jobs.php routes/console.php config/modernization.php tests/Feature/CronJobSchedulerTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-cron-job-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-cron-job-target.php --final` now fails only for missing final cron/job evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 68 files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final cron/job evidence, ADR 0008 approval, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel cron and scheduler foundation, then continue with the next unblocked Laravel foundation gap.
