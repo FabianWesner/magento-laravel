@@ -2614,3 +2614,26 @@ Blocked:
 
 Next:
 - Commit the fixture defect evidence linkage.
+
+## 2026-05-19 10:35 CEST - Magento Home Visual Smoke Evidence
+
+Changed:
+- Updated `dev/modernization/capture-visual-baseline.mjs` to reuse the installed Docusaurus Playwright package when root Playwright is unavailable.
+- Added optional `--evidence=path` output to the visual capture script.
+- Added `specs/modernization/magento-home-visual-smoke-evidence.md` for a local Magento storefront home smoke capture against the sample runtime.
+- Linked the smoke evidence from `specs/modernization/visual-baseline.md` and `DEF-003` without closing the final UI screenshot blocker.
+
+Verified:
+- `curl -I http://127.0.0.1:8090/` returned HTTP `200` from the Magento Nginx/PHP 7.4 stack.
+- `node --check dev/modernization/capture-visual-baseline.mjs` passed.
+- Non-escalated Playwright capture failed because sandbox process restrictions prevented Chrome cleanup (`kill EPERM`).
+- Escalated `node dev/modernization/capture-visual-baseline.mjs --url=http://127.0.0.1:8090/ --out=.localdev/visual-baseline/magento/storefront/SF-HOME/home-default --runtime=magento --screen-id=SF-HOME --feature-ids=SF-001,SF-002 --role=guest --fixture-id=sample-data --state=home-default --parity-decision=preserve --evidence=specs/modernization/magento-home-visual-smoke-evidence.md` captured desktop, laptop, tablet, and mobile screenshots.
+- `file .localdev/visual-baseline/magento/storefront/SF-HOME/home-default/*.png` reported valid PNG files at widths 1440, 1280, 768, and 390.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 73 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- This is local Magento sample-only visual smoke evidence. Final UI readiness still requires Magento and Laravel screenshots for all visible feature IDs, roles, states, and viewports, plus visual diff approval and manual acceptance.
+
+Next:
+- Commit the Magento home visual smoke evidence.

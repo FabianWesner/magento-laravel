@@ -28,6 +28,12 @@ Adjust or add breakpoints if the production analytics show materially different 
 - Every storefront row in `specs/modernization/ui-screen-inventory.md`.
 - Every product type, promotion state, cart state, checkout state, account state, CMS state, and error state covered by the canonical demo fixture.
 
+## Current Local Smoke Evidence
+
+`specs/modernization/magento-home-visual-smoke-evidence.md` records a local Magento storefront home smoke capture for `SF-001` and `SF-002` against the sample data runtime at `http://127.0.0.1:8090/`. The screenshots are local artifacts under `.localdev/visual-baseline/magento/storefront/SF-HOME/home-default/` for desktop, laptop, tablet, and mobile viewports.
+
+This is not the final screenshot manifest. It does not include Laravel comparison screenshots, all storefront/admin screens, required roles, all UI states, visual diff approval, accessibility review, or manual acceptance.
+
 ## Admin Screens
 
 - Every visible `AD-` feature ID from `specs/modernization/magento-feature-catalog.md`.

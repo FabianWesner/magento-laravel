@@ -1,6 +1,13 @@
 #!/usr/bin/env node
+import { createRequire } from 'node:module';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(scriptDir, '../..');
+const docusaurusRoot = path.resolve(repoRoot, 'docusaurus');
+const require = createRequire(import.meta.url);
 
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => {
   const [key, ...value] = arg.replace(/^--/, '').split('=');
@@ -19,6 +26,7 @@ if (args.help || !args.url) {
   console.log('  --fixture-id=canonical-demo');
   console.log('  --state=default');
   console.log('  --parity-decision=preserve|bridge|replace|retire');
+  console.log('  --evidence=specs/modernization/visual-smoke-evidence.md');
   process.exit(args.help ? 0 : 2);
 }
 
@@ -36,21 +44,37 @@ let chromium;
 try {
   ({ chromium } = await import('playwright'));
 } catch {
-  console.error('Playwright package is not installed. Install it in a local tooling workspace or run via npx playwright.');
-  process.exit(2);
+  try {
+    ({ chromium } = require(path.resolve(docusaurusRoot, 'node_modules/playwright')));
+  } catch {
+    console.error('Playwright package is not installed. Install it in a local tooling workspace, install Docusaurus dependencies, or run via npx playwright.');
+    process.exit(2);
+  }
 }
 
 await fs.mkdir(out, { recursive: true });
 const manifestRows = [];
+const evidenceRows = [];
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport });
-    await page.goto(args.url, { waitUntil: 'networkidle', timeout: 60000 });
+    const response = await page.goto(args.url, { waitUntil: 'networkidle', timeout: 60000 });
     const screenshotPath = path.join(out, `${viewport.name}.png`);
     await page.screenshot({ path: screenshotPath, fullPage: true });
+    const title = await page.title();
+    const file = await fs.stat(screenshotPath);
     await page.close();
     console.log(`captured ${viewport.name}`);
+    evidenceRows.push({
+      viewport: viewport.name,
+      width: viewport.width,
+      height: viewport.height,
+      status: response?.status() ?? null,
+      title,
+      artifactPath: toPosixPath(screenshotPath),
+      bytes: file.size,
+    });
     if (manifestContext) {
       manifestRows.push({
         ...manifestContext,
@@ -67,6 +91,11 @@ try {
 if (manifest && manifestRows.length > 0) {
   await appendManifestRows(manifest, manifestRows);
   console.log(`appended ${manifestRows.length} manifest rows to ${manifest}`);
+}
+
+if (args.evidence) {
+  await writeEvidence(args.evidence, evidenceRows, manifestContext);
+  console.log(`wrote evidence to ${args.evidence}`);
 }
 
 function validateManifestContext(options) {
@@ -142,6 +171,57 @@ function markdownCell(value) {
 
 function toPosixPath(filePath) {
   return filePath.split(path.sep).join(path.posix.sep);
+}
+
+async function writeEvidence(evidencePath, rows, context) {
+  const resolvedPath = resolveRepoPath(evidencePath);
+  await fs.mkdir(path.dirname(resolvedPath), { recursive: true });
+
+  const metadata = context ?? {
+    screenId: args['screen-id'] || 'ad-hoc',
+    featureIds: args['feature-ids'] || 'not-specified',
+    runtime: args.runtime || 'not-specified',
+    role: args.role || 'not-specified',
+    fixtureId: args['fixture-id'] || 'not-specified',
+    state: args.state || 'not-specified',
+    parityDecision: args['parity-decision'] || 'not-specified',
+  };
+
+  const lines = [
+    '# Visual Smoke Evidence',
+    '',
+    `Generated At: ${new Date().toISOString()}`,
+    `Command: node dev/modernization/capture-visual-baseline.mjs ${process.argv.slice(2).join(' ')}`,
+    `URL: ${args.url}`,
+    `Runtime: ${metadata.runtime}`,
+    `Screen ID: ${metadata.screenId}`,
+    `Feature IDs: ${metadata.featureIds}`,
+    `Role: ${metadata.role}`,
+    `Fixture ID: ${metadata.fixtureId}`,
+    `State: ${metadata.state}`,
+    `Parity Decision: ${metadata.parityDecision}`,
+    'Status: Local visual smoke only',
+    '',
+    '| Viewport | Size | HTTP Status | Page Title | Artifact Path | Bytes |',
+    '| --- | --- | ---: | --- | --- | ---: |',
+    ...rows.map((row) => `| ${row.viewport} | ${row.width}x${row.height} | ${row.status ?? 'n/a'} | ${markdownCell(row.title)} | \`${row.artifactPath}\` | ${row.bytes} |`),
+    '',
+    '## Notes',
+    '',
+    'This evidence records a local screenshot smoke capture only. It is not a complete Magento/Laravel screenshot manifest, visual regression approval, accessibility evidence, manual acceptance, or release evidence.',
+    '',
+  ];
+
+  await fs.writeFile(resolvedPath, lines.join('\n'), 'utf8');
+}
+
+function resolveRepoPath(filePath) {
+  const resolvedPath = path.resolve(repoRoot, filePath);
+  if (resolvedPath !== repoRoot && !resolvedPath.startsWith(`${repoRoot}${path.sep}`)) {
+    fail(`Evidence path must stay inside the repository: ${filePath}`);
+  }
+
+  return resolvedPath;
 }
 
 function fail(message) {
