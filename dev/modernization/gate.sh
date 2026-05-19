@@ -111,6 +111,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "visual tolerances final check" php dev/modernization/validate-visual-tolerances.php --final
   run_optional "release readiness final check" php dev/modernization/validate-release-readiness.php --final
   run_optional "defect readiness final check" php dev/modernization/validate-defect-readiness.php --final
+  run_optional "CI readiness final check" php dev/modernization/validate-ci-readiness.php --final
   run_optional "performance budgets final check" php dev/modernization/validate-performance-budgets.php --final
   run_optional "operations readiness final check" php dev/modernization/validate-operations-readiness.php --final
   run_optional "security/accessibility final check" php dev/modernization/validate-security-accessibility.php --final
@@ -135,6 +136,7 @@ else
   run_optional "visual tolerances template check" php dev/modernization/validate-visual-tolerances.php
   run_optional "release readiness template check" php dev/modernization/validate-release-readiness.php
   run_optional "defect readiness template check" php dev/modernization/validate-defect-readiness.php
+  run_optional "CI readiness template check" php dev/modernization/validate-ci-readiness.php
   run_optional "performance budgets template check" php dev/modernization/validate-performance-budgets.php
   run_optional "operations readiness template check" php dev/modernization/validate-operations-readiness.php
   run_optional "security/accessibility template check" php dev/modernization/validate-security-accessibility.php
