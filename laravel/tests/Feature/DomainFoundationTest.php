@@ -305,13 +305,67 @@ class DomainFoundationTest extends TestCase
         $this->assertSame('Groessentabelle PDF', $deDownloadableSnapshot['payload']['rows'][0]['payload']['title']);
         $this->assertSame(['Retail Kunde'], $deDownloadableSnapshot['payload']['rows'][0]['payload']['customer_group_permissions']);
 
+        $defaultSearchSnapshot = $this->app->make(DomainQueryService::class)->snapshot('search', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $defaultSearchPayloads = array_column($defaultSearchSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Search', $defaultSearchSnapshot['feature']['context']);
+        $this->assertSame('default', $defaultSearchSnapshot['store_view']);
+        $this->assertSame(3, $defaultSearchSnapshot['payload']['count']);
+        $this->assertSame(['quick', 'advanced', 'quick'], array_column($defaultSearchPayloads, 'query_type'));
+        $this->assertSame(['shirt', 'hoodie under 60', 'legacy jacket'], array_column($defaultSearchPayloads, 'query'));
+        $this->assertSame([1, 1, 0], array_column($defaultSearchPayloads, 'results_count'));
+        $this->assertSame(['simple-shirt'], $defaultSearchPayloads[0]['result_skus']);
+        $this->assertSame(['configurable-hoodie'], $defaultSearchPayloads[1]['result_skus']);
+        $this->assertSame([], $defaultSearchPayloads[2]['result_skus']);
+        $this->assertSame('Gear', $defaultSearchPayloads[1]['filters']['category']);
+        $this->assertSame(['top', 'tee'], $defaultSearchPayloads[0]['synonyms']);
+        $this->assertNull($defaultSearchPayloads[0]['redirect']);
+        $this->assertSame('/gear/configurable-hoodie.html', $defaultSearchPayloads[2]['redirect']['target']);
+        $this->assertSame('/catalogsearch/result/?q=shirt', $defaultSearchPayloads[0]['canonical_url']);
+        $this->assertSame('/rss/catalog/notifystock/?q=shirt', $defaultSearchPayloads[0]['rss_url']);
+        $this->assertFalse($defaultSearchPayloads[0]['is_index_stale']);
+        $this->assertTrue($defaultSearchPayloads[2]['is_index_stale']);
+
+        foreach ($defaultSearchPayloads as $searchPayload) {
+            $this->assertArrayHasKey('query_type', $searchPayload);
+            $this->assertArrayHasKey('query', $searchPayload);
+            $this->assertArrayHasKey('filters', $searchPayload);
+            $this->assertArrayHasKey('results_count', $searchPayload);
+            $this->assertArrayHasKey('result_skus', $searchPayload);
+            $this->assertArrayHasKey('redirect', $searchPayload);
+            $this->assertArrayHasKey('synonyms', $searchPayload);
+            $this->assertArrayHasKey('canonical_url', $searchPayload);
+            $this->assertArrayHasKey('rss_url', $searchPayload);
+            $this->assertArrayHasKey('is_index_stale', $searchPayload);
+        }
+
         $searchSnapshot = $this->app->make(DomainQueryService::class)->snapshot('search', [
             'store_id' => 9002,
             'store_view' => 'de',
         ]);
 
+        $deSearchPayloads = array_column($searchSnapshot['payload']['rows'], 'payload');
+
         $this->assertSame('Search', $searchSnapshot['feature']['context']);
-        $this->assertSame('hemd', $searchSnapshot['payload']['rows'][0]['payload']['query']);
+        $this->assertSame('de', $searchSnapshot['store_view']);
+        $this->assertSame(3, $searchSnapshot['payload']['count']);
+        $this->assertSame(['hemd', 'hoodie bis 65', 'winterjacke'], array_column($deSearchPayloads, 'query'));
+        $this->assertSame([1, 1, 0], array_column($deSearchPayloads, 'results_count'));
+        $this->assertSame(['simple-shirt'], $deSearchPayloads[0]['result_skus']);
+        $this->assertSame(['configurable-hoodie'], $deSearchPayloads[1]['result_skus']);
+        $this->assertSame([], $deSearchPayloads[2]['result_skus']);
+        $this->assertSame('Ausrustung', $deSearchPayloads[1]['filters']['category']);
+        $this->assertSame(['shirt', 'oberteil'], $deSearchPayloads[0]['synonyms']);
+        $this->assertNull($deSearchPayloads[0]['redirect']);
+        $this->assertSame('/de/ausrustung/konfigurierbarer-hoodie.html', $deSearchPayloads[2]['redirect']['target']);
+        $this->assertSame('/de/catalogsearch/result/?q=hemd', $deSearchPayloads[0]['canonical_url']);
+        $this->assertSame('/de/rss/catalog/notifystock/?q=hemd', $deSearchPayloads[0]['rss_url']);
+        $this->assertFalse($deSearchPayloads[0]['is_index_stale']);
+        $this->assertTrue($deSearchPayloads[2]['is_index_stale']);
 
         $customerSnapshot = $this->app->make(DomainQueryService::class)->snapshot('customer', [
             'store_id' => 9001,

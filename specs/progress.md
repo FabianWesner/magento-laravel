@@ -2920,3 +2920,39 @@ Blocked:
 
 Next:
 - Commit this verified admin reports implementation slice, then continue with the next browser-verifiable implementation surface before any broader documentation cleanup.
+
+## 2026-05-19 12:37 CEST - Storefront Search Workbench Implementation
+
+Changed:
+- Kept documentation work at the end of the slice and implemented the browser-visible storefront search workbench first.
+- Added deterministic quick, advanced, redirect, no-result, RSS, canonical, synonym, and stale-index search facts for default and DE store views.
+- Extended domain foundation coverage for scoped search snapshots and read-only UI payload fields.
+- Added `/_modernization/storefront/search` with a named CSS asset route, wrapper Blade view, responsive stylesheet, and `SearchWorkbench` Livewire component.
+- Added read-only search controls for query, store scope, store view, query type, result state, redirect state, index state, sorting, limit, sections, and diagnostics role.
+- Hydrated result product cards from search `result_skus` while preserving selected search row store scope in aggregate mode.
+- Added stable `wire:key` values for repeated Livewire cards and normalized invalid public section state to the results view.
+- Added focused PHPUnit coverage for route rendering, filtering, sections, redirects, stale index state, empty state, denied role, aggregate store-view product scoping, and invalid section normalization.
+- Ignored local search Playwright screenshot exports.
+
+Verified:
+- Laravel Boost `search-docs` was attempted before code changes, but the sandbox could not resolve `boost.laravel.com`; the escalated retry was rejected by the approval reviewer, so no network workaround was attempted.
+- Sub-agent exploration reviewed Magento catalog search controllers, helpers, templates, layout handles, and the expected read-only diagnostics behavior for quick search, advanced search, redirects, RSS, and stale index states.
+- Sub-agent fixture work added and verified the deterministic search facts with `php artisan test --compact tests/Feature/DomainFoundationTest.php`.
+- Sub-agent rule review flagged validation, escaping, query preparation, Blade, and testing constraints; the implementation keeps filtering in the component, escapes output with Blade, and avoids raw SQL.
+- Sub-agent code review flagged aggregate product scoping, missing Livewire loop keys, and invalid public section state; all three were fixed before gate/commit.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationSearchRouteTest.php` passed with 11 tests and 278 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/storefront/search` returned HTTP 200 from PHP 8.5.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/search.css` returned HTTP 200 from PHP 8.5.
+- Chrome/Playwright desktop opened `http://magento-lts.test/_modernization/storefront/search`, verified the default `shirt` row and hydrated `Simple Shirt` product, aggregate store-view mode with 6 search rows and 1 correctly scoped product row, `hoodie` query hydration, redirect-only `legacy jacket`, SEO/RSS URLs, stale index messaging, DE `hemd` localization, empty search state, and denied role state with no console warnings/errors.
+- Chrome/Playwright mobile viewport `390x844` verified responsive stacked controls, DE `Einfaches Hemd` hydration, `winterjacke` no-product stale state, denied role state, and no console warnings/errors.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 80 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`; the gate's Laravel test step passed with 100 tests and 865 assertions.
+
+Blocked:
+- The search route is still a modernization workbench surface and is not yet the final production `catalogsearch` URL.
+- Magento query persistence, popularity tracking, autocomplete JSON, and final product collection/index integration remain future implementation work.
+
+Next:
+- Commit this verified search implementation slice, then continue with the next browser-verifiable storefront/admin implementation surface.

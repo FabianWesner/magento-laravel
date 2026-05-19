@@ -14,7 +14,7 @@ class DomainFactSeeder extends Seeder
     {
         DB::table('domain_facts')
             ->whereIn('feature_key', ['catalog', 'category', 'product', 'product_media', 'search', 'customer', 'customer_address', 'downloadable'])
-            ->whereIn('entity_id', [1001, 1002, 1003, 2001, 2002, 3001, 3002, 3003, 3004, 4001, 4002, 5001, 5002, 6001, 6002, 7001, 7002, 7003, 7004, 8001, 8002])
+            ->whereIn('entity_id', [1001, 1002, 1003, 2001, 2002, 3001, 3002, 3003, 3004, 4001, 4002, 4003, 4004, 4005, 4006, 5001, 5002, 6001, 6002, 7001, 7002, 7003, 7004, 8001, 8002])
             ->whereIn('store_id', [9001, 9002])
             ->delete();
 
@@ -415,22 +415,122 @@ class DomainFactSeeder extends Seeder
                 'store_id' => 9001,
                 'store_view' => 'default',
                 'payload' => json_encode([
+                    'query_type' => 'quick',
                     'query' => 'shirt',
+                    'filters' => [],
                     'results_count' => 1,
                     'result_skus' => ['simple-shirt'],
                     'redirect' => null,
+                    'synonyms' => ['top', 'tee'],
+                    'canonical_url' => '/catalogsearch/result/?q=shirt',
+                    'rss_url' => '/rss/catalog/notifystock/?q=shirt',
+                    'is_index_stale' => false,
                 ]),
             ],
             [
                 'feature_key' => 'search',
                 'entity_id' => 4002,
+                'store_id' => 9001,
+                'store_view' => 'default',
+                'payload' => json_encode([
+                    'query_type' => 'advanced',
+                    'query' => 'hoodie under 60',
+                    'filters' => [
+                        'category' => 'Gear',
+                        'price' => ['from' => 0, 'to' => 60],
+                        'visibility' => 'Catalog, Search',
+                    ],
+                    'results_count' => 1,
+                    'result_skus' => ['configurable-hoodie'],
+                    'redirect' => null,
+                    'synonyms' => ['sweatshirt', 'pullover'],
+                    'canonical_url' => '/catalogsearch/advanced/result/?category=gear&price[to]=60&q=hoodie',
+                    'rss_url' => '/rss/catalog/special/?q=hoodie',
+                    'is_index_stale' => false,
+                ]),
+            ],
+            [
+                'feature_key' => 'search',
+                'entity_id' => 4003,
+                'store_id' => 9001,
+                'store_view' => 'default',
+                'payload' => json_encode([
+                    'query_type' => 'quick',
+                    'query' => 'legacy jacket',
+                    'filters' => [],
+                    'results_count' => 0,
+                    'result_skus' => [],
+                    'redirect' => [
+                        'target' => '/gear/configurable-hoodie.html',
+                        'type' => 302,
+                        'reason' => 'search synonym redirect',
+                    ],
+                    'synonyms' => ['hoodie', 'sweatshirt'],
+                    'canonical_url' => '/catalogsearch/result/?q=legacy+jacket',
+                    'rss_url' => '/rss/catalog/notifystock/?q=legacy+jacket',
+                    'is_index_stale' => true,
+                ]),
+            ],
+            [
+                'feature_key' => 'search',
+                'entity_id' => 4004,
                 'store_id' => 9002,
                 'store_view' => 'de',
                 'payload' => json_encode([
+                    'query_type' => 'quick',
                     'query' => 'hemd',
+                    'filters' => [],
                     'results_count' => 1,
                     'result_skus' => ['simple-shirt'],
                     'redirect' => null,
+                    'synonyms' => ['shirt', 'oberteil'],
+                    'canonical_url' => '/de/catalogsearch/result/?q=hemd',
+                    'rss_url' => '/de/rss/catalog/notifystock/?q=hemd',
+                    'is_index_stale' => false,
+                ]),
+            ],
+            [
+                'feature_key' => 'search',
+                'entity_id' => 4005,
+                'store_id' => 9002,
+                'store_view' => 'de',
+                'payload' => json_encode([
+                    'query_type' => 'advanced',
+                    'query' => 'hoodie bis 65',
+                    'filters' => [
+                        'category' => 'Ausrustung',
+                        'price' => ['from' => 0, 'to' => 65],
+                        'visibility' => 'Katalog, Suche',
+                    ],
+                    'results_count' => 1,
+                    'result_skus' => ['configurable-hoodie'],
+                    'redirect' => null,
+                    'synonyms' => ['kapuzenpullover', 'pullover'],
+                    'canonical_url' => '/de/catalogsearch/advanced/result/?category=ausrustung&price[to]=65&q=hoodie',
+                    'rss_url' => '/de/rss/catalog/special/?q=hoodie',
+                    'is_index_stale' => false,
+                ]),
+            ],
+            [
+                'feature_key' => 'search',
+                'entity_id' => 4006,
+                'store_id' => 9002,
+                'store_view' => 'de',
+                'payload' => json_encode([
+                    'query_type' => 'quick',
+                    'query' => 'winterjacke',
+                    'filters' => [],
+                    'results_count' => 0,
+                    'result_skus' => [],
+                    'redirect' => [
+                        'target' => '/de/ausrustung/konfigurierbarer-hoodie.html',
+                        'type' => 302,
+                        'reason' => 'search synonym redirect',
+                    ],
+                    'synonyms' => ['hoodie', 'kapuzenpullover'],
+                    'canonical_url' => '/de/catalogsearch/result/?q=winterjacke',
+                    'rss_url' => '/de/rss/catalog/notifystock/?q=winterjacke',
+                    'is_index_stale' => true,
                 ]),
             ],
             [
