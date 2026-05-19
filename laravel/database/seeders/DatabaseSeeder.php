@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        $this->call(DomainFactSeeder::class);
         $this->call(ReportFactSeeder::class);
 
         User::factory()->create([

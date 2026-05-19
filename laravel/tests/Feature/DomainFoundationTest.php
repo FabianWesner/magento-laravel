@@ -10,7 +10,8 @@ use App\Modernization\Domain\ImportExportDataflow;
 use App\Modernization\Domain\MediaStorage;
 use App\Modernization\Domain\SeoUrlRewrite;
 use App\Policies\Modernization\Domain\DomainPolicy;
-use Illuminate\Database\Schema\Blueprint;
+use Database\Seeders\DomainFactSeeder;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +23,8 @@ use Tests\TestCase;
 
 class DomainFoundationTest extends TestCase
 {
+    use LazilyRefreshDatabase;
+
     /**
      * @var list<string>
      */
@@ -50,21 +53,6 @@ class DomainFoundationTest extends TestCase
         'CJ-022',
         'CJ-025',
     ];
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Schema::dropIfExists('domain_facts');
-        Schema::create('domain_facts', function (Blueprint $table): void {
-            $table->id();
-            $table->string('feature_key');
-            $table->unsignedInteger('entity_id');
-            $table->unsignedInteger('store_id');
-            $table->string('store_view');
-            $table->json('payload');
-        });
-    }
 
     public function test_catalog_category_product_media_and_search_behavior_has_domain_snapshots(): void
     {
@@ -180,6 +168,62 @@ class DomainFoundationTest extends TestCase
             'feature_key' => 'catalog',
             'entity_id' => 10,
             'store_view' => 'de',
+        ]);
+    }
+
+    public function test_domain_facts_migration_and_seed_data_support_domain_query_service(): void
+    {
+        $this->assertTrue(Schema::hasTable('domain_facts'));
+        $this->assertTrue(Schema::hasColumns('domain_facts', [
+            'id',
+            'feature_key',
+            'entity_id',
+            'store_id',
+            'store_view',
+            'payload',
+        ]));
+
+        $this->seed(DomainFactSeeder::class);
+
+        $catalogSnapshot = $this->app->make(DomainQueryService::class)->snapshot('catalog', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $defaultRows = $catalogSnapshot['payload']['rows'];
+        $defaultPayloads = array_column($defaultRows, 'payload');
+
+        $this->assertSame('Catalog', $catalogSnapshot['feature']['context']);
+        $this->assertSame(2, $catalogSnapshot['payload']['count']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], array_column($defaultPayloads, 'sku'));
+        $this->assertSame(['Women', 'Gear'], array_column($defaultPayloads, 'category'));
+        $this->assertSame(['simple', 'configurable'], array_column($defaultPayloads, 'type'));
+        $this->assertSame('/women/simple-shirt.html', $defaultPayloads[0]['url']);
+        $this->assertArrayHasKey('name', $defaultPayloads[0]);
+        $this->assertArrayHasKey('price', $defaultPayloads[0]);
+        $this->assertArrayHasKey('stock', $defaultPayloads[0]);
+        $this->assertArrayHasKey('short_description', $defaultPayloads[0]);
+
+        $deCatalogSnapshot = $this->app->make(DomainQueryService::class)->snapshot('catalog', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame(1, $deCatalogSnapshot['payload']['count']);
+        $this->assertSame('Einfaches Hemd', $deCatalogSnapshot['payload']['rows'][0]['payload']['name']);
+
+        $searchSnapshot = $this->app->make(DomainQueryService::class)->snapshot('search', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame('Search', $searchSnapshot['feature']['context']);
+        $this->assertSame('hemd', $searchSnapshot['payload']['rows'][0]['payload']['query']);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'category',
+            'entity_id' => 2001,
+            'store_id' => 9001,
+            'store_view' => 'default',
         ]);
     }
 

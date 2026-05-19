@@ -11,6 +11,7 @@
 /.playwright-mcp/
 /livewire-parity-*.png
 /admin-reports-*.png
+/storefront-catalog-*.png
 /favicon.ico
 /site/
 /docusaurus/node_modules/

@@ -30,6 +30,35 @@ Next:
 
 ## Entries
 
+## 2026-05-19 11:52 CEST - Storefront Catalog Workbench Implementation
+
+Changed:
+- Added durable `domain_facts` storage, catalog/category/product/search seed facts, and domain query coverage for store scope and store-view snapshots.
+- Added the `/_modernization/storefront/catalog` Livewire workbench with default/DE store views, grid/list mode, catalog filters, sorting, empty state, and permission-denied state.
+- Added storefront catalog route, CSS asset route, responsive CSS, and PHPUnit route/Livewire coverage.
+- Applied subagent review feedback by using lazy database refresh in touched tests, Laravel string/number helpers in Blade, and a local/testing guard around fixture-role authorization.
+- Ignored local storefront catalog Playwright screenshots.
+
+Verified:
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationStorefrontCatalogRouteTest.php` passed with 10 tests and 115 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan migrate --no-interaction` applied `2026_05_19_093810_create_domain_facts_table` locally.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/storefront/catalog` returned HTTP 200.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/storefront-catalog.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for default catalog grid, DE store-view switch, list mode, category filter, empty state, clear filters, denied role, and zero console errors.
+- Chrome/Playwright mobile verification passed for responsive single-column layout, DE store-view switch, and zero console errors.
+- Parallel subagents supplied catalog implementation scope, domain fixture implementation, and Laravel rule review; their findings were consumed before this entry.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 80 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel Boost `search-docs` for this slice failed with DNS resolution errors in the sandbox, and the escalated retry was rejected by the approval reviewer.
+- This is a modernization workbench slice only; final Magento/Laravel parity screenshots, accessibility, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit the storefront catalog workbench slice, then continue implementation-first on the next Magento domain slice with Chrome verification before documentation.
+
 ## 2026-05-19 10:58 CEST - Route And Auth Evidence
 
 Changed:
