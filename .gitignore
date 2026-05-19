@@ -10,6 +10,7 @@
 /.venv-mkdocs/
 /.playwright-mcp/
 /livewire-parity-*.png
+/admin-reports-*.png
 /favicon.ico
 /site/
 /docusaurus/node_modules/

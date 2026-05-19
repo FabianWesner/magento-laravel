@@ -2805,3 +2805,34 @@ Blocked:
 
 Next:
 - Commit this verified implementation slice, then start the admin reports UI slice using the existing report catalog/query classes and verify each working increment in Chrome before any broader documentation work.
+
+## 2026-05-19 11:34 CEST - Admin Reports Workbench Implementation
+
+Changed:
+- Added a durable `report_facts` migration and deterministic `ReportFactSeeder` rows for sales, coupon, and tax report snapshots.
+- Wired `ReportFactSeeder` into `DatabaseSeeder`.
+- Updated report foundation tests to use the real migration and to prove seeded facts are queryable through `ReportQuery`.
+- Added `/_modernization/admin/reports` as a browser-reachable admin reports workbench backed by `ReportCatalog`, `ReportQuery`, `ReportResult`, and `ReportPolicy`.
+- Added `AdminReportsWorkbench` Livewire UI with report, date, store, currency, and role controls; totals, table rows, CSV preview, empty state, and denied permission state.
+- Added responsive report workbench styling and route tests for the new browser surface.
+- Ignored local admin report Playwright screenshot exports.
+
+Verified:
+- Laravel Boost `search-docs` was attempted before code changes, but the sandbox could not resolve `boost.laravel.com`; the escalated retry was rejected by the approval reviewer, so no network workaround was attempted.
+- Sub-agent worker implemented the durable report table/seed/test slice and reported `vendor/bin/pint --dirty --format agent` passed plus `php artisan test --compact tests/Feature/ReportFoundationTest.php` passed with 7 tests and 42 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed after integration.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/ReportFoundationTest.php tests/Feature/ModernizationAdminReportsRouteTest.php` passed with 9 tests and 63 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan migrate --no-interaction` applied `2026_05_19_092205_create_report_facts_table`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=ReportFactSeeder --no-interaction` seeded local browser data.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/admin/reports` returned HTTP 200 from PHP 8.5.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/admin-reports.css` returned HTTP 200 from PHP 8.5.
+- Chrome/Playwright desktop opened `http://magento-lts.test/_modernization/admin/reports` with no console errors and verified seeded totals `180.00`, mixed currency, store/currency filtering to `125.00`, coupon report `7.50`, CSV preview, low-stock empty state, and denied role state.
+- Chrome/Playwright mobile viewport `390x844` verified responsive layout plus coupon report and denied role state with no browser console errors.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- The admin reports route is still a modernization workbench surface and is not yet guarded by the final admin auth route boundary.
+- Current `report_facts` shape is aggregate-only and does not yet represent report-specific Magento columns such as coupon code, SKU, order counts, subtotal rows, or low-stock item detail.
+
+Next:
+- Commit this verified admin reports implementation slice, then continue with the next browser-verifiable implementation surface before any broader documentation cleanup.

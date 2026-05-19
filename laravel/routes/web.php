@@ -32,6 +32,16 @@ Route::get('/_modernization/assets/livewire-parity.css', function () {
     ]);
 })->name('modernization.assets.livewire-parity');
 
+Route::get('/_modernization/admin/reports', function () {
+    return view('modernization.admin-reports');
+})->name('modernization.admin.reports');
+
+Route::get('/_modernization/assets/admin-reports.css', function () {
+    return response()->file(public_path('modernization/admin-reports.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-reports');
+
 Route::middleware('guest')->prefix('_modernization/auth')->group(function (): void {
     Route::get('/customer/login', [AuthBoundaryController::class, 'password'])->name('modernization.auth.customer.login');
     Route::get('/admin/login', [AuthBoundaryController::class, 'password'])->name('login');

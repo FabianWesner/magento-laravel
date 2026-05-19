@@ -7,7 +7,8 @@ use App\Models\User;
 use App\Modernization\Reports\ReportCatalog;
 use App\Modernization\Reports\ReportQuery;
 use App\Policies\Modernization\Reports\ReportPolicy;
-use Illuminate\Database\Schema\Blueprint;
+use Database\Seeders\ReportFactSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +16,8 @@ use Tests\TestCase;
 
 class ReportFoundationTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @var list<string>
      */
@@ -32,22 +35,6 @@ class ReportFoundationTest extends TestCase
         'CJ-015',
         'CJ-020',
     ];
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Schema::dropIfExists('report_facts');
-        Schema::create('report_facts', function (Blueprint $table): void {
-            $table->id();
-            $table->string('report_key');
-            $table->string('bucket');
-            $table->decimal('amount', 12, 2);
-            $table->unsignedInteger('store_id');
-            $table->string('currency', 3);
-            $table->date('reported_at');
-        });
-    }
 
     public function test_sales_tax_shipping_invoiced_refunded_and_coupon_reports_are_registered(): void
     {
@@ -104,6 +91,41 @@ class ReportFoundationTest extends TestCase
             'store_id' => 1,
             'currency' => 'USD',
         ]);
+    }
+
+    public function test_report_facts_migration_and_seed_data_support_report_query(): void
+    {
+        $this->assertTrue(Schema::hasTable('report_facts'));
+        $this->assertTrue(Schema::hasColumns('report_facts', [
+            'id',
+            'report_key',
+            'bucket',
+            'amount',
+            'store_id',
+            'currency',
+            'reported_at',
+        ]));
+
+        $this->seed(ReportFactSeeder::class);
+
+        $result = $this->app->make(ReportQuery::class)->run($this->app->make(ReportCatalog::class)->get('sales'), [
+            'from_date' => '2026-05-01',
+            'to_date' => '2026-05-01',
+            'store_id' => 9001,
+            'currency' => 'USD',
+        ]);
+
+        $this->assertSame(2, $result->count);
+        $this->assertSame(125.00, $result->total);
+        $this->assertSame([
+            [
+                'bucket' => '2026-05-01',
+                'currency' => 'USD',
+                'total' => 125.00,
+                'count' => 2,
+                'average' => 62.50,
+            ],
+        ], $result->rows);
     }
 
     public function test_before_and_after_aggregation_job_behavior_uses_report_table_snapshots(): void
