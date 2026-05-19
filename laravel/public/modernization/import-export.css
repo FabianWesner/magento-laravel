@@ -1,0 +1,327 @@
+:root {
+    color-scheme: light;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f7f4;
+    color: #18201f;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        linear-gradient(180deg, rgba(30, 73, 88, 0.08), rgba(30, 73, 88, 0) 280px),
+        #f5f7f4;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+.import-export-shell {
+    width: min(1240px, calc(100vw - 48px));
+    margin: 0 auto;
+    padding: 34px 0 64px;
+}
+
+.import-export-page-header {
+    max-width: 930px;
+    margin-bottom: 24px;
+}
+
+.import-export-page-header p,
+.import-export-section-header p,
+.import-export-plan p {
+    margin: 0 0 8px;
+    color: #5b665f;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.import-export-page-header h1 {
+    margin: 0;
+    color: #122623;
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    line-height: 0.98;
+    letter-spacing: 0;
+}
+
+.import-export-page-header span {
+    display: block;
+    margin-top: 12px;
+    color: #52605b;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.import-export-card {
+    border: 1px solid #d8ded6;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 22px 70px rgba(20, 33, 30, 0.08);
+    padding: 22px;
+}
+
+.import-export-section-header {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.import-export-section-header h2 {
+    margin: 0;
+    color: #132825;
+    font-size: 1.45rem;
+    letter-spacing: 0;
+}
+
+.import-export-section-header span {
+    color: #6c2e1f;
+    font-weight: 800;
+}
+
+.import-export-controls {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.import-export-controls label {
+    display: grid;
+    gap: 7px;
+    color: #42504b;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.import-export-controls input,
+.import-export-controls select {
+    width: 100%;
+    min-height: 40px;
+    border: 1px solid #c7d0c9;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #18201f;
+    padding: 9px 10px;
+}
+
+.import-export-controls input:focus,
+.import-export-controls select:focus,
+.import-export-toolbar button:focus,
+.import-export-active-filters button:focus {
+    outline: 3px solid rgba(30, 115, 120, 0.24);
+    outline-offset: 2px;
+}
+
+.import-export-toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 6px 0 18px;
+}
+
+.import-export-summary,
+.import-export-toolbar [role="toolbar"],
+.import-export-active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.import-export-summary span,
+.import-export-active-filters span {
+    border: 1px solid #d7ddd6;
+    border-radius: 999px;
+    background: #f8faf7;
+    color: #23312e;
+    padding: 8px 11px;
+    font-size: 0.83rem;
+    font-weight: 800;
+}
+
+.import-export-toolbar button,
+.import-export-active-filters button {
+    min-height: 40px;
+    border: 1px solid #c7d0c9;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #23312e;
+    padding: 8px 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.import-export-toolbar button.is-active {
+    border-color: #1e7378;
+    background: #1e7378;
+    color: #ffffff;
+}
+
+.import-export-active-filters {
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.import-export-plan {
+    display: grid;
+    gap: 7px;
+    border: 1px solid #d9d2c5;
+    border-radius: 8px;
+    background: #fffaf0;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.import-export-plan h3 {
+    margin: 0;
+    font-size: 1.08rem;
+    letter-spacing: 0;
+}
+
+.import-export-plan span {
+    color: #654321;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.import-export-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.import-export-grid article {
+    display: flex;
+    min-height: 280px;
+    flex-direction: column;
+    gap: 9px;
+    border: 1px solid #d9ded7;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 16px;
+}
+
+.import-export-grid article.import-export-problem-card {
+    border-color: #d58c6b;
+    background: #fff8f4;
+}
+
+.import-export-grid article > span {
+    color: #5d6a64;
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.import-export-grid h3 {
+    margin: 0;
+    color: #132825;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.import-export-grid p,
+.import-export-grid small,
+.import-export-grid strong,
+.import-export-grid em {
+    margin: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.45;
+}
+
+.import-export-grid p,
+.import-export-grid small {
+    color: #53605b;
+}
+
+.import-export-grid strong {
+    color: #25332f;
+}
+
+.import-export-grid em {
+    color: #85412a;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.import-export-grid button {
+    width: 100%;
+    min-height: 40px;
+    margin-top: auto;
+    border: 0;
+    border-radius: 6px;
+    background: #e7ebe5;
+    color: #5d665f;
+    font-weight: 900;
+}
+
+.import-export-state {
+    border: 1px solid #d8ded6;
+    border-radius: 8px;
+    background: #f8faf7;
+    color: #33413d;
+    padding: 16px;
+    font-weight: 800;
+}
+
+.import-export-state-danger {
+    border-color: #d58c6b;
+    background: #fff4ef;
+    color: #7c311a;
+}
+
+@media (max-width: 1040px) {
+    .import-export-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .import-export-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 680px) {
+    .import-export-shell {
+        width: min(100vw - 24px, 420px);
+        padding-top: 28px;
+    }
+
+    .import-export-page-header h1 {
+        font-size: 2.45rem;
+    }
+
+    .import-export-card {
+        padding: 18px;
+    }
+
+    .import-export-controls,
+    .import-export-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .import-export-toolbar {
+        display: grid;
+    }
+
+    .import-export-toolbar [role="toolbar"] {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 2px;
+    }
+
+    .import-export-grid article {
+        min-height: 250px;
+    }
+}

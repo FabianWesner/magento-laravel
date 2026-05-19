@@ -56,6 +56,16 @@ Route::get('/_modernization/assets/cache-index.css', function () {
     ]);
 })->name('modernization.assets.cache-index');
 
+Route::get('/_modernization/admin/import-export', function () {
+    return view('modernization.import-export');
+})->name('modernization.admin.import-export');
+
+Route::get('/_modernization/assets/import-export.css', function () {
+    return response()->file(public_path('modernization/import-export.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.import-export');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

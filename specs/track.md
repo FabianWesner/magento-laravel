@@ -2,6 +2,23 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 14:20 CEST - Why The Import/Export Dataflow Workbench Exists
+
+The import/export slice exists because Magento has two overlapping admin concepts here: modern ImportExport screens for CSV product/customer movement, and older Dataflow profiles for wizard-based or advanced batch jobs. They share operational concerns such as uploaded files, generated exports, validation messages, row counts, batch history, failed rows, and permission boundaries, but they do not behave like a simple CRUD grid.
+
+I built this as a read-only workbench because running imports or exports would be the wrong first step without canonical project fixtures and final admin auth boundaries. The useful increment is to make the states inspectable in Chrome: valid product import, failed customer import, generated product export, scheduled customer export, dataflow profile progress, generated files, blocked DE profile, and denied-role behavior.
+
+The core reasoning was:
+
+- Keep modern ImportExport and legacy Dataflow as separate domain snapshots, then combine them in UI sections where an operator would expect to inspect imports, exports, profiles, and files.
+- Tighten fixtures to Magento core behavior after the legacy scan: products, customers, CSV, and stock dataflow profiles instead of introducing speculative project-overlay examples.
+- Represent row totals, processed counts, failed counts, batch IDs, generated files, and error files directly on cards because those are the migration-critical operational signals.
+- Keep buttons disabled and label them as previews/inspection only, avoiding uploads, downloads, batch execution, and file writes in the local workbench.
+- Normalize every Livewire filter before it touches snapshots because the component state is browser-controlled.
+- Use subagents for parallel context: one inspected Laravel patterns and one inspected Magento ImportExport/Dataflow behavior, while the main path integrated and browser-verified the slice.
+
+The tradeoff is that this improves characterization and local Laravel-side inspection, not production import/export parity. Final project overlay rows, real fixture restore, generated-file retention policy, admin ACL integration, final screenshots, accessibility, performance, CI, and cutover evidence remain open.
+
 ## 2026-05-19 14:04 CEST - Why The Cache/Index Workbench Exists
 
 The cache/index slice exists because Magento's admin cache screen is an operations surface, not a simple settings page. It combines cache-type enablement, invalidated tags, stale output, compiler controls, index process state, unprocessed index events, cron scheduling, lock ownership, and failure diagnostics. Those details are easy to flatten away if the replacement starts directly with a final admin controller.

@@ -30,6 +30,41 @@ Next:
 
 ## Entries
 
+## 2026-05-19 14:20 CEST - Admin Import Export Dataflow Workbench Implementation
+
+Changed:
+- Added deterministic `import_export` and `dataflow` `domain_facts` fixtures for product/customer CSV import/export, validation failures, generated files, dataflow profiles, batch progress, row counts, error files, and DE store-view diagnostics.
+- Tightened AD-013 fixtures to Magento-core product/customer ImportExport behavior and core dataflow stock/customer/product profiles after the legacy source scan.
+- Added the `/_modernization/admin/import-export` Livewire workbench with imports, exports, profiles, files, store-view, status, operation, entity, empty-state, and denied-role states.
+- Added the import/export route, CSS asset route, responsive CSS, focused PHPUnit route/Livewire coverage, and public filter normalization.
+- Updated AD-013 backlog/tasklist/open-issues/reasoning tracking after browser verification.
+- Ignored local import/export Playwright screenshots.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel implementation pattern review and Magento ImportExport/Dataflow behavior context before integration.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/ImportExportWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationImportExportRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/DomainFoundationTest.php` passed from repository root.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationImportExportRouteTest.php` passed with 15 tests and 728 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/admin/import-export` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/import-export.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial import rows, exports section, profiles section, files section, DE store-view filter, blocked/error-file state, catalog-product empty state, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, import cards, disabled actions, and clean current console output.
+- Screenshots were captured as `import-export-desktop-2026-05-19.png` and `import-export-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 119 tests and 1510 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final Magento/Laravel parity screenshots, canonical fixtures, generated-file retention, admin ACL integration, accessibility, performance, hosted CI, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit this verified admin import/export dataflow workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 14:04 CEST - Admin Cache Index Workbench Implementation
 
 Changed:

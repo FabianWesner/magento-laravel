@@ -619,6 +619,56 @@ class DomainFoundationTest extends TestCase
         ]);
     }
 
+    public function test_domain_fact_seeder_provides_import_export_dataflow_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $queryService = $this->app->make(DomainQueryService::class);
+        $importExportSnapshot = $queryService->snapshot('import_export');
+        $dataflowSnapshot = $queryService->snapshot('dataflow');
+        $deImportExportSnapshot = $queryService->snapshot('import_export', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $deDataflowSnapshot = $queryService->snapshot('dataflow', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame(6, $importExportSnapshot['payload']['count']);
+        $this->assertSame(6, $dataflowSnapshot['payload']['count']);
+        $this->assertSame(2, $deImportExportSnapshot['payload']['count']);
+        $this->assertSame(2, $deDataflowSnapshot['payload']['count']);
+
+        $customerImport = collect($importExportSnapshot['payload']['rows'])
+            ->firstWhere('entity_id', 11002);
+        $priceImportProfile = collect($dataflowSnapshot['payload']['rows'])
+            ->firstWhere('entity_id', 11102);
+        $deCustomerProfile = collect($deDataflowSnapshot['payload']['rows'])
+            ->firstWhere('entity_id', 11106);
+
+        $this->assertSame('failed', $customerImport['payload']['status']);
+        $this->assertSame('var/importexport/customer-import-errors.csv', $customerImport['payload']['error_file']);
+        $this->assertSame(2, $customerImport['payload']['rows_failed']);
+        $this->assertSame('dataflow-batch-702', $priceImportProfile['payload']['batch_id']);
+        $this->assertSame('var/importexport/price-import-errors.csv', $priceImportProfile['payload']['error_file']);
+        $this->assertSame('blocked', $deCustomerProfile['payload']['status']);
+        $this->assertSame('var/importexport/de-customer-import-errors.csv', $deCustomerProfile['payload']['error_file']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'import_export',
+            'entity_id' => 11003,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'dataflow',
+            'entity_id' => 11105,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
     public function test_media_filesystem_traversal_missing_media_and_downloadable_behavior(): void
     {
         Storage::fake('domain-media');
