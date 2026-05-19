@@ -1654,3 +1654,34 @@ Blocked:
 
 Next:
 - Commit the Laravel bootstrap foundation services, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:02 CEST - Laravel EAV Read Repository Foundation
+
+Changed:
+- Added a read-only Laravel EAV access layer for product, category, customer, and address entities.
+- Added `EavEntityType`, `EavAttribute`, `EavAttributeValueReaderContract`, `EavAttributeValueReader`, and entity-specific repository wrappers.
+- Registered `EavServiceProvider` so the EAV reader contract resolves through Laravel's container with the active database connection.
+- Added PHPUnit fixture coverage for Magento-style store-scope fallback, static product attributes, customer/address unscoped EAV values, missing attributes, legacy resource model parity language, and critical read query count assertions.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `query builder`, `database testing`, `database query count`, `service container binding`, and `phpunit database` against Laravel framework `13.x` docs.
+- `php artisan make:provider`, `php artisan make:interface`, `php artisan make:class`, and `php artisan make:test EavAttributeValueReaderTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/EavAttributeValueReaderTest.php` passed with 5 tests and 8 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 20 tests and 52 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed after formatting the dirty PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Eav app/Providers/EavServiceProvider.php tests/Feature/EavAttributeValueReaderTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-eav-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-eav-target.php --final` now fails only for missing final EAV parity evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 60 files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel EAV read repository foundation, then continue with the next unblocked parity slice.
