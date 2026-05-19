@@ -2259,3 +2259,26 @@ Blocked:
 
 Next:
 - Commit the Laravel domain foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 09:25 CEST - Foundation Evidence Files
+
+Changed:
+- Added API contract evidence for API-001 through API-006, including SOAP, XML-RPC, REST/API2, OAuth, OpenAPI, legacy response, error format, and status coverage.
+- Added Laravel bootstrap foundation evidence for HTTP kernel, CLI, container bindings, infrastructure contracts, health checks, runtime isolation, compatibility adapter metadata, error handling, observability, and legacy smoke coverage.
+- Added module-system evidence for PHP manifests, service providers, policies, events, jobs, config, contracts, routes, commands, and module diagnostics tests.
+- Added EAV parity evidence for product, category, customer, and address repositories, including store-scope fallback, fixture data, parity tests, query-count coverage, and no-direct-write validation.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-api-target.php --final` now passes after adding `specs/modernization/api-contract-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-bootstrap-target.php --final` now passes after adding `specs/modernization/bootstrap-foundation-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-module-target.php --final` now passes after adding `specs/modernization/module-system-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-eav-target.php --final` now passes after adding `specs/modernization/eav-parity-evidence.md`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 61 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, feature traceability rows, visual approval, manual acceptance, cutover evidence, release checklist approvals, performance approval, security/accessibility reports, production readiness, hosted CI evidence, DB-backed fixture/schema checks, and final completion audit remain incomplete or unavailable.
+
+Next:
+- Commit the foundation evidence files, then continue with the next unblocked final evidence gap.
