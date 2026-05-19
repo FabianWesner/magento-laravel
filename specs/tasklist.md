@@ -19,6 +19,7 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Admin permissions workbench | `/_modernization/admin/admin-permissions`, focused PHPUnit, Chrome desktop/mobile, role/resource/API/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin integrations/API workbench | `/_modernization/admin/integration-api`, focused PHPUnit, Chrome desktop/mobile, status/feature/query/role filters. | Not release-ready. |
 | 2026-05-19 | Admin cron/job operations workbench | `/_modernization/admin/cron-jobs`, focused PHPUnit, Chrome desktop/mobile, job/config/report/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin tax/currency workbench | `/_modernization/admin/tax-currency`, focused PHPUnit, Chrome desktop/mobile, tax/rate/rule/currency/job/problem filters. | Not release-ready. |

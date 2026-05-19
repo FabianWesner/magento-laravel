@@ -30,6 +30,43 @@ Next:
 
 ## Entries
 
+## 2026-05-19 15:51 CEST - Admin Permissions Workbench Implementation
+
+Changed:
+- Added `AdminPermissionCatalog` to turn the existing `PermissionManifest` and deterministic API permission fixtures into browser-ready rows for admin roles, ACL resources, classic API users/roles, REST/API2 role types, OAuth consumers/tokens, denied states, rollback metadata, and attention states.
+- Added `AdminPermissionPolicy` and the `/_modernization/admin/admin-permissions` Livewire workbench with roles, resources, API, problems, search, status, kind, feature, role, viewer-role, empty-state, read-only-viewer, and denied-viewer states.
+- Added the admin permissions route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/catalog coverage, and modernization module manifest references for the new route/view/policy.
+- Included legacy ACL risks surfaced by subagents: menu ACL can diverge from direct action ACL, and API2/OAuth declared ACL paths can differ from runtime controller checks.
+- Replaced class-style legacy labels in Laravel diagnostics after the removed-technology gate correctly flagged them as banned target-code references.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after browser verification.
+- Ignored local admin-permissions Playwright screenshots.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel permissions/workbench pattern review and legacy Magento admin/API ACL behavior context before finalizing the slice.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Auth/AdminPermissionCatalog.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/AdminPermissionsWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Policies/Modernization/Auth/AdminPermissionPolicy.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationAdminPermissionsRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/AuthSecurityFoundationTest.php tests/Feature/ApiContractFoundationTest.php tests/Feature/ModernizationAdminPermissionsRouteTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 24 tests and 177 assertions.
+- `curl -I http://magento-lts.test/_modernization/admin/admin-permissions` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/admin-permissions.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial role counts, resources, API guest role filtering, API-003 problem filtering, empty query state, denied viewer state, disabled read-only actions, API2/OAuth ACL mismatch text, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, role cards, API-003 problem filtering, disabled actions, and clean current console output.
+- Chrome/Playwright post-fix desktop and mobile verification passed after replacing banned class-style legacy labels in the browser-visible API permission rows.
+- Screenshots were captured as `admin-permissions-desktop-2026-05-19.png` and `admin-permissions-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `git diff --check` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` initially failed the removed-technology check because class-style legacy labels appeared in Laravel target code; after replacing those labels, the same gate passed in normal no-DB mode, with Laravel tests passing 142 tests and 1821 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final admin/API permission parity still needs real admin/API users, API roles, API2 attribute rules, OAuth token lifecycle fixtures, direct URL denial evidence, ADR 0008 approval, manual security review, hosted CI, production runbook, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 15:32 CEST - Admin Integrations API Workbench Implementation
 
 Changed:

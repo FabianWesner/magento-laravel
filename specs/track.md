@@ -2,6 +2,22 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 15:51 CEST - Why The Admin Permissions Workbench Exists
+
+The admin permissions slice exists because Magento admin authorization is more than a role name on a user. It includes admin users, admin roles, menu ACL filtering, direct controller action checks, session-cached ACL state, SOAP/XML-RPC API users and roles, REST/API2 roles and attributes, OAuth consumers and tokens, and several denied-state formats. A Laravel cutover needs those boundaries visible before any user, role, token, or permission mutation exists.
+
+I implemented this as a read-only workbench under `/_modernization/admin/admin-permissions`. It does not create users, save roles, rotate keys, revoke tokens, log users in, reset passwords, or call API endpoints. The useful increment is a Chrome-verifiable diagnostic surface for the current `PermissionManifest`, admin role fixtures, ACL resources, classic API users/roles, REST/API2 admin/customer/guest roles, OAuth consumers/tokens, denied states, rollback metadata, empty states, and denied viewer behavior.
+
+The legacy scan shaped the scope:
+
+- Admin menus can be ACL-filtered differently from direct controller action checks, so the workbench makes menu-visible and direct-URL denial concerns explicit.
+- Legacy admin user and role saves require current admin password plus form/secret key checks; this local slice deliberately avoids every write path.
+- SOAP/XML-RPC API ACL uses separate API user, role, rule, and session tables, and failures surface as API faults such as access denied or session expired.
+- REST/API2 falls back to Guest when an OAuth Authorization header is absent, so guest behavior must be explicit rather than treated as generic auth failure.
+- API2 and OAuth declared ACL XML paths do not always match runtime controller checks; the workbench carries that mismatch as a parity risk instead of smoothing it away.
+
+This slice is deliberately not final auth cutover. ADR 0008 remains proposed, final admin auth and API permission fixtures are absent, and the release still needs real admin/API users, API roles, API2 attribute rules, OAuth token lifecycle fixtures, direct URL denial evidence, manual security review, hosted CI, production runbook, and final Magento/Laravel screenshot evidence.
+
 ## 2026-05-19 15:32 CEST - Why The Integrations/API Workbench Exists
 
 The integrations/API slice exists because Magento's external surface is not one API. The legacy application has classic SOAP and XML-RPC entrypoints, REST/API2 with OAuth and guest behavior, admin-managed API users and roles, payment redirects and callbacks, shipping and currency service calls, webhook-style integrations, retry/timeout behavior, secrets, and rollback concerns. Replacing any of that without a visible diagnostic layer would hide the highest-risk parts of the cutover.

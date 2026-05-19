@@ -106,6 +106,16 @@ Route::get('/_modernization/assets/integration-api.css', function () {
     ]);
 })->name('modernization.assets.integration-api');
 
+Route::get('/_modernization/admin/admin-permissions', function () {
+    return view('modernization.admin-permissions');
+})->name('modernization.admin.admin-permissions');
+
+Route::get('/_modernization/assets/admin-permissions.css', function () {
+    return response()->file(public_path('modernization/admin-permissions.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-permissions');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

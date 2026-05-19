@@ -7,8 +7,11 @@ use App\Http\Resources\LegacyApiContractResource;
 use App\Jobs\Modernization\Cron\CaptureCronParitySnapshot;
 use App\Jobs\Modernization\Modules\VerifyModuleRegistry;
 use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Modernization\Auth\AdminPermissionCatalog;
+use App\Modernization\Auth\PermissionManifest;
 use App\Modernization\Config\ScopedConfig;
 use App\Policies\LegacyApiContractPolicy;
+use App\Policies\Modernization\Auth\AdminPermissionPolicy;
 use App\Policies\Modernization\Cron\CronPolicy;
 use App\Policies\Modernization\Integrations\IntegrationPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
@@ -42,6 +45,7 @@ return [
                 '/_modernization/modules',
                 '/_modernization/admin/cron-jobs',
                 '/_modernization/admin/integration-api',
+                '/_modernization/admin/admin-permissions',
             ],
             'commands' => [
                 'modernization:modules',
@@ -61,6 +65,7 @@ return [
                 'cron_jobs.jobs',
                 'integrations.adapters',
                 'modernization.modules',
+                PermissionManifest::class,
                 'scoped_config.implementation',
             ],
             'views' => [
@@ -68,6 +73,8 @@ return [
                 'livewire.cron-jobs-workbench',
                 'modernization.integration-api',
                 'livewire.integration-api-workbench',
+                'modernization.admin-permissions',
+                'livewire.admin-permissions-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,
@@ -75,6 +82,7 @@ return [
             ],
             'policies' => [
                 LegacyApiContractPolicy::class,
+                AdminPermissionPolicy::class,
                 CronPolicy::class,
                 IntegrationPolicy::class,
                 ModuleRegistryPolicy::class,
@@ -85,6 +93,7 @@ return [
                 LegacyApiContractResource::class,
             ],
             'typed_config' => [
+                AdminPermissionCatalog::class,
                 ScopedConfig::class,
             ],
         ],
