@@ -2,6 +2,22 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 16:25 CEST - Why The Admin Customer Workbench Exists
+
+The admin customer slice exists because Magento customer administration is not just a table of accounts. It includes an AJAX-backed customer grid, EAV-generated account fields, addresses, website-specific email uniqueness, customer groups, newsletter state, recent activity, orders, carts, wishlist, reviews, tags, default billing and shipping addresses, and ACL-gated tabs.
+
+I implemented this as a read-only workbench under `/_modernization/admin/customer-management`. It does not save customers, create customers, delete customers, mass-update groups, subscribe or unsubscribe newsletters, change passwords, create orders, delete carts, configure wishlists, edit reviews, edit tags, send emails, or write back to Magento tables. The useful increment is a Chrome-verifiable diagnostic surface for customer rows, addresses, wishlist and compare rows, review/tag moderation rows, problem rows, DE store-view values, empty states, and denied viewer behavior.
+
+The legacy scan shaped the scope:
+
+- Customer grids join EAV and default billing data, so the workbench carries account summary and address signals together instead of showing only names and emails.
+- Customer account and address forms are generated from EAV form codes, so final parity cannot hardcode only the current fixture fields.
+- Existing customer website assignment is immutable in legacy admin, and email uniqueness is per website, which needs real fixture coverage before any write path exists.
+- Customer saves can delete omitted addresses, toggle newsletter state, change passwords, dispatch events, and send emails, so this slice deliberately avoids every mutation.
+- Wishlist, reviews, and tags are admin-visible customer tabs, but legacy also exposes destructive actions; this slice keeps them inspectable with disabled actions only.
+
+This slice improves admin customer inspection for `AD-007` while also surfacing related `SF-010`, `SF-011`, and `AD-009` signals, but it is not final customer admin cutover. Real customer fixtures, multi-website duplicate-email cases, full EAV forms, order/cart/newsletter queue fixtures, admin ACL integration, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
 ## 2026-05-19 16:11 CEST - Why The Admin Catalog Workbench Exists
 
 The admin catalog slice exists because Magento product and category administration is much broader than a product grid. It includes product grids, store-view overrides, attribute sets, custom options, configurable attributes, category tree assignments, media gallery roles, missing image states, downloadable files, product status, inventory signals, mass actions, and ACL boundaries.

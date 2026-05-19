@@ -126,6 +126,16 @@ Route::get('/_modernization/assets/admin-catalog.css', function () {
     ]);
 })->name('modernization.assets.admin-catalog');
 
+Route::get('/_modernization/admin/customer-management', function () {
+    return view('modernization.admin-customer');
+})->name('modernization.admin.customer-management');
+
+Route::get('/_modernization/assets/admin-customer.css', function () {
+    return response()->file(public_path('modernization/admin-customer.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-customer');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

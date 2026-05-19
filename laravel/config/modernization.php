@@ -47,6 +47,7 @@ return [
                 '/_modernization/admin/integration-api',
                 '/_modernization/admin/admin-permissions',
                 '/_modernization/admin/catalog-management',
+                '/_modernization/admin/customer-management',
             ],
             'commands' => [
                 'modernization:modules',
@@ -78,6 +79,8 @@ return [
                 'livewire.admin-permissions-workbench',
                 'modernization.admin-catalog',
                 'livewire.admin-catalog-workbench',
+                'modernization.admin-customer',
+                'livewire.admin-customer-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,

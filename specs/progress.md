@@ -30,6 +30,38 @@ Next:
 
 ## Entries
 
+## 2026-05-19 16:25 CEST - Admin Customer Management Workbench Implementation
+
+Changed:
+- Added the `/_modernization/admin/customer-management` Livewire workbench to inspect deterministic customer grid, address book, wishlist, compare, review moderation, tag moderation, and problem rows from existing domain facts.
+- Added the admin customer route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire coverage, modernization module manifest references, and ignored local admin-customer Playwright screenshots.
+- Kept the slice read-only after the legacy scan confirmed customer saves, address updates/deletes, newsletter status changes, group assignment, password changes, mass actions, emails, wishlist deletes/configures, review edits, and tag edits are high-risk before final fixtures and auth cutover.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after Chrome verification.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel workbench pattern review and legacy Magento admin customer/account/address/activity/moderation behavior context before finalizing the slice.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/AdminCustomerWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l routes/web.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationAdminCustomerRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationAdminCustomerRouteTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 24 tests and 794 assertions.
+- `curl -I http://magento-lts.test/_modernization/admin/customer-management` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/admin-customer.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial customer summary, address section, wishlist/compare activity filtering, pending review/tag moderation filtering, problem rows, DE store-view row, empty query state, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, DE problem empty state, disabled actions, and clean current console output.
+- Screenshots were captured as `admin-customer-desktop-2026-05-19.png` and `admin-customer-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `git diff --check` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 150 tests and 1915 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final admin customer parity still needs real project customer fixtures, multi-website duplicate-email cases, full EAV account/address forms, order/cart/newsletter queue fixtures, admin ACL integration, hosted CI, manual acceptance, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 16:11 CEST - Admin Catalog Management Workbench Implementation
 
 Changed:
