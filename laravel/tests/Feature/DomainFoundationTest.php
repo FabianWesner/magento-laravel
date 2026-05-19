@@ -100,6 +100,7 @@ class DomainFoundationTest extends TestCase
         $this->assertContains('Review', $contexts);
         $this->assertContains('Tag', $contexts);
         $this->assertContains('Newsletter', $contexts);
+        $this->assertContains('Poll', $contexts);
         $this->assertContains('Contact', $contexts);
         $this->assertTrue($plan['send to friend']);
         $this->assertTrue($this->app->make(CommunicationService::class)->plan('product alert', 'customer@example.test')['product alert']);
@@ -159,6 +160,31 @@ class DomainFoundationTest extends TestCase
         $this->assertSame('de_DE', $deNewsletterPayloads[0]['store_scope']['locale']);
         $this->assertSame('Problembericht', $deNewsletterPayloads[2]['ui']['badge']);
         $this->assertSame('recipient_complaint', $deNewsletterPayloads[2]['email']['failure_reason']);
+
+        $pollSnapshot = $this->app->make(DomainQueryService::class)->snapshot('poll', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $pollPayloads = array_column($pollSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Poll', $pollSnapshot['feature']['context']);
+        $this->assertSame(3, $pollSnapshot['payload']['count']);
+        $this->assertSame(['active', 'closed', 'invalid'], array_column($pollPayloads, 'status'));
+        $this->assertSame('Homepage Satisfaction', $pollPayloads[0]['question']);
+        $this->assertSame(96, $pollPayloads[0]['total_votes']);
+        $this->assertSame('missing_answer_label', $pollPayloads[2]['problem']['type']);
+
+        $dePollSnapshot = $this->app->make(DomainQueryService::class)->snapshot('poll', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $dePollPayload = $dePollSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertSame(1, $dePollSnapshot['payload']['count']);
+        $this->assertSame('Startseite Bewertung', $dePollPayload['question']);
+        $this->assertSame('Sehr gut', $dePollPayload['answers'][0]['label']);
 
         $contactSnapshot = $this->app->make(DomainQueryService::class)->snapshot('contact', [
             'store_id' => 9001,
@@ -236,6 +262,12 @@ class DomainFoundationTest extends TestCase
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'newsletter',
             'entity_id' => 10606,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'poll',
+            'entity_id' => 11604,
             'store_id' => 9002,
             'store_view' => 'de',
         ]);

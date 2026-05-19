@@ -49,6 +49,7 @@ return [
                 '/_modernization/admin/catalog-management',
                 '/_modernization/admin/customer-management',
                 '/_modernization/admin/cms-design',
+                '/_modernization/admin/newsletter-polls',
             ],
             'commands' => [
                 'modernization:modules',
@@ -84,6 +85,8 @@ return [
                 'livewire.admin-customer-workbench',
                 'modernization.admin-cms-design',
                 'livewire.admin-cms-design-workbench',
+                'modernization.admin-newsletter-polls',
+                'livewire.admin-newsletter-polls-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,

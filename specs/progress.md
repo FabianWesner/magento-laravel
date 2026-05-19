@@ -30,6 +30,40 @@ Next:
 
 ## Entries
 
+## 2026-05-19 17:00 CEST - Admin Newsletter/Polls Workbench Implementation
+
+Changed:
+- Added the `/_modernization/admin/newsletter-polls` Livewire workbench to inspect deterministic newsletter subscriber, template, queue, problem report, poll, and poll answer rows.
+- Added deterministic poll domain facts for active, closed, invalid, missing-label, and DE localized poll states, with cleanup ids so repeated seeding remains stable.
+- Added the admin newsletter/polls route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/domain coverage, modernization module manifest references, and ignored local admin-newsletter-polls Playwright screenshots.
+- Linked `poll` into the domain catalog for `AD-015`, while retaining newsletter linkage to `SF-016`, `AD-015`, and `CJ-022`.
+- Kept the slice read-only after the legacy scan confirmed newsletter template saves, queue state transitions, scheduled sends, problem-report mutation, poll validation saves, answer deletes, and vote aggregation are high-risk before final fixtures and auth cutover.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after Chrome verification.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied legacy Magento newsletter/poll behavior context, Laravel implementation constraints, and the implementation blueprint before finalizing the slice.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/AdminNewsletterPollsWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationAdminNewsletterPollsRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/ModernizationAdminNewsletterPollsRouteTest.php tests/Feature/ModernizationCommunicationsRouteTest.php tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 27 tests and 849 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data after Chrome exposed missing poll rows in the live Herd database.
+- `curl -I http://magento-lts.test/_modernization/admin/newsletter-polls` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/admin-newsletter-polls.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for summary counts, subscribers, templates, failed queue filter, active poll filter, DE store-view poll scoping, DE answer rows, DE problem rows, empty query state, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, summary wrapping, DE problem row readability, disabled actions, and clean current console output.
+- Browser verification improved the implementation by catching missing live poll facts, missing poll seeder cleanup ids, over-broad answer problem counts, and noisy template titles.
+- Screenshots were captured as `admin-newsletter-polls-desktop-2026-05-19.png` and `admin-newsletter-polls-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 158 tests and 2028 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final admin newsletter/polls parity still needs real project subscriber/template/queue/problem/poll fixtures, mail artifacts, scheduled-send evidence, poll validation/write characterization, admin ACL integration, hosted CI, manual acceptance, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Commit this verified admin newsletter/polls implementation slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 16:41 CEST - Admin CMS Design Workbench Implementation
 
 Changed:

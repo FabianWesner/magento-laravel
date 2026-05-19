@@ -2,6 +2,24 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 17:00 CEST - Why The Admin Newsletter/Polls Workbench Exists
+
+The admin newsletter/polls slice exists because Magento treats customer communication and polls as operational admin surfaces, not just content records. Newsletter subscribers, templates, queue states, cron sends, problem reports, suppression behavior, poll questions, answer validation, vote guards, close/reopen rules, and store scope all carry migration risk. A replacement that starts with write-capable admin screens would be premature without mail artifacts, scheduler evidence, and final fixtures.
+
+I implemented this as a read-only workbench under `/_modernization/admin/newsletter-polls`. It does not save templates, queue newsletters, start/pause/resume/cancel sends, unsubscribe recipients, delete problem rows, save polls, delete answers, or recalculate vote aggregates. The useful increment is a Chrome-verifiable diagnostic surface for subscriber rows, template rows, queue rows, failed delivery/problem states, active/closed/invalid poll rows, answer rows, missing answer labels, DE store-view scoping, empty states, and denied viewer behavior.
+
+The legacy scan shaped the scope:
+
+- Newsletter admin is split across subscribers, templates, queue, and problem reports, so the workbench keeps those sections separate instead of flattening everything into one communication list.
+- Queue action availability depends on legacy integer states and scheduled-send behavior, so this local slice only displays queue diagnostics and keeps all actions disabled.
+- Newsletter problem reports can include suppressed recipients and send failures; those are first-class problem rows rather than hidden behind a generic failed status.
+- Poll admin has unusual behavior where validation can persist data through an AJAX path, while save only flashes success; this slice avoids every write path and represents invalid poll/answer fixtures explicitly.
+- Poll answers and vote totals need to be visible because missing labels, closed polls, and aggregate counts are where a final implementation can accidentally diverge from Magento.
+
+The browser pass changed the implementation. The first live Chrome check showed `0 polls` and `0 answers`, which proved the Herd database was behind the new deterministic fixtures. That led to adding poll ids to the seeder cleanup list and reseeding locally before continuing. Chrome also exposed that problem counts were too broad because all answers under an invalid poll were counted as problem rows; the final behavior counts the poll-level validation issue and only the missing-label answer as answer-level trouble. Template titles were tightened after the UI made them too noisy.
+
+This slice improves local admin inspection for `AD-015` and touches related communication/cron evidence for `SF-016` and `CJ-022`, but it is not final newsletter or poll cutover. Real subscriber/template/queue/problem/poll fixtures, mail artifacts, scheduled-send traces, unsubscribe semantics, poll validation/write characterization, admin ACL integration, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
 ## 2026-05-19 16:41 CEST - Why The Admin CMS Design Workbench Exists
 
 The admin CMS/design slice exists because Magento CMS administration is not just page content. It includes CMS pages with direct identifier routing, static blocks with WYSIWYG content, widget instances that create layout update rows, URL key uniqueness across selected stores, no-route/home-page configuration, page-level custom design fields, System > Design schedule records, theme/package configuration, and cache invalidation after content or layout changes.

@@ -27,6 +27,7 @@ class DomainCatalog
             'cms_block' => new DomainFeature('cms_block', 'CmsBlock', 'CMS block', ['SF-001', 'SF-013', 'AD-007', 'AD-009'], ['cms block', 'WYSIWYG media'], true),
             'widget' => new DomainFeature('widget', 'Widget', 'Widget output', ['SF-013', 'AD-007', 'AD-009'], ['widget instance'], true),
             'newsletter' => new DomainFeature('newsletter', 'Newsletter', 'Newsletter', ['SF-016', 'AD-015', 'CJ-022'], ['subscriber', 'problem reports', 'email'], true),
+            'poll' => new DomainFeature('poll', 'Poll', 'Polls', ['AD-015'], ['poll', 'answer', 'vote', 'closed', 'validation'], true),
             'contact' => new DomainFeature('contact', 'Contact', 'Contact and send to friend', ['SF-016', 'AD-017'], ['contact', 'product alert', 'send to friend', 'email'], true),
             'cache' => new DomainFeature('cache', 'Cache', 'Cache and compiler operations', ['AD-011', 'CB-013', 'CJ-016'], ['enabled', 'disabled', 'invalidated', 'stale cache', 'compiler'], true),
             'index' => new DomainFeature('index', 'Index', 'Index management', ['AD-011', 'CB-012', 'CJ-021'], ['ready', 'processing', 'reindex required', 'update required', 'lock'], true),

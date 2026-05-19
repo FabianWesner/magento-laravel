@@ -146,6 +146,16 @@ Route::get('/_modernization/assets/admin-cms-design.css', function () {
     ]);
 })->name('modernization.assets.admin-cms-design');
 
+Route::get('/_modernization/admin/newsletter-polls', function () {
+    return view('modernization.admin-newsletter-polls');
+})->name('modernization.admin.newsletter-polls');
+
+Route::get('/_modernization/assets/admin-newsletter-polls.css', function () {
+    return response()->file(public_path('modernization/admin-newsletter-polls.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-newsletter-polls');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

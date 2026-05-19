@@ -2,7 +2,7 @@
 
 This file is the human-readable open-issues backlog for ongoing execution. The canonical release-blocking defect register remains `specs/modernization/defect-register.md`; this file summarizes active blockers and working issues so they are easy to review.
 
-Last reviewed: 2026-05-19 16:41 CEST after admin CMS/design Chrome verification. No release-blocking issue was closed by this local workbench slice.
+Last reviewed: 2026-05-19 17:00 CEST after admin newsletter/polls Chrome verification. No release-blocking issue was closed by this local workbench slice.
 
 ## Maintenance Rules
 
@@ -36,5 +36,6 @@ Last reviewed: 2026-05-19 16:41 CEST after admin CMS/design Chrome verification.
 
 | Issue | Date | Evidence |
 | --- | --- | --- |
+| Admin newsletter/polls browser verification initially showed `0 polls` and `0 answers` because the live Herd database had not been reseeded after adding poll facts, and the seeder cleanup list omitted poll entity ids. | 2026-05-19 | Added poll entity ids to `DomainFactSeeder` cleanup, ran the deterministic seeder locally, and verified `4 polls`, `8 answers`, and `4 problems` in Chrome. |
 | Unsandboxed integration adapters could be labeled healthy in local diagnostics. | 2026-05-19 | Fixed `IntegrationDiagnosticsCatalog` so missing sandbox metadata becomes `mock-required` and attention-worthy; covered by focused PHPUnit. |
 | Browser favicon 404 polluted current Chrome console checks. | 2026-05-19 | Added a lightweight `/favicon.ico` 204 route and rechecked Playwright console output with no current warnings/errors. |

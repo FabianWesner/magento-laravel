@@ -13,8 +13,8 @@ class DomainFactSeeder extends Seeder
     public function run(): void
     {
         DB::table('domain_facts')
-            ->whereIn('feature_key', ['catalog', 'category', 'product', 'product_media', 'search', 'customer', 'customer_address', 'wishlist', 'compare', 'review', 'tag', 'newsletter', 'contact', 'cache', 'index', 'tax', 'currency', 'import_export', 'dataflow', 'system_config', 'downloadable', 'cms_page', 'cms_block', 'widget', 'sitemap', 'url_rewrite', 'store_scope'])
-            ->whereIn('entity_id', [1001, 1002, 1003, 2001, 2002, 3001, 3002, 3003, 3004, 4001, 4002, 4003, 4004, 4005, 4006, 5001, 5002, 6001, 6002, 7001, 7002, 7003, 7004, 8001, 8002, 9101, 9102, 9103, 9201, 9202, 9203, 9301, 9302, 9303, 9401, 9402, 9403, 10601, 10602, 10603, 10604, 10605, 10606, 10701, 10702, 10703, 10704, 10705, 10706, 10707, 10708, 10709, 10710, 10801, 10802, 10803, 10804, 10805, 10806, 10901, 10902, 10903, 10904, 10905, 10906, 11001, 11002, 11003, 11004, 11005, 11006, 11101, 11102, 11103, 11104, 11105, 11106, 11201, 11202, 11203, 11204, 11205, 11206, 11207, 11208, 11301, 11302, 11303, 11304, 11305, 11306, 11307, 11308, 11401, 11402, 11403, 11404, 11405, 11406, 11407, 10001, 10002, 10003, 10004, 10005, 10006, 10101, 10102, 10103, 10104, 10201, 10202, 10203, 10204, 10301, 10302, 10303, 10304, 10401, 10402, 10403, 10404, 10501, 10502])
+            ->whereIn('feature_key', ['catalog', 'category', 'product', 'product_media', 'search', 'customer', 'customer_address', 'wishlist', 'compare', 'review', 'tag', 'newsletter', 'poll', 'contact', 'cache', 'index', 'tax', 'currency', 'import_export', 'dataflow', 'system_config', 'downloadable', 'cms_page', 'cms_block', 'widget', 'sitemap', 'url_rewrite', 'store_scope'])
+            ->whereIn('entity_id', [1001, 1002, 1003, 2001, 2002, 3001, 3002, 3003, 3004, 4001, 4002, 4003, 4004, 4005, 4006, 5001, 5002, 6001, 6002, 7001, 7002, 7003, 7004, 8001, 8002, 9101, 9102, 9103, 9201, 9202, 9203, 9301, 9302, 9303, 9401, 9402, 9403, 10601, 10602, 10603, 10604, 10605, 10606, 10701, 10702, 10703, 10704, 10705, 10706, 10707, 10708, 10709, 10710, 10801, 10802, 10803, 10804, 10805, 10806, 10901, 10902, 10903, 10904, 10905, 10906, 11001, 11002, 11003, 11004, 11005, 11006, 11101, 11102, 11103, 11104, 11105, 11106, 11201, 11202, 11203, 11204, 11205, 11206, 11207, 11208, 11301, 11302, 11303, 11304, 11305, 11306, 11307, 11308, 11401, 11402, 11403, 11404, 11405, 11406, 11407, 11601, 11602, 11603, 11604, 10001, 10002, 10003, 10004, 10005, 10006, 10101, 10102, 10103, 10104, 10201, 10202, 10203, 10204, 10301, 10302, 10303, 10304, 10401, 10402, 10403, 10404, 10501, 10502])
             ->whereIn('store_id', [9001, 9002])
             ->delete();
 
@@ -1267,6 +1267,159 @@ class DomainFactSeeder extends Seeder
                         'badge' => 'Problembericht',
                         'summary' => 'DE suppressed recipient with failed campaign email',
                         'primary_action' => 'review_problem',
+                    ],
+                ]),
+            ],
+            [
+                'feature_key' => 'poll',
+                'entity_id' => 11601,
+                'store_id' => 9001,
+                'store_view' => 'default',
+                'payload' => json_encode([
+                    'poll_id' => 11601,
+                    'code' => 'homepage-satisfaction',
+                    'question' => 'Homepage Satisfaction',
+                    'status' => 'active',
+                    'is_active' => true,
+                    'visibility' => 'public',
+                    'answers' => [
+                        ['answer_id' => 116011, 'label' => 'Great', 'votes' => 84],
+                        ['answer_id' => 116012, 'label' => 'Needs work', 'votes' => 12],
+                    ],
+                    'total_votes' => 96,
+                    'store_scope' => [
+                        'store_id' => 9001,
+                        'store_view' => 'default',
+                        'locale' => 'en_US',
+                    ],
+                    'vote_guard' => [
+                        'mode' => 'cookie_and_ip',
+                        'allow_guest' => true,
+                        'duplicate_policy' => 'reject_duplicate_vote',
+                    ],
+                    'schedule' => [
+                        'starts_at' => '2026-05-01T00:00:00+00:00',
+                        'ends_at' => '2026-06-01T00:00:00+00:00',
+                    ],
+                    'ui' => [
+                        'summary' => 'Active homepage poll with two answer rows',
+                        'primary_action' => 'edit_poll',
+                    ],
+                ]),
+            ],
+            [
+                'feature_key' => 'poll',
+                'entity_id' => 11602,
+                'store_id' => 9001,
+                'store_view' => 'default',
+                'payload' => json_encode([
+                    'poll_id' => 11602,
+                    'code' => 'retired-holiday-survey',
+                    'question' => 'Retired Holiday Survey',
+                    'status' => 'closed',
+                    'is_active' => false,
+                    'visibility' => 'hidden',
+                    'answers' => [
+                        ['answer_id' => 116021, 'label' => 'Gift guides', 'votes' => 43],
+                        ['answer_id' => 116022, 'label' => 'Shipping cutoff', 'votes' => 31],
+                    ],
+                    'total_votes' => 74,
+                    'store_scope' => [
+                        'store_id' => 9001,
+                        'store_view' => 'default',
+                        'locale' => 'en_US',
+                    ],
+                    'vote_guard' => [
+                        'mode' => 'session',
+                        'allow_guest' => true,
+                        'duplicate_policy' => 'closed_poll_no_votes',
+                    ],
+                    'schedule' => [
+                        'starts_at' => '2025-11-01T00:00:00+00:00',
+                        'ends_at' => '2025-12-31T23:59:59+00:00',
+                    ],
+                    'ui' => [
+                        'summary' => 'Closed seasonal poll retained for admin history',
+                        'primary_action' => 'view_results',
+                    ],
+                ]),
+            ],
+            [
+                'feature_key' => 'poll',
+                'entity_id' => 11603,
+                'store_id' => 9001,
+                'store_view' => 'default',
+                'payload' => json_encode([
+                    'poll_id' => 11603,
+                    'code' => 'missing-answer-label',
+                    'question' => 'Missing Answer Labels',
+                    'status' => 'invalid',
+                    'is_active' => false,
+                    'visibility' => 'admin_only',
+                    'answers' => [
+                        ['answer_id' => 116031, 'label' => '', 'votes' => 0],
+                        ['answer_id' => 116032, 'label' => 'Valid answer', 'votes' => 0],
+                    ],
+                    'total_votes' => 0,
+                    'is_problem' => true,
+                    'problem' => [
+                        'type' => 'missing_answer_label',
+                        'message' => 'Poll answer labels must be present before the poll can be activated.',
+                    ],
+                    'store_scope' => [
+                        'store_id' => 9001,
+                        'store_view' => 'default',
+                        'locale' => 'en_US',
+                    ],
+                    'vote_guard' => [
+                        'mode' => 'cookie_and_ip',
+                        'allow_guest' => false,
+                        'duplicate_policy' => 'blocked_until_valid',
+                    ],
+                    'schedule' => [
+                        'starts_at' => null,
+                        'ends_at' => null,
+                    ],
+                    'ui' => [
+                        'summary' => 'Invalid poll fixture for admin validation checks',
+                        'primary_action' => 'fix_answers',
+                    ],
+                ]),
+            ],
+            [
+                'feature_key' => 'poll',
+                'entity_id' => 11604,
+                'store_id' => 9002,
+                'store_view' => 'de',
+                'payload' => json_encode([
+                    'poll_id' => 11604,
+                    'code' => 'startseite-bewertung',
+                    'question' => 'Startseite Bewertung',
+                    'status' => 'active',
+                    'is_active' => true,
+                    'visibility' => 'public',
+                    'answers' => [
+                        ['answer_id' => 116041, 'label' => 'Sehr gut', 'votes' => 52],
+                        ['answer_id' => 116042, 'label' => 'Verbesserbar', 'votes' => 8],
+                    ],
+                    'total_votes' => 60,
+                    'store_scope' => [
+                        'store_id' => 9002,
+                        'store_view' => 'de',
+                        'locale' => 'de_DE',
+                    ],
+                    'vote_guard' => [
+                        'mode' => 'cookie_and_ip',
+                        'allow_guest' => true,
+                        'duplicate_policy' => 'reject_duplicate_vote',
+                    ],
+                    'schedule' => [
+                        'starts_at' => '2026-05-01T00:00:00+00:00',
+                        'ends_at' => '2026-06-01T00:00:00+00:00',
+                    ],
+                    'ui' => [
+                        'summary' => 'Localized DE homepage poll',
+                        'primary_action' => 'edit_poll',
                     ],
                 ]),
             ],
