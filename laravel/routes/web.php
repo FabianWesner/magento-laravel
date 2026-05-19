@@ -116,6 +116,16 @@ Route::get('/_modernization/assets/admin-permissions.css', function () {
     ]);
 })->name('modernization.assets.admin-permissions');
 
+Route::get('/_modernization/admin/catalog-management', function () {
+    return view('modernization.admin-catalog');
+})->name('modernization.admin.catalog-management');
+
+Route::get('/_modernization/assets/admin-catalog.css', function () {
+    return response()->file(public_path('modernization/admin-catalog.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-catalog');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

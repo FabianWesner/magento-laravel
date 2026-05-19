@@ -46,6 +46,7 @@ return [
                 '/_modernization/admin/cron-jobs',
                 '/_modernization/admin/integration-api',
                 '/_modernization/admin/admin-permissions',
+                '/_modernization/admin/catalog-management',
             ],
             'commands' => [
                 'modernization:modules',
@@ -75,6 +76,8 @@ return [
                 'livewire.integration-api-workbench',
                 'modernization.admin-permissions',
                 'livewire.admin-permissions-workbench',
+                'modernization.admin-catalog',
+                'livewire.admin-catalog-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,

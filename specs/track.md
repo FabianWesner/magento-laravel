@@ -2,6 +2,22 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 16:11 CEST - Why The Admin Catalog Workbench Exists
+
+The admin catalog slice exists because Magento product and category administration is much broader than a product grid. It includes product grids, store-view overrides, attribute sets, custom options, configurable attributes, category tree assignments, media gallery roles, missing image states, downloadable files, product status, inventory signals, mass actions, and ACL boundaries.
+
+I implemented this as a read-only workbench under `/_modernization/admin/catalog-management`. It does not save products, save categories, move category nodes, delete rows, run mass actions, upload media, upload downloadable files, update URL rewrites, trigger index/cache side effects, or write EAV values. The useful increment is a Chrome-verifiable diagnostic surface for product rows, category rows, EAV-like attribute signals, media gallery rows, downloadable link rows, problem rows, store-view values, empty states, and denied viewer behavior.
+
+The legacy scan shaped the scope:
+
+- Admin product grids include store-aware columns and filters such as ID, name, type, attribute set, SKU, price, quantity, visibility, status, and websites.
+- Product and category saves are high-risk because they can mutate EAV backend values, website/category relations, stock rows, media files, downloadable links, URL rewrite history, index state, and cache state.
+- Category administration includes tree/root behavior and product positions, but moves and saves remain out of scope for this local slice.
+- Media gallery behavior needs labels, positions, base/small/thumbnail roles, disabled flags, missing media, and store defaults visible before any upload flow exists.
+- Downloadable products have file/sample/title/shareability/group-permission behavior, but uploads and deletes remain disabled.
+
+This slice improves admin catalog inspection for `AD-002`, `AD-003`, and `AD-004`, but it is not final catalog cutover. Real project catalog fixtures, full product type coverage, EAV backend/source validation artifacts, stock/media/downloadable write characterization, admin ACL integration, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
 ## 2026-05-19 15:51 CEST - Why The Admin Permissions Workbench Exists
 
 The admin permissions slice exists because Magento admin authorization is more than a role name on a user. It includes admin users, admin roles, menu ACL filtering, direct controller action checks, session-cached ACL state, SOAP/XML-RPC API users and roles, REST/API2 roles and attributes, OAuth consumers and tokens, and several denied-state formats. A Laravel cutover needs those boundaries visible before any user, role, token, or permission mutation exists.

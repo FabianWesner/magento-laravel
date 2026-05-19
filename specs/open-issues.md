@@ -2,7 +2,7 @@
 
 This file is the human-readable open-issues backlog for ongoing execution. The canonical release-blocking defect register remains `specs/modernization/defect-register.md`; this file summarizes active blockers and working issues so they are easy to review.
 
-Last reviewed: 2026-05-19 15:51 CEST after admin permissions Chrome verification. No release-blocking issue was closed by this local workbench slice.
+Last reviewed: 2026-05-19 16:11 CEST after admin catalog management Chrome verification. No release-blocking issue was closed by this local workbench slice.
 
 ## Maintenance Rules
 
