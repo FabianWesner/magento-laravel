@@ -2510,3 +2510,23 @@ Blocked:
 
 Next:
 - Commit the final gate snapshot, then continue with the next blocker that can be advanced without fabricating final evidence.
+
+## 2026-05-19 10:11 CEST - Docusaurus Browser Smoke Evidence
+
+Changed:
+- Added optional `--evidence` output to `dev/modernization/smoke-docusaurus.mjs` so successful Playwright/Chrome smoke runs can retain a Markdown artifact.
+- Added `specs/modernization/docusaurus-browser-smoke-evidence.md` from an escalated smoke run covering `/`, `/user/`, and `/developer/`.
+- Linked the retained smoke artifact from `specs/modernization/install-verification.md` and noted it in `specs/modernization/defect-register.md` without closing unrelated release defects.
+
+Verified:
+- `node --check dev/modernization/smoke-docusaurus.mjs` passed.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs --evidence specs/modernization/docusaurus-browser-smoke-evidence.md` passed and wrote retained evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 70 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- The final gate can still fail the Docusaurus browser smoke step inside the restricted sandbox because binding `127.0.0.1:3012` returns `EPERM`.
+- Docusaurus smoke evidence does not satisfy spec-currency, completion audit, hosted CI, fixture, visual, security, accessibility, cutover, production, or release checklist blockers.
+
+Next:
+- Commit the Docusaurus smoke evidence update, then continue with the next release blocker that has real local evidence available.

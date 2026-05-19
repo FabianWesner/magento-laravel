@@ -147,6 +147,14 @@ Verified on 2026-05-18:
 | Browser smoke | Chrome/Playwright loaded `/developer/` with title `Developer Documentation | Magento Laravel Modernization`. |
 | Browser console | No warnings or errors were reported after Docusaurus browser verification. |
 
+Retained evidence recorded on 2026-05-19:
+
+| Check | Evidence |
+| --- | --- |
+| Browser smoke | `specs/modernization/docusaurus-browser-smoke-evidence.md` records an escalated Playwright/Chrome smoke run for `/`, `/user/`, and `/developer/`. |
+| Browser console | The retained evidence reports no browser console warnings or errors. |
+| Sandbox note | The final gate can still fail the browser smoke step inside the restricted sandbox because the script cannot bind `127.0.0.1:3012`; run the same smoke command outside the sandbox to refresh retained evidence. |
+
 The Docusaurus static build output remains ignored under `docusaurus/build/`; source docs and lockfile are committed.
 
 ## Install Commands
