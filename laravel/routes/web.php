@@ -11,6 +11,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/favicon.ico', function () {
+    return response('', 204);
+})->name('favicon');
+
 Route::get('/_modernization/modules', [ModernizationDiagnosticsController::class, 'modules'])
     ->name('modernization.modules');
 
@@ -81,6 +85,16 @@ Route::get('/_modernization/assets/search.css', function () {
         'Content-Type' => 'text/css; charset=UTF-8',
     ]);
 })->name('modernization.assets.search');
+
+Route::get('/_modernization/storefront/cms-seo', function () {
+    return view('modernization.cms-seo');
+})->name('modernization.storefront.cms-seo');
+
+Route::get('/_modernization/assets/cms-seo.css', function () {
+    return response()->file(public_path('modernization/cms-seo.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.cms-seo');
 
 Route::get('/_modernization/customer/commerce', function () {
     return view('modernization.customer-commerce');

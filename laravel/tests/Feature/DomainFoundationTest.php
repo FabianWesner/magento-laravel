@@ -114,6 +114,222 @@ class DomainFoundationTest extends TestCase
         $this->assertSame('/de/about-us', $rewrite['canonical']);
     }
 
+    public function test_domain_fact_seeder_provides_cms_seo_and_store_scope_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $cmsPageSnapshot = $this->app->make(DomainQueryService::class)->snapshot('cms_page', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $cmsPagePayloads = array_column($cmsPageSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('CmsPage', $cmsPageSnapshot['feature']['context']);
+        $this->assertSame(3, $cmsPageSnapshot['payload']['count']);
+        $this->assertSame(['about-us', 'spring-sale-legacy', 'no-route'], array_column($cmsPagePayloads, 'identifier'));
+        $this->assertSame(['active', 'disabled', 'active'], array_column($cmsPagePayloads, 'status'));
+        $this->assertSame([true, false, true], array_column($cmsPagePayloads, 'is_active'));
+        $this->assertSame([false, false, true], array_column($cmsPagePayloads, 'is_404'));
+        $this->assertSame('/sale', $cmsPagePayloads[1]['redirect']['target']);
+        $this->assertSame(301, $cmsPagePayloads[1]['redirect']['type']);
+        $this->assertSame('cms/index/noRoute', $cmsPagePayloads[2]['target_path']);
+        $this->assertSame(['home-page-hero', 'footer-links'], $cmsPagePayloads[0]['block_identifiers']);
+        $this->assertSame([10201], $cmsPagePayloads[0]['widget_instance_ids']);
+        $this->assertSame('About Us | Example Store', $cmsPagePayloads[0]['meta_title']);
+
+        foreach ($cmsPagePayloads as $cmsPagePayload) {
+            $this->assertArrayHasKey('identifier', $cmsPagePayload);
+            $this->assertArrayHasKey('status', $cmsPagePayload);
+            $this->assertArrayHasKey('content_preview', $cmsPagePayload);
+            $this->assertArrayHasKey('canonical_url', $cmsPagePayload);
+            $this->assertArrayHasKey('redirect', $cmsPagePayload);
+        }
+
+        $deCmsPageSnapshot = $this->app->make(DomainQueryService::class)->snapshot('cms_page', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deCmsPagePayloads = array_column($deCmsPageSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('de', $deCmsPageSnapshot['store_view']);
+        $this->assertSame(3, $deCmsPageSnapshot['payload']['count']);
+        $this->assertSame(['ueber-uns', 'fruehlingsaktion-alt', 'no-route-de'], array_column($deCmsPagePayloads, 'identifier'));
+        $this->assertSame('/de/angebote', $deCmsPagePayloads[1]['redirect']['target']);
+        $this->assertTrue($deCmsPagePayloads[2]['is_no_route']);
+        $this->assertSame('Seite Nicht Gefunden', $deCmsPagePayloads[2]['title']);
+
+        $cmsBlockSnapshot = $this->app->make(DomainQueryService::class)->snapshot('cms_block', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $cmsBlockPayloads = array_column($cmsBlockSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('CmsBlock', $cmsBlockSnapshot['feature']['context']);
+        $this->assertSame(2, $cmsBlockSnapshot['payload']['count']);
+        $this->assertSame(['home-page-hero', 'footer-links'], array_column($cmsBlockPayloads, 'identifier'));
+        $this->assertSame(['wysiwyg/home/default-hero.jpg'], $cmsBlockPayloads[0]['wysiwyg_media']);
+        $this->assertSame(['cms_page:about-us'], $cmsBlockPayloads[0]['used_on']);
+        $this->assertContains('store_9001', $cmsBlockPayloads[0]['cache_tags']);
+
+        $deCmsBlockSnapshot = $this->app->make(DomainQueryService::class)->snapshot('cms_block', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deCmsBlockPayloads = array_column($deCmsBlockSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame(2, $deCmsBlockSnapshot['payload']['count']);
+        $this->assertSame(['home-page-hero-de', 'footer-links-de'], array_column($deCmsBlockPayloads, 'identifier'));
+        $this->assertSame('Startseiten-Hero', $deCmsBlockPayloads[0]['title']);
+
+        $widgetSnapshot = $this->app->make(DomainQueryService::class)->snapshot('widget', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $widgetPayloads = array_column($widgetSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Widget', $widgetSnapshot['feature']['context']);
+        $this->assertSame(2, $widgetSnapshot['payload']['count']);
+        $this->assertSame(['catalog/widget_new', 'cms/widget_block'], array_column($widgetPayloads, 'type'));
+        $this->assertSame([true, false], array_column($widgetPayloads, 'is_active'));
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], $widgetPayloads[0]['conditions']['skus']);
+        $this->assertSame('footer-links', $widgetPayloads[1]['conditions']['block_identifier']);
+
+        $deWidgetSnapshot = $this->app->make(DomainQueryService::class)->snapshot('widget', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deWidgetPayloads = array_column($deWidgetSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame(2, $deWidgetSnapshot['payload']['count']);
+        $this->assertSame('Neue Produkte', $deWidgetPayloads[0]['title']);
+        $this->assertSame('footer-links-de', $deWidgetPayloads[1]['conditions']['block_identifier']);
+
+        $sitemapSnapshot = $this->app->make(DomainQueryService::class)->snapshot('sitemap', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $sitemapPayloads = array_column($sitemapSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Sitemap', $sitemapSnapshot['feature']['context']);
+        $this->assertSame(2, $sitemapSnapshot['payload']['count']);
+        $this->assertSame(['sitemap', 'rss'], array_column($sitemapPayloads, 'type'));
+        $this->assertSame([true, false], array_column($sitemapPayloads, 'is_fresh'));
+        $this->assertSame('/sitemap.xml', $sitemapPayloads[0]['url']);
+        $this->assertSame('/rss/catalog/new', $sitemapPayloads[0]['rss']['feed_url']);
+        $this->assertTrue($sitemapPayloads[0]['rss']['is_fresh']);
+        $this->assertSame('catalog price rule updated after feed generation', $sitemapPayloads[1]['stale_reason']);
+
+        $deSitemapSnapshot = $this->app->make(DomainQueryService::class)->snapshot('sitemap', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deSitemapPayloads = array_column($deSitemapSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame(2, $deSitemapSnapshot['payload']['count']);
+        $this->assertSame('/de/sitemap.xml', $deSitemapPayloads[0]['url']);
+        $this->assertSame('localized CMS page updated after feed generation', $deSitemapPayloads[1]['stale_reason']);
+
+        $urlRewriteSnapshot = $this->app->make(DomainQueryService::class)->snapshot('url_rewrite', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $urlRewritePayloads = array_column($urlRewriteSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('UrlRewrite', $urlRewriteSnapshot['feature']['context']);
+        $this->assertSame(2, $urlRewriteSnapshot['payload']['count']);
+        $this->assertSame(['about-us', 'company'], array_column($urlRewritePayloads, 'request_path'));
+        $this->assertSame([0, 301], array_column($urlRewritePayloads, 'redirect_type'));
+        $this->assertSame('/about-us', $urlRewritePayloads[0]['canonical_url']);
+        $this->assertSame('admin_redirect', $urlRewritePayloads[1]['metadata']['source']);
+        $this->assertTrue($urlRewritePayloads[1]['metadata']['preserve_query']);
+
+        $deUrlRewriteSnapshot = $this->app->make(DomainQueryService::class)->snapshot('url_rewrite', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deUrlRewritePayloads = array_column($deUrlRewriteSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame(2, $deUrlRewriteSnapshot['payload']['count']);
+        $this->assertSame(['de/ueber-uns', 'de/unternehmen'], array_column($deUrlRewritePayloads, 'request_path'));
+        $this->assertSame('/de/ueber-uns', $deUrlRewritePayloads[1]['canonical_url']);
+        $this->assertSame('localized cms identifier changed', $deUrlRewritePayloads[1]['metadata']['reason']);
+
+        $storeScopeSnapshot = $this->app->make(DomainQueryService::class)->snapshot('store_scope', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $storeScopePayload = $storeScopeSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertSame('StoreScope', $storeScopeSnapshot['feature']['context']);
+        $this->assertSame(1, $storeScopeSnapshot['payload']['count']);
+        $this->assertSame('default', $storeScopePayload['store_code']);
+        $this->assertSame('en_US', $storeScopePayload['locale']);
+        $this->assertSame('no-route', $storeScopePayload['cms_no_route']);
+        $this->assertTrue($storeScopePayload['config']['web/seo/use_rewrites']);
+        $this->assertTrue($storeScopePayload['config']['rss/config/active']);
+
+        $deStoreScopeSnapshot = $this->app->make(DomainQueryService::class)->snapshot('store_scope', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deStoreScopePayload = $deStoreScopeSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertSame(1, $deStoreScopeSnapshot['payload']['count']);
+        $this->assertSame('de', $deStoreScopePayload['store_code']);
+        $this->assertSame('de_DE', $deStoreScopePayload['locale']);
+        $this->assertSame('no-route-de', $deStoreScopePayload['cms_no_route']);
+        $this->assertFalse($deStoreScopePayload['can_use_default']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'cms_page',
+            'entity_id' => 10006,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'cms_block',
+            'entity_id' => 10104,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'widget',
+            'entity_id' => 10204,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'sitemap',
+            'entity_id' => 10304,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'url_rewrite',
+            'entity_id' => 10404,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'store_scope',
+            'entity_id' => 10502,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
     public function test_import_export_dataflow_validation_and_failure_behavior(): void
     {
         $dataflow = $this->app->make(ImportExportDataflow::class);

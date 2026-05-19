@@ -30,6 +30,37 @@ Next:
 
 ## Entries
 
+## 2026-05-19 13:13 CEST - Storefront CMS SEO Workbench Implementation
+
+Changed:
+- Added deterministic CMS/SEO `domain_facts` fixtures for CMS pages, CMS blocks, widgets, sitemap/RSS, URL rewrites, and store scope across default and DE store views.
+- Added the `/_modernization/storefront/cms-seo` Livewire workbench with pages, blocks, widgets, SEO, store-view, content-state, freshness, empty-state, and denied-role states.
+- Added CMS/SEO route, CSS asset route, responsive CSS, focused PHPUnit route/Livewire coverage, and a lightweight `/favicon.ico` 204 route to keep browser console checks clean.
+- Added `specs/tasklist.md`, `specs/open-issues.md`, and `specs/track.md` so the implementation tasklist, open issues, and reasoning narrative are maintained separately from this progress ledger.
+- Ignored local CMS/SEO Playwright screenshots.
+
+Verified:
+- Required Laravel Boost `search-docs` was attempted before code changes and failed with DNS resolution errors; the escalated retry was rejected by the approval reviewer.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationCmsSeoRouteTest.php` passed with 12 tests and 442 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/storefront/cms-seo` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/cms-seo.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial pages, blocks, widgets, SEO rows, DE store-view filter, redirect filter, stale sitemap/RSS filter, denied role, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column layout and DE stale sitemap/RSS filtering with clean current console output.
+- Screenshots were captured as `cms-seo-desktop-2026-05-19.png` and `cms-seo-mobile-2026-05-19.png`.
+- Laravel Boost `BrowserLogs` reported no browser log file, so current browser console verification used Playwright console output.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel Boost docs lookup remains blocked by sandbox DNS and rejected escalation.
+- Boost `get-absolute-url` returned `http://localhost/_modernization/storefront/cms-seo`, while the working Herd URL is `http://magento-lts.test/_modernization/storefront/cms-seo`.
+- This is a local modernization workbench slice only; final Magento/Laravel parity screenshots, canonical fixtures, accessibility, performance, hosted CI, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit the CMS/SEO workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 12:17 CEST - Product Detail Workbench Implementation
 
 Changed:

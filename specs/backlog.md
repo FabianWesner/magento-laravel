@@ -1,6 +1,9 @@
 # Modernization Backlog Spec
 
-Canonical backlog instructions live in `specs/modernization/backlog.md`.
+Canonical migration backlog instructions live in `specs/modernization/backlog.md`.
+
+The overall working tasklist lives in `specs/tasklist.md`.
+The open-issues backlog lives in `specs/open-issues.md`, with release-blocking defects canonically tracked in `specs/modernization/defect-register.md`.
 
 Each backlog item must include:
 
@@ -12,4 +15,3 @@ Each backlog item must include:
 - verification command or evidence
 - owner
 - status
-
