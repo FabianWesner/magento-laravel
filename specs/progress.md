@@ -1558,3 +1558,37 @@ Blocked:
 
 Next:
 - Commit the completion audit gate, then continue with unblocked verification hardening.
+
+## 2026-05-19 06:41 CEST - Laravel Module Registry Foundation
+
+Changed:
+- Added a PHP-first modernization module manifest config at `laravel/config/modernization.php`.
+- Added `ModuleManifest`, `ModuleRegistry`, `ModuleRegistryHealth`, `ModernizationServiceProvider`, an internal `/_modernization/modules` diagnostic route, and the `modernization:modules` console diagnostic.
+- Added PHPUnit coverage for manifest resolution, the diagnostic route, the console command, invalid duplicate/missing dependencies, and dependency cycle diagnostics.
+- Updated `dev/modernization/validate-module-target.php` so final module scanning includes the actual Laravel modernization foundation namespace and PHP config/route/provider artifacts.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `service providers`, `service container binding`, `configuration`, `http tests`, and `console command testing` against Laravel framework `13.x` docs.
+- `php artisan make:provider ModernizationServiceProvider --no-interaction`, `php artisan make:class ... --no-interaction`, and `php artisan make:test ModernizationModuleRegistryTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `php artisan test --compact tests/Feature/ModernizationModuleRegistryTest.php` passed with 5 tests and 18 assertions.
+- `php artisan test --compact` passed with 7 tests and 20 assertions.
+- `php artisan route:list --path=_modernization --except-vendor` showed the `GET|HEAD _modernization/modules` route named `modernization.modules`.
+- `php artisan modernization:modules` returned `foundation | Laravel Foundation | 0.1.0`.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `php dev/modernization/validate-removed-technologies.php` passed for 33 files.
+- `php dev/modernization/validate-module-target.php` passed.
+- `php dev/modernization/validate-module-target.php --final` still fails as expected, now only for missing module contract/interface, policy, event, listener, job, and final module-system evidence.
+- `php dev/modernization/validate-bootstrap-target.php --final` still fails as expected for remaining bootstrap foundation artifacts, runtime isolation evidence, legacy smoke coverage, and final evidence.
+- `php dev/modernization/validate-completion-audit.php --final` still fails as expected because no final completion audit evidence exists.
+- `php dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Module contracts, policies, events, listeners, jobs, final module evidence, full bootstrap foundation evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel module registry foundation, then continue with the next unblocked Laravel foundation or verification gap.

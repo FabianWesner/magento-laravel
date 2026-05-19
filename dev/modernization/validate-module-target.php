@@ -276,7 +276,7 @@ function moduleTargetFiles(): array
 {
     $files = [];
 
-    foreach (['laravel/modules', 'laravel/packages', 'laravel/app/Modules'] as $directory) {
+    foreach (['laravel/modules', 'laravel/packages', 'laravel/app/Modules', 'laravel/app/Modernization', 'laravel/app/Providers', 'laravel/config', 'laravel/routes'] as $directory) {
         $files = array_merge($files, phpFilesUnder($directory));
     }
 
