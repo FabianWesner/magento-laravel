@@ -4,6 +4,35 @@ This register tracks release-blocking defects and accepted residual defects for 
 
 The current register is not release acceptance. Open P0 and P1 rows block final cutover until the listed evidence exists and the row is closed.
 
+## Final Gate Snapshot
+
+Command run on 2026-05-19 10:07 CEST:
+
+```bash
+env PATH=/private/tmp/magento-lts-php85-bin:$PATH MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh
+```
+
+The final gate failed, as expected for the current non-release state. The run confirmed that several implementation and documentation checks pass, while release evidence, approvals, project fixture data, and browser smoke evidence remain open.
+
+| Gate Area | Result | Tracked By | Current Evidence State |
+| --- | --- | --- | --- |
+| Documentation content | Pass | DEF-010 | Docusaurus and MkDocs content checks pass, but final spec-currency and completion audit evidence are absent. |
+| Feature traceability | Pass | DEF-004, DEF-009 | All 79 feature IDs are traceable, but rows still point to non-release-ready evidence states. |
+| Source/dependency, runtime tooling, Boost MCP | Pass | DEF-008 | Local source, dependency, runtime, and Boost checks pass; hosted CI evidence is absent. |
+| Laravel implementation target checks | Pass | DEF-004, DEF-005 | Bootstrap, EAV, module, cron/job, API, commerce, report, domain, integration, and config checks pass. |
+| Operations runbook | Pass | DEF-009 | Runbook content passes; rehearsal, cutover, support, production, and manual acceptance evidence are absent. |
+| No-new-XML and removed technology | Pass | DEF-004 | Static migration policy checks pass for the Laravel target. |
+| UI screenshot inventory | Fail | DEF-003 | Screenshot manifest and retained Magento/Laravel screenshot artifacts are absent. |
+| Fixture/media and DB-backed reports | Fail | DEF-002 | Fixture manifest, restore evidence, `DB_DSN`, fixture coverage report, and schema report are absent from the final run. |
+| Magento baseline and docroot | Fail | DEF-001 | `project/` remains placeholder-only. |
+| Complex, edge, resilience, and parity evidence | Fail | DEF-004 | Approved complex reverse-engineering evidence and retained dual-runtime artifacts are absent. |
+| Route fallback and auth/security | Fail | DEF-005 | ADR 0008 is not Approved or Accepted, and route/auth evidence files are absent. |
+| Security and accessibility | Fail | DEF-006 | Security review and accessibility report are absent. |
+| Performance budgets | Fail | DEF-007 | Approved numeric budget manifest and retained measurements are absent. |
+| Manual acceptance, support, cutover, production readiness | Fail | DEF-009 | Acceptance, support, cutover, and production readiness evidence are absent. |
+| Release checklist and defect closure | Fail | DEF-001 through DEF-010 | Release checklist remains unchecked and every P0/P1 defect in this register is still open. |
+| Docusaurus browser smoke | Fail in sandbox final mode | DEF-010 | Build passes; browser smoke cannot bind `127.0.0.1:3012` in the sandbox and requires the escalated smoke command for evidence. |
+
 | Defect ID | Severity | Status | Owner | Feature IDs | Evidence | Acceptance | Accepted By | Accepted At | Resolution | Workaround |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | DEF-001 | P0 | Open | modernization | ALL | `project/` is placeholder-only; final gate reports project overlay is not present. | Release is blocked; no acceptance granted. | None | None | Add real project overlay or approved source evidence, then rerun Magento docroot verification. | Keep Magento baseline source-only and do not cut over project routes. |

@@ -2491,3 +2491,22 @@ Blocked:
 
 Next:
 - Run markdown and normal gate checks, then commit the sample fixture DB evidence update.
+
+## 2026-05-19 10:07 CEST - Final Gate Failure Snapshot
+
+Changed:
+- Added a final gate snapshot to `specs/modernization/defect-register.md` that maps the 2026-05-19 final gate failures to the tracked P0/P1 defects.
+- Recorded the distinction between passing implementation/documentation checks and still-open release evidence, approval, project fixture, and browser smoke blockers.
+
+Verified:
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected for the current non-release state.
+- The final gate passed documentation content, visual tolerances, source/dependency, operations runbook, runtime tooling, Laravel bootstrap, Boost MCP, no-new-XML, removed-technology, feature traceability, Laravel tests, MkDocs build, and Docusaurus build checks.
+- The final gate failed spec-currency evidence, completion audit, UI screenshot manifest, release checklist, manual acceptance/support, cutover, defect closure, CI evidence, fixture/media evidence, Magento baseline/project overlay, complex evidence, edge/failure evidence, performance budgets, security/accessibility, production readiness, schema preservation, Livewire evidence, route fallback/auth evidence, DB-backed fixture/schema reports, and sandbox Docusaurus browser smoke.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 69 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final release remains blocked by the same ten open P0/P1 defects in `specs/modernization/defect-register.md`; no final evidence or approval was created by this snapshot.
+
+Next:
+- Commit the final gate snapshot, then continue with the next blocker that can be advanced without fabricating final evidence.
