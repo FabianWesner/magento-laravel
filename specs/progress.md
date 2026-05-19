@@ -30,6 +30,34 @@ Next:
 
 ## Entries
 
+## 2026-05-19 12:04 CEST - Customer Account Workbench Implementation
+
+Changed:
+- Added customer and customer address `domain_facts` fixtures for default and DE store views.
+- Added the `/_modernization/customer/account` Livewire workbench with dashboard, address book, order activity, security/session snapshot, customer/address filters, store-view switching, empty states, and denied-role state.
+- Added customer account route, CSS asset route, responsive CSS, and PHPUnit route/Livewire coverage.
+- Updated the domain policy to allow the local/testing customer workbench fixture role.
+- Ignored local customer account Playwright screenshots.
+
+Verified:
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationCustomerAccountRouteTest.php` passed with 10 tests and 148 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/customer/account` returned HTTP 200.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/customer-account.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for default dashboard, address book, DE store-view switch, order activity, security state, additional-address empty state, denied role, and zero console errors.
+- Chrome/Playwright mobile verification passed for responsive single-column layout, DE store-view switch showing Lena Keller, and zero console errors.
+- Parallel subagents supplied customer/account implementation scope and customer fixture implementation; their findings were consumed before this entry.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 80 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel Boost `search-docs` for this slice failed with DNS resolution errors in the sandbox, and the escalated retry was rejected by the approval reviewer.
+- This is a modernization workbench slice only; final Magento/Laravel parity screenshots, accessibility, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit the customer account workbench slice, then continue implementation-first on the next Magento domain slice with Chrome verification before documentation.
+
 ## 2026-05-19 11:52 CEST - Storefront Catalog Workbench Implementation
 
 Changed:

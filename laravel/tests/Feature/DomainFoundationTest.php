@@ -219,11 +219,85 @@ class DomainFoundationTest extends TestCase
 
         $this->assertSame('Search', $searchSnapshot['feature']['context']);
         $this->assertSame('hemd', $searchSnapshot['payload']['rows'][0]['payload']['query']);
+
+        $customerSnapshot = $this->app->make(DomainQueryService::class)->snapshot('customer', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $customerPayload = $customerSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertSame('Customer', $customerSnapshot['feature']['context']);
+        $this->assertSame('default', $customerSnapshot['store_view']);
+        $this->assertSame(1, $customerSnapshot['payload']['count']);
+        $this->assertSame(5001, $customerSnapshot['payload']['rows'][0]['entity_id']);
+        $this->assertSame('maria.sommer@example.test', $customerPayload['email']);
+        $this->assertSame('Maria Sommer', $customerPayload['full_name']);
+        $this->assertSame('General', $customerPayload['group']);
+        $this->assertTrue($customerPayload['is_active']);
+        $this->assertSame(3, $customerPayload['orders_count']);
+        $this->assertSame(184.70, $customerPayload['lifetime_value']);
+        $this->assertTrue($customerPayload['newsletter_subscribed']);
+        $this->assertSame(6001, $customerPayload['default_billing_address_id']);
+        $this->assertSame(6001, $customerPayload['default_shipping_address_id']);
+
+        $deCustomerSnapshot = $this->app->make(DomainQueryService::class)->snapshot('customer', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame(1, $deCustomerSnapshot['payload']['count']);
+        $this->assertSame('Lena Keller', $deCustomerSnapshot['payload']['rows'][0]['payload']['full_name']);
+        $this->assertSame('Retail Kunde', $deCustomerSnapshot['payload']['rows'][0]['payload']['group']);
+
+        $addressSnapshot = $this->app->make(DomainQueryService::class)->snapshot('customer_address', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $addressPayload = $addressSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertSame('CustomerAddress', $addressSnapshot['feature']['context']);
+        $this->assertSame('default', $addressSnapshot['store_view']);
+        $this->assertSame(1, $addressSnapshot['payload']['count']);
+        $this->assertSame(6001, $addressSnapshot['payload']['rows'][0]['entity_id']);
+        $this->assertSame(5001, $addressPayload['customer_id']);
+        $this->assertSame('billing_shipping', $addressPayload['address_type']);
+        $this->assertSame(['101 Market Street', 'Suite 400'], $addressPayload['street']);
+        $this->assertSame('Portland', $addressPayload['city']);
+        $this->assertSame('Oregon', $addressPayload['region']);
+        $this->assertSame('97204', $addressPayload['postcode']);
+        $this->assertSame('US', $addressPayload['country_id']);
+        $this->assertSame('+1-503-555-0198', $addressPayload['telephone']);
+        $this->assertTrue($addressPayload['is_default_billing']);
+        $this->assertTrue($addressPayload['is_default_shipping']);
+        $this->assertContains('Portland, Oregon 97204', $addressPayload['formatted_lines']);
+
+        $deAddressSnapshot = $this->app->make(DomainQueryService::class)->snapshot('customer_address', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame(1, $deAddressSnapshot['payload']['count']);
+        $this->assertSame('DE', $deAddressSnapshot['payload']['rows'][0]['payload']['country_id']);
+        $this->assertSame('10117 Berlin', $deAddressSnapshot['payload']['rows'][0]['payload']['formatted_lines'][3]);
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'category',
             'entity_id' => 2001,
             'store_id' => 9001,
             'store_view' => 'default',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'customer',
+            'entity_id' => 5002,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'customer_address',
+            'entity_id' => 6002,
+            'store_id' => 9002,
+            'store_view' => 'de',
         ]);
     }
 

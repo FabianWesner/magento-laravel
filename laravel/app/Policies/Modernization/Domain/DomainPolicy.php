@@ -8,6 +8,6 @@ class DomainPolicy
 {
     public function viewDiagnostics(?User $user): bool
     {
-        return in_array($user?->getAttribute('role'), ['full', 'catalog', 'read-only'], true);
+        return in_array($user?->getAttribute('role'), ['full', 'catalog', 'customer', 'read-only'], true);
     }
 }
