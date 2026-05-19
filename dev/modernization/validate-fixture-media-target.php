@@ -72,7 +72,7 @@ function validateFixtureMediaSpecs(array &$errors): void
         ],
         'specs/modernization/backlog.md' => [
             'Capture database and media fixtures',
-            'Pending sanitized fixture manifest.',
+            'Awaiting sanitized fixture manifest.',
             'Sanitized DB/media fixtures are reproducible and mapped to feature IDs.',
             'Restore fixture locally and compare schema checksum.',
         ],

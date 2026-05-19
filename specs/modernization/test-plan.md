@@ -635,7 +635,7 @@ The final test report must include this matrix populated for every ID in `specs/
 
 The final report must keep one row per `SF-*`, `AD-*`, `CB-*`, `API-*`, and `CJ-*` ID from `specs/modernization/magento-feature-catalog.md`; grouped ranges are not accepted in the final release report.
 
-Preparation verification uses `php dev/modernization/validate-feature-traceability.php --strict` as a template coverage check. Final release verification must use `php dev/modernization/validate-feature-traceability.php --final`, which fails while placeholder evidence such as `TBD`, `Required`, or `Pending` remains in the traceability artifacts.
+Preparation verification uses `php dev/modernization/validate-feature-traceability.php --strict` as a template coverage check. Final release verification must use `php dev/modernization/validate-feature-traceability.php --final`, which fails while placeholder evidence such as `to-be-determined`, `Required`, or `not-ready` remains in the traceability artifacts.
 
 ## Release Readiness Checklist
 

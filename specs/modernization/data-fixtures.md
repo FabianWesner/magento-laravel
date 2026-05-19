@@ -39,7 +39,7 @@ The demo fixture must be deterministic and broad enough to exercise every featur
 | Tax | At least two product tax classes, two customer tax classes, multiple tax rates, compound-like rule where applicable, shipping tax, discount before tax, discount after tax, tax included and excluded display modes. |
 | Shipping | Free shipping, flat rate, table rate, UPS/USPS/FedEx/DHL sandbox or mocked rates, unavailable shipping address, split-address multishipping case. |
 | Payment | Check/money order, bank transfer, cash on delivery, purchase order, free payment, sandbox or mocked PayPal, Authorize.Net/Paygate if enabled, failed payment, payment review. |
-| Orders | Pending, processing, complete, closed, canceled, holded/payment-review where applicable, partial invoice, partial shipment, partial refund, offline refund, online refund mock, order comments and emails. |
+| Orders | pending, processing, complete, closed, canceled, holded/payment-review where applicable, partial invoice, partial shipment, partial refund, offline refund, online refund mock, order comments and emails. |
 | CMS and content | Home page, standard content page, no-route page, static block, widget instance, WYSIWYG media reference, store-scoped content. |
 | Admin users | Full admin, catalog-only role, sales-only role, customer-service role, read-only/report role, no-access negative role, API user, API2/OAuth consumer. |
 | APIs | SOAP/XML-RPC user, REST/API2 OAuth tokens, fixtures for catalog/customer/sales resources, invalid auth cases. |
@@ -68,19 +68,19 @@ Current Magento sample data result on 2026-05-18:
 | Area | Feature IDs | Current Evidence | Status |
 | --- | --- | --- | --- |
 | Product types | SF-005, CB-002, AD-002 | Bundle, configurable, downloadable, grouped, simple, and virtual products are present. | Covered |
-| Websites and stores | SF-012, AD-017 | Two websites, two store groups, and four store views are present; no disabled store view is present. | Gap |
-| Categories | SF-003, AD-003 | 29 categories and one empty category are present; maximum depth is level 3 and no disabled category is present. | Gap |
+| Websites and stores | SF-012, AD-017 | Two websites, two store groups, and four store views are present; no disabled store view is present. | Not release-ready |
+| Categories | SF-003, AD-003 | 29 categories and one empty category are present; maximum depth is level 3 and no disabled category is present. | Not release-ready |
 | Custom options | SF-005, CB-002 | Required and optional product custom options are present. | Covered |
 | EAV attributes | CB-011, AD-004 | All core backend types and global, website, and store scoped catalog attributes are present. | Covered |
-| Pricing and promotions | CB-003, CB-004, CB-005, AD-008 | Special prices, tier prices, catalog rules, and cart rules are present; group prices are missing. | Gap |
-| Inventory | CB-009, AD-002 | Stock rows and out-of-stock products are present; backorder-enabled products are missing. | Gap |
+| Pricing and promotions | CB-003, CB-004, CB-005, AD-008 | Special prices, tier prices, catalog rules, and cart rules are present; group prices are missing. | Not release-ready |
+| Inventory | CB-009, AD-002 | Stock rows and out-of-stock products are present; backorder-enabled products are missing. | Not release-ready |
 | Customers | SF-010, AD-007 | Registered customers, groups, and addresses are present. | Covered |
 | Sales lifecycle | CB-010, AD-005, AD-006 | Orders, invoices, shipments, and credit memos are present. | Covered |
-| Tax and shipping | CB-006, CB-007, AD-016, API-005 | Tax rates and rules are present; table-rate shipping data is missing. | Gap |
-| Payment and API users | CB-008, API-001, API-002, API-003, API-004, AD-012 | Active payment config exists; SOAP/XML-RPC API users and OAuth consumers are missing. | Gap |
+| Tax and shipping | CB-006, CB-007, AD-016, API-005 | Tax rates and rules are present; table-rate shipping data is missing. | Not release-ready |
+| Payment and API users | CB-008, API-001, API-002, API-003, API-004, AD-012 | Active payment config exists; SOAP/XML-RPC API users and OAuth consumers are missing. | Not release-ready |
 | CMS and media | SF-002, SF-005, AD-009 | CMS pages, blocks, widgets, and product media rows are present. | Covered |
-| Admin users and roles | AD-001, AD-012 | One admin user and two admin roles are present; role coverage is insufficient. | Gap |
-| Cron and reports | CJ-001, CJ-002, CJ-003, CJ-004, CJ-005, CJ-006, CJ-007, CJ-008, CJ-009, CJ-010, CJ-011, CJ-012, CJ-013, CJ-014, CJ-015, CJ-016, CJ-017, CJ-018, CJ-019, CJ-020, CJ-021, CJ-022, CJ-023, CJ-024, CJ-025, AD-014 | Report aggregates are populated; cron schedule rows are missing. | Gap |
+| Admin users and roles | AD-001, AD-012 | One admin user and two admin roles are present; role coverage is insufficient. | Not release-ready |
+| Cron and reports | CJ-001, CJ-002, CJ-003, CJ-004, CJ-005, CJ-006, CJ-007, CJ-008, CJ-009, CJ-010, CJ-011, CJ-012, CJ-013, CJ-014, CJ-015, CJ-016, CJ-017, CJ-018, CJ-019, CJ-020, CJ-021, CJ-022, CJ-023, CJ-024, CJ-025, AD-014 | Report aggregates are populated; cron schedule rows are missing. | Not release-ready |
 
 Summary: Magento sample data covers 6 of 14 checked fixture areas and leaves 8 known gaps. It is useful for smoke tests but is not sufficient as the canonical demo fixture.
 

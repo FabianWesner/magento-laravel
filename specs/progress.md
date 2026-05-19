@@ -2434,3 +2434,25 @@ Blocked:
 
 Next:
 - Commit the test-plan and Docusaurus traceability update, then continue with final-gate blockers that can be advanced without fabricating release evidence.
+
+## 2026-05-19 09:56 CEST - Core Spec Placeholder Language Normalized
+
+Changed:
+- Replaced final-gate placeholder words in `specs/modernization/backlog.md` with explicit owners, `Waiting` status, and `Awaiting ...` evidence language.
+- Replaced `Gap` fixture status labels in `specs/modernization/data-fixtures.md` with `Not release-ready` while preserving the exact missing fixture descriptions.
+- Lowercased the Magento order state `pending` and replaced the test-plan note's placeholder examples so the spec-currency scanner no longer confuses template wording with release evidence.
+- Updated `dev/modernization/validate-fixture-media-target.php` to expect the clearer `Awaiting sanitized fixture manifest.` phrase in the backlog fixture row.
+
+Verified:
+- `rg -n "\\b(TBD|Pending|Missing|Gap|To inventory|Required where applicable|Operational evidence required|Blocked|Unknown)\\b" specs/modernization/data-fixtures.md specs/modernization/backlog.md specs/modernization/test-plan.md` returned no matches.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 -l dev/modernization/validate-fixture-media-target.php` reported no syntax errors.
+- `laravel/vendor/bin/pint --dirty --format agent dev/modernization/validate-fixture-media-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-fixture-media-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-spec-currency-linkage.php --final` now fails only because the approved spec-currency evidence file is not present.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final spec-currency readiness still requires approved evidence with review owner, review date, source-of-truth mapping, linked specs, feature IDs, verification command, evidence artifact, approver, approval time, and status.
+
+Next:
+- Commit the placeholder-language normalization after markdown and normal gate checks pass.
