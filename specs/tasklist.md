@@ -19,6 +19,7 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Admin CMS/design workbench | `/_modernization/admin/cms-design`, focused PHPUnit, Chrome desktop/mobile, page/block/widget/design/rewrite/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin customer management workbench | `/_modernization/admin/customer-management`, focused PHPUnit, Chrome desktop/mobile, customer/address/activity/moderation/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin catalog management workbench | `/_modernization/admin/catalog-management`, focused PHPUnit, Chrome desktop/mobile, product/category/attribute/media/download/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin permissions workbench | `/_modernization/admin/admin-permissions`, focused PHPUnit, Chrome desktop/mobile, role/resource/API/problem filters. | Not release-ready. |

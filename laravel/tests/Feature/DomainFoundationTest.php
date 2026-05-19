@@ -382,6 +382,9 @@ class DomainFoundationTest extends TestCase
         $this->assertContains('UrlRewrite', $this->domainContexts());
         $this->assertContains('no-route', $catalog->get('cms_page')->states);
         $this->assertContains('404', $catalog->get('cms_page')->states);
+        $this->assertContains('AD-009', $catalog->get('cms_page')->featureIds);
+        $this->assertContains('AD-009', $catalog->get('cms_block')->featureIds);
+        $this->assertContains('AD-009', $catalog->get('widget')->featureIds);
         $this->assertTrue($rewrite['redirect']);
         $this->assertTrue($rewrite['sitemap']);
         $this->assertTrue($rewrite['RSS']);

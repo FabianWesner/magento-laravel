@@ -24,7 +24,7 @@ class ModernizationSystemConfigRouteTest extends TestCase
             ->assertSee(route('modernization.assets.system-config'))
             ->assertSee('System config workbench')
             ->assertSee('System configuration, Store scope')
-            ->assertSee('SF-012, AD-010, CB-011, CB-013, SF-001, SF-002, AD-017')
+            ->assertSee('SF-012, AD-010, CB-011, CB-013, SF-001, SF-002, AD-009, AD-017')
             ->assertSee('Base URL')
             ->assertSee('Gateway Token');
 

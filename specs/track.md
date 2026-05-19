@@ -2,6 +2,22 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 16:41 CEST - Why The Admin CMS Design Workbench Exists
+
+The admin CMS/design slice exists because Magento CMS administration is not just page content. It includes CMS pages with direct identifier routing, static blocks with WYSIWYG content, widget instances that create layout update rows, URL key uniqueness across selected stores, no-route/home-page configuration, page-level custom design fields, System > Design schedule records, theme/package configuration, and cache invalidation after content or layout changes.
+
+I implemented this as a read-only workbench under `/_modernization/admin/cms-design`. It does not save CMS pages, save static blocks, create widget layout links, validate or render arbitrary layout XML, upload or delete media, activate design schedules, scan theme packages, regenerate rewrites, or refresh caches. The useful increment is a Chrome-verifiable diagnostic surface for CMS page rows, block rows, widget rows, design scope rows, URL rewrite rows, cache dependency rows, problem rows, DE store-view scoping, empty states, and denied viewer behavior.
+
+The legacy scan shaped the scope:
+
+- CMS page admin has grid columns plus Page Information, Content, Design, and Meta Data tabs, so the workbench keeps layout, meta, block, widget, redirect, and no-route signals visible together.
+- Page and block saves have store-scoped identifier uniqueness rules, URL key restrictions, self-reference checks, and cache invalidation, so this slice avoids every write path.
+- Widget admin is a two-step flow that depends on widget type and design package/theme before writing layout update/link records, which is too risky without final fixture and validator evidence.
+- Design behavior is split across page-level custom design fields, System > Design scheduled changes, and configuration package/theme values; the workbench exposes store-scope diagnostics without claiming final theme fallback parity.
+- Layout XML and WYSIWYG media have security-sensitive validation and storage behavior, so the workbench shows references and disabled actions instead of rendering or mutating them.
+
+This slice improves admin CMS/design inspection for `AD-009` and links related CMS/domain facts into the domain catalog, but it is not final CMS/design cutover. Real project CMS fixtures, duplicate-key validation, layout XML validator parity, widget layout rows, WYSIWYG media storage/security, design schedule overlap cases, admin ACL integration, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
 ## 2026-05-19 16:25 CEST - Why The Admin Customer Workbench Exists
 
 The admin customer slice exists because Magento customer administration is not just a table of accounts. It includes an AJAX-backed customer grid, EAV-generated account fields, addresses, website-specific email uniqueness, customer groups, newsletter state, recent activity, orders, carts, wishlist, reviews, tags, default billing and shipping addresses, and ACL-gated tabs.
