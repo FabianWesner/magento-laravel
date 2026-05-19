@@ -2475,3 +2475,19 @@ Blocked:
 
 Next:
 - Commit the defect register, then continue reducing final-gate blockers with real evidence or implementation.
+
+## 2026-05-19 10:03 CEST - Sample Fixture DB Rechecked
+
+Changed:
+- Updated `specs/modernization/data-fixtures.md` with the 2026-05-19 sample DB fixture coverage recheck and schema signature.
+
+Verified:
+- Sandbox DB access failed with `SQLSTATE[HY000] [2002] Operation not permitted`, confirming local MySQL access requires escalation from this environment.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento /Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps` connected to the local Docker Magento sample DB, reported 14 checks, 6 covered areas, and 8 fixture gaps, then exited non-zero because strict mode found gaps.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento /Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/schema-report.php --format=markdown` reported 362 tables and schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`.
+
+Blocked:
+- The local sample DB is still not the final canonical project fixture: project overlay, sanitized project database/media, fixture manifest, restore evidence, and DB-backed final reports remain absent.
+
+Next:
+- Run markdown and normal gate checks, then commit the sample fixture DB evidence update.
