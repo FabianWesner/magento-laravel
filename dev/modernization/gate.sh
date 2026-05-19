@@ -175,6 +175,11 @@ else
 fi
 run_maybe_unavailable "Magento docroot verification" run_magento_docroot_verification
 run_optional "Laravel Boost application smoke" run_laravel_boost_smoke
+if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
+  run_optional "Boost MCP readiness final check" php dev/modernization/validate-boost-mcp-readiness.php --final
+else
+  run_optional "Boost MCP readiness template check" php dev/modernization/validate-boost-mcp-readiness.php
+fi
 run_maybe_unavailable "fixture coverage report" run_fixture_coverage
 run_maybe_unavailable "schema report" run_schema_report
 run_optional "no-new-xml check for migrated paths" php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs

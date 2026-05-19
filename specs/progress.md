@@ -1503,3 +1503,31 @@ Blocked:
 
 Next:
 - Commit the Docusaurus final unknown-ID guard, then continue with unblocked verification hardening.
+
+## 2026-05-19 02:53 CEST - Boost MCP Readiness Gate
+
+Changed:
+- Added `dev/modernization/validate-boost-mcp-readiness.php` to open a real `php artisan boost:mcp` JSON-RPC stdio session, run `initialize`, run `tools/list`, and assert the required Boost tools are exposed.
+- The new check verifies `application-info`, `database-query`, `database-schema`, `get-absolute-url`, and `search-docs`, including read-only annotations for operational read-only tools.
+- Wired the check into `dev/modernization/gate.sh`; final mode now also requires durable Boost MCP evidence with reload/run status details.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost fallback `DatabaseQuery` returned `[{"ok":1}]`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `mcp tools list`, `artisan mcp server`, and `boost mcp` against Laravel Boost and MCP docs.
+- Manual Boost MCP stdio probe returned `initialize` and `tools/list` responses for the `Laravel Boost` server.
+- `php -l dev/modernization/validate-boost-mcp-readiness.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-boost-mcp-readiness.php` passed.
+- `php dev/modernization/validate-boost-mcp-readiness.php --final` fails as expected for missing final Boost MCP evidence.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` still fails as expected for final evidence, target implementation, project overlay, DB fixture, and browser smoke blockers; the new Boost MCP final evidence blocker is present.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, Boost MCP final evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Boost MCP readiness gate, then continue with unblocked verification hardening.
