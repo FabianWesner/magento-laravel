@@ -12,6 +12,7 @@ use App\Modernization\Config\Contracts\ConfigRepositoryContract;
 use App\Modernization\Modules\Contracts\ModuleRegistryContract;
 use App\Modernization\Modules\ModuleRegistry;
 use App\Policies\LegacyApiContractPolicy;
+use App\Policies\Modernization\Domain\DomainPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use App\Policies\Modernization\Reports\ReportPolicy;
 use Illuminate\Contracts\Foundation\Application;
@@ -52,6 +53,7 @@ class ModernizationServiceProvider extends ServiceProvider
         Gate::define('admin.access', function (User $user, string $permission = 'admin.dashboard'): bool {
             return app(PermissionManifest::class)->allows((string) $user->getAttribute('role'), $permission);
         });
+        Gate::define('viewDomainDiagnostics', [DomainPolicy::class, 'viewDiagnostics']);
         Gate::define('viewReports', [ReportPolicy::class, 'view']);
         Event::listen(ModuleRegistryChecked::class, RecordModuleRegistryCheck::class);
     }

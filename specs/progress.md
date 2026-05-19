@@ -1901,3 +1901,36 @@ Blocked:
 
 Next:
 - Commit the Laravel report foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 08:07 CEST - Laravel Domain Foundation
+
+Changed:
+- Added domain service contract, feature value objects, `DomainCatalog`, `DomainRepository`, and `DomainQueryService` for catalog, category, product, product media, search, customer, address, wishlist, compare, review, tag, CMS page/block, widget, newsletter, contact, sitemap, URL rewrite, import/export, dataflow, store scope, media storage, and downloadable coverage.
+- Added `MediaStorage` with filesystem access through Laravel Storage and traversal protection.
+- Added `CommunicationService` for newsletter, product alert, send-to-friend, contact, email, mail, and notification planning.
+- Added `ImportExportDataflow` validation for CSV/batch imports and failed-import error files.
+- Added `SeoUrlRewrite` for canonical, redirect, sitemap, RSS, and SEO metadata.
+- Added `DomainDiagnosticsController`, `DomainPolicy`, and `viewDomainDiagnostics` gate for an admin-facing domain diagnostics surface.
+- Added PHPUnit coverage for catalog/category/product/media/search states, customer/address/wishlist/compare/review/tag/newsletter/contact behavior, CMS/no-route/redirect/widget behavior, sitemap/RSS/URL rewrite/SEO behavior, import/export/dataflow validation and failures, media filesystem traversal and missing-media/downloadable behavior, DB snapshots, store scope/store view side effects, permissions, and all domain feature IDs.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits; applied filesystem, validation, policy, controller, and PHPUnit guidance locally because sub-agents require an explicit user request.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `filesystem testing storage fake`, `mail fake testing`, `notification fake testing`, and `validation rules` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:interface` generated the domain service contract; `make:class` generated the domain service/value classes; `make:controller Modernization/DomainDiagnosticsController --no-interaction` generated the controller; `make:policy Modernization/Domain/DomainPolicy --no-interaction` generated the policy; and `make:test DomainFoundationTest --phpunit --no-interaction` generated the PHPUnit test before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/DomainFoundationTest.php` passed with 7 tests and 75 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 66 tests and 435 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Domain app/Http/Controllers/Modernization/DomainDiagnosticsController.php app/Policies/Modernization/Domain/DomainPolicy.php app/Providers/ModernizationServiceProvider.php tests/Feature/DomainFoundationTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-domain-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-domain-target.php --final` now fails only for missing final domain service evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 125 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final domain service evidence, final report parity evidence, integration matrix, final integration parity evidence, ADR 0008 approval, final auth/security evidence, final config parity evidence, OpenAPI documentation, final API contract evidence, final cron/job evidence, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel domain foundation, then continue with the next unblocked Laravel foundation gap.
