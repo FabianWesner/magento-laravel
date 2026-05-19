@@ -2577,3 +2577,24 @@ Blocked:
 
 Next:
 - Commit the sample fixture coverage evidence artifact, then continue with the next release blocker that has real local evidence available.
+
+## 2026-05-19 10:26 CEST - Sample Schema Report Evidence Artifact
+
+Changed:
+- Added `--evidence=path` support to `dev/modernization/schema-report.php` for retaining scoped Markdown schema evidence.
+- Added `specs/modernization/sample-schema-report-evidence.md` from the local Magento sample database.
+- Linked the retained sample schema evidence from `specs/modernization/data-fixtures.md` while keeping it explicitly separate from final schema preservation evidence.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 -l dev/modernization/schema-report.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/schema-report.php --help` documents `--evidence=path`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento /Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/schema-report.php --format=markdown --evidence=specs/modernization/sample-schema-report-evidence.md` passed, wrote retained evidence, and recorded 362 tables with schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 72 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- The retained sample schema evidence is not final project schema preservation evidence. Project overlay, sanitized project DB/media, fixture manifest, restore evidence, CI restore, and final DB-backed reports remain absent.
+
+Next:
+- Commit the sample schema report evidence artifact, then continue with the next release blocker that has real local evidence available.
