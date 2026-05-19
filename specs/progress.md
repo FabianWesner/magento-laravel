@@ -30,6 +30,24 @@ Next:
 
 ## Entries
 
+## 2026-05-19 09:03 CEST - Operations Runbook
+
+Changed:
+- Added `specs/modernization/operations-runbook.md` with operator procedures for deployment, rollback, backup, restore, health checks, cache, scheduler, queue, logs, monitoring, and troubleshooting.
+- Scoped the runbook to the side-by-side Magento/Laravel repository layout and existing modernization gates without claiming release rehearsal evidence or final approval.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-operations-readiness.php --final` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 54 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Operations rehearsal evidence, final release checklist approvals, DB-backed fixture/schema checks, project overlay, project database/media fixtures, screenshot artifacts, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the operations runbook, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:59 CEST - Visual Override Manifest Cleanup
 
 Changed:
