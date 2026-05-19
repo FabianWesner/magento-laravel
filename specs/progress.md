@@ -30,6 +30,24 @@ Next:
 
 ## Entries
 
+## 2026-05-19 09:13 CEST - Boost MCP Evidence
+
+Changed:
+- Added `specs/modernization/boost-mcp-evidence.md` with MCP server, tool discovery, application-info, search-docs, database-schema, database-query, read-only annotations, reload steps, run log, and status.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan boost:execute-tool 'Laravel\Boost\Mcp\Tools\ApplicationInfo' W10=` returned `isError:false` with Laravel `13.9.0`, PHP `8.5`, Livewire `4.3.0`, Boost `2.4.7`, MCP `0.7.0`, Pail `1.2.6`, Pint `1.29.1`, and PHPUnit `12.5.25`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-boost-mcp-readiness.php --final` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 57 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- DB-backed fixture/schema checks, project overlay, project database/media fixtures, screenshot artifacts, hosted CI evidence, ADR 0008 approval, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Boost MCP evidence, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 09:10 CEST - Source Dependency Evidence
 
 Changed:
