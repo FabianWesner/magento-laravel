@@ -1780,3 +1780,34 @@ Blocked:
 
 Next:
 - Commit the Laravel API contract foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:31 CEST - Laravel Scoped Config Foundation
+
+Changed:
+- Added typed scoped configuration services over `core_config_data`: `ScopedConfig`, `ConfigRepository`, `ConfigScope`, `ConfigValue`, `WebsiteScope`, `StoreScope`, `StoreView`, `ConfigCache`, `EnvOverride`, `SecretConfig`, `AdminConfig`, `SourceModel`, and `BackendModel`.
+- Added `scoped_config.php` for PHP config without XML, environment overrides, secret paths, and source model options.
+- Bound `ConfigRepositoryContract` to the database-backed `ConfigRepository` through `ModernizationServiceProvider`.
+- Extended the module manifest metadata with scoped config support.
+- Added PHPUnit coverage for default/website/store fallback, environment overrides, encrypted secret fields, cache invalidation, admin save validation, inherited values, source/backend model behavior, `core_config_data` assertions, store-switch localization/currency/base URL behavior, no-XML typed config, and config feature IDs `SF-012`, `AD-010`, `CB-011`, and `CB-013`.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `configuration`, `cache testing`, `database testing assert database`, `validation exception`, `encryption`, and `service container binding` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:interface`, multiple `make:class` commands for scoped config services, and `make:test ScopedConfigTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/ScopedConfigTest.php` passed with 6 tests and 18 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 40 tests and 231 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed after formatting the dirty PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Config app/Providers/ModernizationServiceProvider.php config/scoped_config.php config/modernization.php tests/Feature/ScopedConfigTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-config-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-config-target.php --final` now fails only for missing final config parity evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 92 files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final config parity evidence, OpenAPI documentation, final API contract evidence, final cron/job evidence, ADR 0008 approval, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel scoped config foundation, then continue with the next unblocked Laravel foundation gap.

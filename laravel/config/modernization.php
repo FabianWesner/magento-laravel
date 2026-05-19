@@ -7,6 +7,7 @@ use App\Http\Resources\LegacyApiContractResource;
 use App\Jobs\Modernization\Cron\CaptureCronParitySnapshot;
 use App\Jobs\Modernization\Modules\VerifyModuleRegistry;
 use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Modernization\Config\ScopedConfig;
 use App\Policies\LegacyApiContractPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use App\Providers\ModernizationServiceProvider;
@@ -55,6 +56,7 @@ return [
                 'api_contracts.contracts',
                 'cron_jobs.jobs',
                 'modernization.modules',
+                'scoped_config.implementation',
             ],
             'views' => [],
             'jobs' => [
@@ -69,6 +71,9 @@ return [
                 LegacyApiContractController::class,
                 LegacyApiContractIndexRequest::class,
                 LegacyApiContractResource::class,
+            ],
+            'typed_config' => [
+                ScopedConfig::class,
             ],
         ],
     ],
