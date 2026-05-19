@@ -4,10 +4,13 @@
         <p>{{ $selectedRow['legacy'] }}</p>
     </header>
 
-    <div role="toolbar" aria-label="Admin parity filters">
-        <button type="button" wire:click="setFilter('all')">All</button>
-        <button type="button" wire:click="setFilter('edge')">Edge</button>
-        <button type="button" wire:click="setFilter('failure')">Failure</button>
+    <div class="parity-toolbar-row">
+        <div role="toolbar" aria-label="Admin parity filters">
+            <button type="button" wire:click="setFilter('all')" @class(['is-active' => $filter === 'all'])>All</button>
+            <button type="button" wire:click="setFilter('edge')" @class(['is-active' => $filter === 'edge'])>Edge</button>
+            <button type="button" wire:click="setFilter('failure')" @class(['is-active' => $filter === 'failure'])>Failure</button>
+        </div>
+        <output aria-live="polite">Filter: {{ ucfirst($filter) }}</output>
     </div>
 
     <table>

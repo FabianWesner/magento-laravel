@@ -22,6 +22,16 @@ Route::get('/_modernization/bootstrap', function (CoreInfrastructure $infrastruc
     ]);
 })->name('modernization.bootstrap');
 
+Route::get('/_modernization/livewire-parity', function () {
+    return view('modernization.livewire-parity');
+})->name('modernization.livewire-parity');
+
+Route::get('/_modernization/assets/livewire-parity.css', function () {
+    return response()->file(public_path('modernization/livewire-parity.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.livewire-parity');
+
 Route::middleware('guest')->prefix('_modernization/auth')->group(function (): void {
     Route::get('/customer/login', [AuthBoundaryController::class, 'password'])->name('modernization.auth.customer.login');
     Route::get('/admin/login', [AuthBoundaryController::class, 'password'])->name('login');

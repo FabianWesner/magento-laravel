@@ -9,6 +9,8 @@
 /.localdev/
 /.venv-mkdocs/
 /.playwright-mcp/
+/livewire-parity-*.png
+/favicon.ico
 /site/
 /docusaurus/node_modules/
 /docusaurus/build/

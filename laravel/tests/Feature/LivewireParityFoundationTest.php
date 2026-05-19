@@ -35,6 +35,7 @@ class LivewireParityFoundationTest extends TestCase
             ->assertSee('stale index')
             ->call('setFilter', 'failure')
             ->assertSet('filter', 'failure')
+            ->assertSee('Filter: Failure')
             ->call('selectFeature', 'AD-016')
             ->assertSet('featureId', 'AD-016')
             ->assertSee('Tax and currency')

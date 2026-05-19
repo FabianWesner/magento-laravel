@@ -2774,3 +2774,34 @@ Blocked:
 
 Next:
 - Commit the Magento home visual smoke evidence.
+
+## 2026-05-19 11:16 CEST - Livewire Parity Workbench Implementation
+
+Changed:
+- Shifted the working roadmap to implementation-first slices with documentation/evidence updates deferred until after each working increment is verified.
+- Added a root Laravel front controller so the parked Herd domain can open the Laravel modernization runtime at `http://magento-lts.test`.
+- Added `/_modernization/livewire-parity` as a browser-reachable Livewire workbench for the existing storefront and admin parity panels.
+- Added a named CSS asset route and workbench stylesheet for the Livewire parity page.
+- Exposed admin filter state visibly in the Livewire admin parity grid so browser interaction has an observable result.
+- Added a PHPUnit feature test for the new browser route.
+- Ignored local Playwright screenshot exports and the temporary root favicon artifact so generated browser-check files do not enter implementation commits.
+
+Verified:
+- Laravel Boost `search-docs` was attempted before code changes, but the sandbox could not resolve `boost.laravel.com`; the escalated retry was rejected by the approval reviewer, so no network workaround was attempted.
+- `php artisan serve --host=127.0.0.1 --port=8000 --no-interaction` failed with sandbox `Operation not permitted`; the escalated local-server retry was rejected by the approval reviewer.
+- Herd PHP 8.5 was installed and active; `magento-lts.test` was isolated to PHP 8.5 with the Herd MCP tool.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/ModernizationLivewireParityRouteTest.php tests/Feature/LivewireParityFoundationTest.php` passed with 3 tests and 29 assertions.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/livewire-parity` returned HTTP 200 from PHP 8.5.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/livewire-parity.css` returned HTTP 200 from PHP 8.5.
+- Chrome/Playwright opened `http://magento-lts.test/_modernization/livewire-parity` on desktop, with no browser console errors after the data favicon fix.
+- Chrome/Playwright desktop interactions verified `SF-008 Checkout`, `SF-009 Multishipping checkout`, `Filter: Failure`, and `AD-016 Tax and currency`.
+- Chrome/Playwright mobile viewport `390x844` verified responsive layout and `Filter: Failure` with no browser console errors.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- The route is still a modernization workbench surface, not a migrated production storefront/admin URL.
+- The next implementation slice needs real browser-visible functionality backed by durable data rather than synthetic component snapshots.
+
+Next:
+- Commit this verified implementation slice, then start the admin reports UI slice using the existing report catalog/query classes and verify each working increment in Chrome before any broader documentation work.
