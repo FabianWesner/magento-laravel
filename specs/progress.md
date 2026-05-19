@@ -30,6 +30,32 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:17 CEST - Laravel Commerce Foundation
+
+Changed:
+- Added Laravel commerce catalog, feature/value objects, service contract, calculator, snapshot repository, transaction policy, and side-effect replay job covering quote, cart, totals, product type, pricing, promotion, tax, shipping, payment, inventory, order, invoice, shipment, credit memo, refund, EAV scope, index, cache/session, and email queue behavior.
+- Added PHPUnit commerce foundation coverage for catalog registration, all `CB-001` through `CB-014` feature IDs, totals calculation, payment retry/timeout controls, order lifecycle behavior, queue dispatch, DB side-effect snapshots, idempotency, duplicate control, edge/failure states, recovery, rollback, stale behavior, and legacy comparison markers.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel edits.
+- Laravel Boost `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated PHP `8.5.5` retry succeeded for HTTP client retry/timeout, cache locks, queue testing, and database testing docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/CommerceFoundationTest.php` passed with 7 tests and 51 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-commerce-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-commerce-target.php --final` failed only because final commerce parity evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 73 tests and 486 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final commerce parity evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, final traceability evidence, and broader release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel commerce foundation, then continue with the next unblocked `specs/GOAL.md` Laravel target gap.
+
 ## 2026-05-19 02:46 CEST - Spec Currency Linkage Gate
 
 Changed:
