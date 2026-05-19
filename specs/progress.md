@@ -2456,3 +2456,22 @@ Blocked:
 
 Next:
 - Commit the placeholder-language normalization after markdown and normal gate checks pass.
+
+## 2026-05-19 10:00 CEST - Defect Register Added
+
+Changed:
+- Added `specs/modernization/defect-register.md` as the release-blocking defect ledger for the modernization.
+- Recorded ten current P0/P1 defects covering the absent project overlay, fixture restore evidence, DB-backed reports, UI screenshot artifacts, complex parity evidence, ADR approval, security/accessibility reports, performance approval, hosted CI evidence, manual acceptance, cutover, production readiness, completion audit, and spec-currency approval.
+- Each row includes owner, affected feature IDs, evidence, acceptance status, resolution path, and workaround without granting release acceptance.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-defect-readiness.php --final` now finds the defect register and fails only because the release checklist is unchecked and the listed P0/P1 defects remain open.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 69 files.
+- `rg -n "\\b(TBD|Pending|Required|Required where applicable|To inventory)\\b" specs/modernization/defect-register.md` returned no matches.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final defect readiness remains blocked until every P0/P1 defect in `specs/modernization/defect-register.md` is resolved and the release checklist item is checked with real approval evidence.
+
+Next:
+- Commit the defect register, then continue reducing final-gate blockers with real evidence or implementation.
