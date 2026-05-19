@@ -64,7 +64,7 @@ Blocked:
 - This is a local modernization workbench slice only; final API/integration parity still needs real API payload snapshots, OAuth exchanges, payment callbacks, carrier responses, currency imports, admin ACL mapping, sandbox credentials, outage drills, hosted CI, security review, production runbook, rollback rehearsal, and final Magento/Laravel screenshot evidence.
 
 Next:
-- Commit this verified admin integrations/API workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+- Continue implementation-first on the next browser-verifiable Magento domain slice.
 
 ## 2026-05-19 15:12 CEST - Admin Cron Jobs Workbench Implementation
 

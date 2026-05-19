@@ -13,7 +13,6 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Status | Task | Why It Matters | Verification |
 | --- | --- | --- | --- |
-| In progress | Commit the verified admin integrations/API diagnostics workbench. | Makes SOAP/XML-RPC/REST/OAuth, payment/shipping/currency adapters, callbacks, secrets, retry, timeout, rollback, and attention states browser-visible without invoking live external services. | Focused PHPUnit, Chrome desktop/mobile, post-fix Chrome status filtering, markdown checks, diff check, and normal gate passed; commit is pending. |
 | Pending | Pick the next low-risk, browser-verifiable Magento domain slice. | Keeps implementation moving while avoiding checkout, payment, order writes, and destructive schema changes until release blockers are reduced. | Not started. |
 
 ## Recently Completed Local Slices
