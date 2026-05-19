@@ -25,3 +25,20 @@ The most important tradeoff is that this slice improves characterization and Lar
 The user explicitly redirected the workflow toward implementation-first progress with regular Chrome verification. I kept documentation to the end of the slice so the repository records reflect verified work, not intentions. `specs/progress.md` remains the factual ledger, while this file captures why the implementation shape was chosen.
 
 The new `specs/tasklist.md` and `specs/open-issues.md` are meant to make the work easier to follow without conflating local progress with release readiness.
+
+## 2026-05-19 13:43 CEST - Why The Communications Workbench Exists
+
+The communications slice exists because Magento's storefront communication behavior sits across several subsystems that are easy to underestimate if they are treated as a single email feature. Newsletter subscribers, contact forms, send-to-friend, product alerts, queue records, suppression/problem reports, store scope, and delivery failures all influence what a customer or operator sees.
+
+I kept this as a read-only workbench instead of starting with a final mailer or scheduler replacement. That lets us expose the behavior shape in Chrome first: subscriber states, invalid contact submissions, guest send-to-friend denial, product alert success/failure, delivery queue status, and DE store-view localization. The goal is to make the domain inspectable before wiring destructive sends, retries, or production cron behavior.
+
+The core reasoning was:
+
+- Model newsletter and contact as the existing domain keys, while carrying `send_to_friend`, `product_alert`, and `contact_form` as communication types inside the payload.
+- Store email delivery details under nested `email` payloads, because Magento communication behavior is not just the visible form or subscription row.
+- Include failed delivery and problem-report fixtures early, because the migration has to preserve support and operational failure states, not just happy-path messages.
+- Keep queue rows derived from delivery status and problem attempts so invalid or denied forms do not masquerade as queued mail.
+- Normalize Livewire filters and read nested payload fields defensively, because public component state and fixture shape both need explicit boundaries.
+- Use Chrome interactions as the integration check, since the point of the workbench is whether a human can inspect the states across sections, filters, and viewports.
+
+The tradeoff is the same as previous workbench slices: this improves characterization and local Laravel-side inspection, but it is not final communication parity. Real queued mail, scheduler behavior, retry semantics, suppression policy, production fixture restore, and Magento/Laravel screenshot manifests remain release work.

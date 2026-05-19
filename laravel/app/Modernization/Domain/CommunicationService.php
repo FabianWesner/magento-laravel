@@ -12,12 +12,14 @@ class CommunicationService
      */
     public function plan(string $kind, string $recipient): array
     {
+        $normalizedKind = str_replace('_', ' ', $kind);
+
         return [
             'kind' => $kind,
             'recipient' => $recipient,
             'newsletter' => $kind === 'newsletter',
-            'product alert' => $kind === 'product alert',
-            'send to friend' => $kind === 'send to friend',
+            'product alert' => $normalizedKind === 'product alert',
+            'send to friend' => $normalizedKind === 'send to friend',
             'email' => true,
             'mail_artifact' => Mail::class,
             'notification_artifact' => Notification::class,

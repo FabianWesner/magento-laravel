@@ -30,6 +30,38 @@ Next:
 
 ## Entries
 
+## 2026-05-19 13:43 CEST - Storefront Communications Workbench Implementation
+
+Changed:
+- Added deterministic newsletter/contact `domain_facts` fixtures for newsletter subscriptions, problem reports, contact forms, send-to-friend, product alerts, and email queue delivery states across default and DE store views.
+- Added the `/_modernization/storefront/communications` Livewire workbench with newsletter, contact, alerts, queue, store-view, status, channel, empty-state, and denied-role states.
+- Added communications route, CSS asset route, responsive CSS, focused PHPUnit route/Livewire coverage, and email queue plan normalization for underscore-based communication kinds.
+- Updated the overall tasklist so communications is the active implementation slice and kept the open-issues backlog separate from normal work items.
+- Ignored local communications Playwright screenshots.
+
+Verified:
+- Required Laravel Boost `search-docs` was attempted before code changes and failed with DNS resolution errors; the escalated retry was rejected by the approval reviewer.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/CommunicationsWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Domain/CommunicationService.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationCommunicationsRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationCommunicationsRouteTest.php` passed with 13 tests and 594 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/storefront/communications` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/communications.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial newsletter rows, contact rows, alerts rows, queue rows, DE store-view filter, failed status filter, product-alert channel filter, empty query state, denied role, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column layout and DE queue state with clean current console output.
+- Screenshots were captured as `communications-desktop-2026-05-19.png` and `communications-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 111 tests and 1295 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel Boost docs lookup remains blocked by sandbox DNS and rejected escalation.
+- This is a local modernization workbench slice only; final Magento/Laravel parity screenshots, canonical fixtures, accessibility, performance, hosted CI, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 13:13 CEST - Storefront CMS SEO Workbench Implementation
 
 Changed:

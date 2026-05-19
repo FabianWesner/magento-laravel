@@ -80,6 +80,7 @@ class DomainFoundationTest extends TestCase
 
         $contexts = $this->domainContexts();
         $plan = $this->app->make(CommunicationService::class)->plan('send to friend', 'friend@example.test');
+        $newsletterPlan = $this->app->make(CommunicationService::class)->plan('newsletter', 'subscriber@example.test');
 
         $this->assertContains('Customer', $contexts);
         $this->assertContains('CustomerAddress', $contexts);
@@ -91,8 +92,148 @@ class DomainFoundationTest extends TestCase
         $this->assertContains('Contact', $contexts);
         $this->assertTrue($plan['send to friend']);
         $this->assertTrue($this->app->make(CommunicationService::class)->plan('product alert', 'customer@example.test')['product alert']);
+        $this->assertTrue($newsletterPlan['newsletter']);
+        $this->assertSame('domain-communications', $plan['queue']);
         $this->assertSame(Mail::class, $plan['mail_artifact']);
         $this->assertSame(Notification::class, $plan['notification_artifact']);
+    }
+
+    public function test_domain_fact_seeder_provides_newsletter_contact_and_email_queue_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $newsletterSnapshot = $this->app->make(DomainQueryService::class)->snapshot('newsletter', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $newsletterPayloads = array_column($newsletterSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Newsletter', $newsletterSnapshot['feature']['context']);
+        $this->assertSame('default', $newsletterSnapshot['store_view']);
+        $this->assertSame(3, $newsletterSnapshot['payload']['count']);
+        $this->assertSame(['subscribed', 'unsubscribed', 'problem_report'], array_column($newsletterPayloads, 'state'));
+        $this->assertSame(['sent', 'queued', 'failed'], array_column(array_column($newsletterPayloads, 'email'), 'delivery_status'));
+        $this->assertSame('domain-communications', $newsletterPayloads[0]['email']['queue']);
+        $this->assertSame('en_US', $newsletterPayloads[0]['store_scope']['locale']);
+        $this->assertSame('hard_bounce', $newsletterPayloads[2]['problem_report']['type']);
+        $this->assertFalse($newsletterPayloads[2]['permissions']['can_view_recipient']);
+        $this->assertTrue($newsletterPayloads[2]['permissions']['safe_payload']);
+        $this->assertSame('suppression_list_protects_recipient', $newsletterPayloads[2]['permissions']['denied_reason']);
+
+        foreach ($newsletterPayloads as $newsletterPayload) {
+            $this->assertArrayHasKey('newsletter_subscription_id', $newsletterPayload);
+            $this->assertArrayHasKey('subscriber_status', $newsletterPayload);
+            $this->assertArrayHasKey('store_scope', $newsletterPayload);
+            $this->assertArrayHasKey('email', $newsletterPayload);
+            $this->assertArrayHasKey('permissions', $newsletterPayload);
+            $this->assertArrayHasKey('ui', $newsletterPayload);
+            $this->assertSame(9001, $newsletterPayload['store_scope']['store_id']);
+            $this->assertSame('default', $newsletterPayload['store_scope']['store_view']);
+            $this->assertSame('domain-communications', $newsletterPayload['email']['queue']);
+            $this->assertTrue($newsletterPayload['permissions']['safe_payload']);
+        }
+
+        $deNewsletterSnapshot = $this->app->make(DomainQueryService::class)->snapshot('newsletter', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deNewsletterPayloads = array_column($deNewsletterSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('de', $deNewsletterSnapshot['store_view']);
+        $this->assertSame(3, $deNewsletterSnapshot['payload']['count']);
+        $this->assertSame(['subscribed', 'unsubscribed', 'problem_report'], array_column($deNewsletterPayloads, 'state'));
+        $this->assertSame(['sent', 'queued', 'failed'], array_column(array_column($deNewsletterPayloads, 'email'), 'delivery_status'));
+        $this->assertSame('de_DE', $deNewsletterPayloads[0]['store_scope']['locale']);
+        $this->assertSame('Problembericht', $deNewsletterPayloads[2]['ui']['badge']);
+        $this->assertSame('recipient_complaint', $deNewsletterPayloads[2]['email']['failure_reason']);
+
+        $contactSnapshot = $this->app->make(DomainQueryService::class)->snapshot('contact', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $contactPayloads = array_column($contactSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Contact', $contactSnapshot['feature']['context']);
+        $this->assertSame('default', $contactSnapshot['store_view']);
+        $this->assertSame(6, $contactSnapshot['payload']['count']);
+        $this->assertSame([
+            'contact_form',
+            'contact_form',
+            'send_to_friend',
+            'product_alert',
+            'product_alert',
+            'send_to_friend',
+        ], array_column($contactPayloads, 'communication_type'));
+        $this->assertSame(['valid', 'invalid', 'queued', 'sent', 'failed', 'permission_denied'], array_column($contactPayloads, 'state'));
+        $this->assertSame(['queued', 'not_queued', 'queued', 'sent', 'failed', 'not_queued'], array_column(array_column($contactPayloads, 'email'), 'delivery_status'));
+        $this->assertTrue($contactPayloads[0]['form']['is_valid']);
+        $this->assertSame([], $contactPayloads[0]['form']['validation_errors']);
+        $this->assertFalse($contactPayloads[1]['form']['is_valid']);
+        $this->assertSame('Email must be valid.', $contactPayloads[1]['form']['validation_errors']['email']);
+        $this->assertSame('simple-shirt', $contactPayloads[2]['product_sku']);
+        $this->assertSame('alex.friend@example.test', $contactPayloads[2]['recipients'][0]['email']);
+        $this->assertSame('stock', $contactPayloads[3]['alert_type']);
+        $this->assertSame(0, $contactPayloads[3]['alert']['stock_was']);
+        $this->assertSame(8, $contactPayloads[3]['alert']['stock_is']);
+        $this->assertSame('price', $contactPayloads[4]['alert_type']);
+        $this->assertSame(29.95, $contactPayloads[4]['alert']['price_was']);
+        $this->assertSame(24.95, $contactPayloads[4]['alert']['price_is']);
+        $this->assertSame('mail_transport_failed', $contactPayloads[4]['email']['failure_reason']);
+        $this->assertFalse($contactPayloads[5]['permissions']['can_view_message']);
+        $this->assertTrue($contactPayloads[5]['permissions']['safe_payload']);
+        $this->assertSame('customer_session_required', $contactPayloads[5]['permissions']['denied_reason']);
+        $this->assertNull($contactPayloads[5]['email']['recipient']);
+        $this->assertSame(0, $contactPayloads[5]['recipient_count']);
+
+        foreach ($contactPayloads as $contactPayload) {
+            $this->assertArrayHasKey('communication_id', $contactPayload);
+            $this->assertArrayHasKey('communication_type', $contactPayload);
+            $this->assertArrayHasKey('state', $contactPayload);
+            $this->assertArrayHasKey('store_scope', $contactPayload);
+            $this->assertArrayHasKey('email', $contactPayload);
+            $this->assertArrayHasKey('permissions', $contactPayload);
+            $this->assertArrayHasKey('ui', $contactPayload);
+            $this->assertSame(9001, $contactPayload['store_scope']['store_id']);
+            $this->assertSame('default', $contactPayload['store_scope']['store_view']);
+            $this->assertSame('domain-communications', $contactPayload['email']['queue']);
+            $this->assertTrue($contactPayload['permissions']['safe_payload']);
+        }
+
+        $deContactSnapshot = $this->app->make(DomainQueryService::class)->snapshot('contact', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deContactPayloads = array_column($deContactSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('de', $deContactSnapshot['store_view']);
+        $this->assertSame(4, $deContactSnapshot['payload']['count']);
+        $this->assertSame(['valid', 'invalid', 'queued', 'failed'], array_column($deContactPayloads, 'state'));
+        $this->assertSame(['sent', 'not_queued', 'queued', 'failed'], array_column(array_column($deContactPayloads, 'email'), 'delivery_status'));
+        $this->assertSame('de_DE', $deContactPayloads[0]['store_scope']['locale']);
+        $this->assertSame('Rueckfrage zur Bestellung', $deContactPayloads[0]['form']['subject']);
+        $this->assertSame('E-Mail muss gueltig sein.', $deContactPayloads[1]['form']['validation_errors']['email']);
+        $this->assertSame('mia.freundin@example.test', $deContactPayloads[2]['recipients'][0]['email']);
+        $this->assertSame('price', $deContactPayloads[3]['alert_type']);
+        $this->assertSame(31.95, $deContactPayloads[3]['alert']['price_was']);
+        $this->assertSame(26.95, $deContactPayloads[3]['alert']['price_is']);
+        $this->assertSame('mail_transport_failed', $deContactPayloads[3]['email']['failure_reason']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'newsletter',
+            'entity_id' => 10606,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'contact',
+            'entity_id' => 10710,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
     }
 
     public function test_cms_page_block_widget_no_route_redirect_sitemap_rss_url_rewrite_and_seo_behavior(): void

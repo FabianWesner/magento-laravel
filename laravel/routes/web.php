@@ -96,6 +96,16 @@ Route::get('/_modernization/assets/cms-seo.css', function () {
     ]);
 })->name('modernization.assets.cms-seo');
 
+Route::get('/_modernization/storefront/communications', function () {
+    return view('modernization.communications');
+})->name('modernization.storefront.communications');
+
+Route::get('/_modernization/assets/communications.css', function () {
+    return response()->file(public_path('modernization/communications.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.communications');
+
 Route::get('/_modernization/customer/commerce', function () {
     return view('modernization.customer-commerce');
 })->name('modernization.customer.commerce');
