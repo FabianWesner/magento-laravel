@@ -82,6 +82,16 @@ Route::get('/_modernization/assets/search.css', function () {
     ]);
 })->name('modernization.assets.search');
 
+Route::get('/_modernization/customer/commerce', function () {
+    return view('modernization.customer-commerce');
+})->name('modernization.customer.commerce');
+
+Route::get('/_modernization/assets/customer-commerce.css', function () {
+    return response()->file(public_path('modernization/customer-commerce.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.customer-commerce');
+
 Route::middleware('guest')->prefix('_modernization/auth')->group(function (): void {
     Route::get('/customer/login', [AuthBoundaryController::class, 'password'])->name('modernization.auth.customer.login');
     Route::get('/admin/login', [AuthBoundaryController::class, 'password'])->name('login');

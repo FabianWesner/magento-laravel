@@ -428,6 +428,129 @@ class DomainFoundationTest extends TestCase
         $this->assertSame(1, $deAddressSnapshot['payload']['count']);
         $this->assertSame('DE', $deAddressSnapshot['payload']['rows'][0]['payload']['country_id']);
         $this->assertSame('10117 Berlin', $deAddressSnapshot['payload']['rows'][0]['payload']['formatted_lines'][3]);
+
+        $wishlistSnapshot = $this->app->make(DomainQueryService::class)->snapshot('wishlist', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $wishlistPayloads = array_column($wishlistSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Wishlist', $wishlistSnapshot['feature']['context']);
+        $this->assertSame('default', $wishlistSnapshot['store_view']);
+        $this->assertSame(2, $wishlistSnapshot['payload']['count']);
+        $this->assertSame([5001, 5001], array_column($wishlistPayloads, 'customer_id'));
+        $this->assertSame(['shared', 'empty_private'], array_column($wishlistPayloads, 'state'));
+        $this->assertSame('wl-default-maria-001', $wishlistPayloads[0]['sharing_code']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], $wishlistPayloads[0]['visible_product_skus']);
+        $this->assertSame('simple-shirt', $wishlistPayloads[0]['items'][0]['sku']);
+        $this->assertTrue($wishlistPayloads[0]['can_move_to_cart']);
+        $this->assertSame([], $wishlistPayloads[1]['visible_product_skus']);
+        $this->assertSame([], $wishlistPayloads[1]['items']);
+        $this->assertFalse($wishlistPayloads[1]['can_move_to_cart']);
+        $this->assertSame('not_shared', $wishlistPayloads[1]['denied_reason']);
+
+        $deWishlistSnapshot = $this->app->make(DomainQueryService::class)->snapshot('wishlist', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame('de', $deWishlistSnapshot['store_view']);
+        $this->assertSame(1, $deWishlistSnapshot['payload']['count']);
+        $this->assertSame(5002, $deWishlistSnapshot['payload']['rows'][0]['payload']['customer_id']);
+        $this->assertSame(['simple-shirt'], $deWishlistSnapshot['payload']['rows'][0]['payload']['visible_product_skus']);
+        $this->assertSame('Sichere geteilte Wunschlisten-Fixture.', $deWishlistSnapshot['payload']['rows'][0]['payload']['message']);
+
+        $compareSnapshot = $this->app->make(DomainQueryService::class)->snapshot('compare', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $comparePayloads = array_column($compareSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Compare', $compareSnapshot['feature']['context']);
+        $this->assertSame('default', $compareSnapshot['store_view']);
+        $this->assertSame(2, $compareSnapshot['payload']['count']);
+        $this->assertSame(['active', 'empty_guest'], array_column($comparePayloads, 'state'));
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], $comparePayloads[0]['visible_product_skus']);
+        $this->assertSame('price', $comparePayloads[0]['attributes'][0]['code']);
+        $this->assertSame(29.95, $comparePayloads[0]['attributes'][0]['values']['simple-shirt']);
+        $this->assertSame('Color', $comparePayloads[0]['attributes'][1]['label']);
+        $this->assertSame([], $comparePayloads[1]['visible_product_skus']);
+        $this->assertSame([], $comparePayloads[1]['attributes']);
+        $this->assertSame('guest_session_expired', $comparePayloads[1]['denied_reason']);
+
+        $deCompareSnapshot = $this->app->make(DomainQueryService::class)->snapshot('compare', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame('de', $deCompareSnapshot['store_view']);
+        $this->assertSame(1, $deCompareSnapshot['payload']['count']);
+        $this->assertSame(5002, $deCompareSnapshot['payload']['rows'][0]['payload']['customer_id']);
+        $this->assertSame('Preis', $deCompareSnapshot['payload']['rows'][0]['payload']['attributes'][0]['label']);
+        $this->assertSame('Farbe', $deCompareSnapshot['payload']['rows'][0]['payload']['attributes'][1]['label']);
+
+        $reviewSnapshot = $this->app->make(DomainQueryService::class)->snapshot('review', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $reviewPayloads = array_column($reviewSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Review', $reviewSnapshot['feature']['context']);
+        $this->assertSame('default', $reviewSnapshot['store_view']);
+        $this->assertSame(2, $reviewSnapshot['payload']['count']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], array_column($reviewPayloads, 'product_sku'));
+        $this->assertSame([5001, 5001], array_column($reviewPayloads, 'customer_id'));
+        $this->assertSame(['approved', 'pending'], array_column($reviewPayloads, 'status'));
+        $this->assertTrue($reviewPayloads[0]['is_visible']);
+        $this->assertFalse($reviewPayloads[1]['is_visible']);
+        $this->assertSame('approved', $reviewPayloads[0]['moderation']['status']);
+        $this->assertSame('pending', $reviewPayloads[1]['moderation']['status']);
+        $this->assertSame(5, $reviewPayloads[0]['ratings']['quality']);
+        $this->assertSame(4.3, $reviewPayloads[0]['average_rating']);
+
+        $deReviewSnapshot = $this->app->make(DomainQueryService::class)->snapshot('review', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame('de', $deReviewSnapshot['store_view']);
+        $this->assertSame(1, $deReviewSnapshot['payload']['count']);
+        $this->assertSame(5002, $deReviewSnapshot['payload']['rows'][0]['payload']['customer_id']);
+        $this->assertSame('Zuverlaessiges Hemd', $deReviewSnapshot['payload']['rows'][0]['payload']['title']);
+        $this->assertSame(4.7, $deReviewSnapshot['payload']['rows'][0]['payload']['average_rating']);
+
+        $tagSnapshot = $this->app->make(DomainQueryService::class)->snapshot('tag', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $tagPayloads = array_column($tagSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Tag', $tagSnapshot['feature']['context']);
+        $this->assertSame('default', $tagSnapshot['store_view']);
+        $this->assertSame(2, $tagSnapshot['payload']['count']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], array_column($tagPayloads, 'product_sku'));
+        $this->assertSame([5001, 5001], array_column($tagPayloads, 'customer_id'));
+        $this->assertSame(['approved', 'pending'], array_column($tagPayloads, 'status'));
+        $this->assertTrue($tagPayloads[0]['is_visible']);
+        $this->assertFalse($tagPayloads[1]['is_visible']);
+        $this->assertSame('summer', $tagPayloads[0]['name']);
+        $this->assertSame(['simple-shirt'], $tagPayloads[0]['related_product_skus']);
+
+        $deTagSnapshot = $this->app->make(DomainQueryService::class)->snapshot('tag', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame('de', $deTagSnapshot['store_view']);
+        $this->assertSame(1, $deTagSnapshot['payload']['count']);
+        $this->assertSame(5002, $deTagSnapshot['payload']['rows'][0]['payload']['customer_id']);
+        $this->assertSame('sommer', $deTagSnapshot['payload']['rows'][0]['payload']['name']);
+        $this->assertSame('approved', $deTagSnapshot['payload']['rows'][0]['payload']['status']);
+
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'category',
             'entity_id' => 2001,
@@ -455,6 +578,30 @@ class DomainFoundationTest extends TestCase
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'downloadable',
             'entity_id' => 8002,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'wishlist',
+            'entity_id' => 9103,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'compare',
+            'entity_id' => 9203,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'review',
+            'entity_id' => 9303,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'tag',
+            'entity_id' => 9403,
             'store_id' => 9002,
             'store_view' => 'de',
         ]);

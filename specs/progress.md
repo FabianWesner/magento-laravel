@@ -2956,3 +2956,39 @@ Blocked:
 
 Next:
 - Commit this verified search implementation slice, then continue with the next browser-verifiable storefront/admin implementation surface.
+
+## 2026-05-19 12:54 CEST - Customer Commerce Workbench Implementation
+
+Changed:
+- Kept documentation work at the end of the slice and implemented the browser-visible SF-011 customer commerce workbench first.
+- Added deterministic `domain_facts` for wishlist, compare, review, and tag rows across default and DE store views.
+- Covered shared wishlist metadata, empty private wishlist, guest compare empty state, compare attributes, review moderation and ratings, tag status, customer ownership, and visible product SKUs.
+- Extended domain foundation coverage for scoped wishlist, compare, review, and tag snapshots.
+- Added `/_modernization/customer/commerce` with a named CSS asset route, wrapper Blade view, responsive stylesheet, and `CustomerCommerceWorkbench` Livewire component.
+- Added read-only controls for store scope, store view, customer, product, status, section, and diagnostics role.
+- Escaped all review/tag/wishlist payload output with Blade, kept filtering in the component, normalized invalid public Livewire state, and added stable `wire:key` values for dynamic options and repeated cards.
+- Added focused PHPUnit coverage for route rendering, CSS asset response, sections, store-view filtering, empty state, pending moderation state, denied role, and invalid public state normalization.
+- Ignored local customer-commerce Playwright screenshot exports.
+
+Verified:
+- Laravel Boost `search-docs` was attempted before code changes, but the sandbox could not resolve `boost.laravel.com`; the escalated retry was rejected by the approval reviewer, so no network workaround was attempted.
+- Sub-agent exploration reviewed Magento wishlist, compare, review, and tag controllers, blocks, templates, layout handles, and route behavior.
+- Sub-agent fixture work added and verified deterministic SF-011 domain facts with `php artisan test --compact tests/Feature/DomainFoundationTest.php`, passing with 8 tests and 310 assertions.
+- Sub-agent rule review flagged the full SF-011 scope, route/test placeholders, authorization, Livewire state whitelisting, escaping, Blade query avoidance, and fixture requirements; the implementation follows existing `DomainQueryService`/`DomainPolicy` workbench patterns.
+- Sub-agent code review flagged clear-filter behavior, invalid public state normalization, missing dynamic option keys, and CSS asset test coverage; all four were fixed before gate/commit.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationCustomerCommerceRouteTest.php` passed with 11 tests and 345 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/customer/commerce` returned HTTP 200 from PHP 8.5.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/customer-commerce.css` returned HTTP 200 from PHP 8.5.
+- Chrome/Playwright desktop opened `http://magento-lts.test/_modernization/customer/commerce`, verified wishlist rows, compare attributes, pending review moderation, tag rows, DE store-view scope, filtered empty wishlist state, denied role state, and no console warnings/errors.
+- Chrome/Playwright mobile viewport `390x844` verified responsive stacked controls, wishlist rows, compare attributes, pending review moderation, denied role state, and no console warnings/errors.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 80 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`; the gate's Laravel test step passed with 103 tests and 970 assertions.
+
+Blocked:
+- This is still a modernization workbench surface and is not yet the final production wishlist, compare, review, or tag URL replacement.
+- SF-011 also lists newsletter subscription, downloadable products, recurring profiles, and billing agreements; newsletter is cataloged separately as SF-016/CJ-022 in `DomainCatalog`, downloadable product evidence is currently covered by the product detail workbench, and recurring profiles/billing agreements remain future fixtures and UI work.
+
+Next:
+- Commit this verified customer commerce implementation slice, then continue with the next browser-verifiable storefront/admin implementation surface.
