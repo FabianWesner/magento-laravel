@@ -30,6 +30,28 @@ Next:
 
 ## Entries
 
+## 2026-05-19 11:03 CEST - Schema Preservation Evidence
+
+Changed:
+- Added `specs/modernization/schema-preservation-evidence.md` tying the current schema-preservation foundation to the retained sample schema report, policy/repository code, and PHPUnit coverage.
+- Linked the schema-preservation evidence from DEF-002 while keeping the canonical fixture and project-overlay blockers open.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/SchemaPreservationFoundationTest.php` passed from `laravel/` with 5 tests and 26 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-schema-preservation-target.php --final` failed before the evidence file only because schema-preservation evidence was not present.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-schema-preservation-target.php --final` passed after adding the evidence file.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 77 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- `rg` confirmed the retained sample schema report records 362 tables, schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`, and key Magento commerce/EAV table signatures.
+
+Blocked:
+- Direct sandbox access to the local MySQL sample schema report failed with `SQLSTATE[HY000] [2002] Operation not permitted`.
+- Escalation for the same read-only local schema report was rejected by the approval reviewer, so no new database query result was generated in this turn.
+- Canonical project fixture manifest, restore proof, project database, project media, project overlay, hosted CI evidence, and final release approval remain incomplete.
+
+Next:
+- Commit the retained schema-preservation evidence, then continue with the next unblocked final-gate evidence gap.
+
 ## 2026-05-19 10:45 CEST - Magento Category Visual Smoke
 
 Changed:
