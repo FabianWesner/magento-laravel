@@ -1842,3 +1842,32 @@ Blocked:
 
 Next:
 - Commit the Laravel auth/security foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:48 CEST - Laravel Integration Foundation
+
+Changed:
+- Added `integrations.php` with config-backed adapter entries for payment gateways, shipping carriers, currency rates, Google Analytics, Google Base, email provider, ERP, PIM, CRM, feeds, webhooks, OAuth, sandbox health, and integration config.
+- Added `IntegrationConfig`, `IntegrationEndpoint`, `IntegrationGateway`, and `IntegrationResponse` for sandbox/fake integration routing, HTTP timeout/retry/status handling, secret/config path metadata, webhook/OAuth metadata, rollback, and outage recovery dispatch.
+- Added `RecoverIntegrationOutage` queued job with retry/backoff, timeout, failure logging, rollback metadata, replay, and idempotency context.
+- Added PHPUnit coverage for payment redirect/webhook/IPN/callback failure behavior, shipping carrier sandbox unavailable rates, currency/Google/email/ERP/PIM/CRM/feed registration, HTTP fake failed connections, timeout/retry config, secret/config paths, queue recovery, dual-runtime payload snapshots, rollback, observability, and all integration feature IDs.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits; applied HTTP client, queue, logging, configuration, and PHPUnit guidance locally because sub-agents require an explicit user request.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `http client retry timeout`, `http client fake failed connection`, `queue fake testing`, and `logging testing` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:class` generated the integration value/service classes, `make:job Modernization/Integrations/RecoverIntegrationOutage --no-interaction` generated the recovery job, and `make:test IntegrationFoundationTest --phpunit --no-interaction` generated the PHPUnit test before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/IntegrationFoundationTest.php` passed with 6 tests and 44 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 53 tests and 323 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Integrations app/Jobs/Modernization/Integrations/RecoverIntegrationOutage.php config/integrations.php tests/Feature/IntegrationFoundationTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-integration-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-integration-target.php --final` now fails only for missing integration matrix and final integration parity evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 106 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Integration matrix, final integration parity evidence, ADR 0008 approval, final auth/security evidence, final config parity evidence, OpenAPI documentation, final API contract evidence, final cron/job evidence, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel integration foundation, then continue with the next unblocked Laravel foundation gap.
