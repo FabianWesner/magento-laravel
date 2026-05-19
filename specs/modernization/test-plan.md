@@ -75,6 +75,14 @@ The release gate is feature-ID driven. A feature ID is complete only when the fo
 
 No feature ID may be marked complete by visual approval alone, and no cart/checkout/sales feature may be marked complete without DB side-effect comparison.
 
+## Completion Audit Gate
+
+Before final cutover or completion is declared, create `specs/modernization/completion-audit.md` and use it as the final proof ledger. The audit must restate the modernization objective as concrete deliverables, then build a Prompt-to-artifact checklist that maps every explicit requirement, numbered item, named file, command, test, gate, and deliverable from `specs/GOAL.md` to concrete evidence.
+
+The audit must inspect actual files, command output, test reports, browser artifacts, screenshots, CI results, commit state, and release evidence. Passing tests, manifests, verifier success, or green status are proxy signals until the audit maps them to the requirement they prove. Treat uncertainty as not achieved.
+
+The Prompt-to-artifact checklist must include columns for requirement, source, evidence, verification, and status. Each row must cite a concrete artifact, command output, URL, or file path. The final audit can pass only when no missing, incomplete, weakly verified, or uncovered requirements remain.
+
 ## Quality Gates
 
 ```mermaid

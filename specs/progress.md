@@ -1531,3 +1531,30 @@ Blocked:
 
 Next:
 - Commit the Boost MCP readiness gate, then continue with unblocked verification hardening.
+
+## 2026-05-19 06:33 CEST - Completion Audit Gate
+
+Changed:
+- Added `dev/modernization/validate-completion-audit.php` to require a final prompt-to-artifact completion audit before the modernization can be declared complete.
+- Wired the completion audit validator into `dev/modernization/gate.sh` for both template and final modes.
+- Updated `specs/modernization/test-plan.md` and `specs/modernization/release-strategy.md` so final release requires a concrete audit against `specs/GOAL.md`, not only passing proxy signals.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `console command testing`, `filesystem testing`, and `phpunit assertions` against Laravel framework `13.x` docs.
+- `php -l dev/modernization/validate-completion-audit.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-completion-audit.php` passed.
+- `php dev/modernization/validate-completion-audit.php --final` fails as expected because no final completion audit evidence exists.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` still fails as expected for final documentation placeholders, missing spec linkage evidence, missing completion audit evidence, UI screenshot manifest, release readiness, manual acceptance/support evidence, cutover evidence, defect evidence, CI workflow/evidence, source/dependency evidence, fixture/media evidence, source-only Magento baseline evidence, complex reverse-engineering evidence, edge/failure evidence, performance budgets, operations/security/accessibility/production evidence, missing Laravel target implementations, placeholder project overlay, missing DB-backed fixture/schema checks, final traceability evidence, Boost MCP final evidence, and sandbox browser smoke unavailability.
+
+Blocked:
+- Final completion audit evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, Boost MCP final evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the completion audit gate, then continue with unblocked verification hardening.

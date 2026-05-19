@@ -54,5 +54,6 @@ Defer checkout, payment, tax, and sales writes until late phases.
 - Laravel target runtime runs on the latest stable PHP branch selected for release, with Composer platform checks passing.
 - Laravel Boost remains installable in the target Laravel workspace.
 - Laravel Boost MCP can list tools and run `application-info`, `search-docs`, and read-only database tooling, or an implementation blocker records exact client reload/config steps.
+- Completion audit approved against `specs/GOAL.md` with concrete evidence for every requirement, named file, command, test, gate, and deliverable.
 - Rollback rehearsal complete.
 - Open defect list accepted by severity policy.

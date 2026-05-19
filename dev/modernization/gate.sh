@@ -103,9 +103,11 @@ run_optional "markdown checks" php dev/modernization/markdown-check.php
 if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "documentation content final check" php dev/modernization/validate-docs-content.php --final
   run_optional "spec currency/linkage final check" php dev/modernization/validate-spec-currency-linkage.php --final
+  run_optional "completion audit final check" php dev/modernization/validate-completion-audit.php --final
 else
   run_optional "documentation content template check" php dev/modernization/validate-docs-content.php
   run_optional "spec currency/linkage template check" php dev/modernization/validate-spec-currency-linkage.php
+  run_optional "completion audit template check" php dev/modernization/validate-completion-audit.php
 fi
 run_optional "inventory report" php dev/modernization/inventory.php --format=markdown
 if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
