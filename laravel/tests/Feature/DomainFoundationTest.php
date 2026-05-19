@@ -212,6 +212,99 @@ class DomainFoundationTest extends TestCase
         $this->assertSame(1, $deCatalogSnapshot['payload']['count']);
         $this->assertSame('Einfaches Hemd', $deCatalogSnapshot['payload']['rows'][0]['payload']['name']);
 
+        $productSnapshot = $this->app->make(DomainQueryService::class)->snapshot('product', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $productPayloads = array_column($productSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Product', $productSnapshot['feature']['context']);
+        $this->assertSame('default', $productSnapshot['store_view']);
+        $this->assertSame(2, $productSnapshot['payload']['count']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], array_column($productPayloads, 'sku'));
+        $this->assertSame(['simple', 'configurable'], array_column($productPayloads, 'type'));
+        $this->assertSame('/women/simple-shirt.html', $productPayloads[0]['url']);
+        $this->assertSame('USD', $productPayloads[0]['currency']);
+        $this->assertSame(24.95, $productPayloads[0]['final_price']);
+        $this->assertTrue($productPayloads[0]['stock']['is_in_stock']);
+        $this->assertSame(24, $productPayloads[0]['stock']['qty']);
+        $this->assertSame(4.5, $productPayloads[0]['rating']['summary']);
+        $this->assertSame(12, $productPayloads[0]['rating']['reviews_count']);
+        $this->assertSame('monogram', $productPayloads[0]['custom_options'][0]['code']);
+        $this->assertSame(['configurable-hoodie'], $productPayloads[0]['related_skus']);
+        $this->assertSame(['configurable-hoodie'], $productPayloads[0]['upsell_skus']);
+        $this->assertSame(['downloadable-size-guide'], $productPayloads[0]['cross_sell_skus']);
+        $this->assertSame([7001], $productPayloads[0]['media_entity_ids']);
+        $this->assertSame([8001], $productPayloads[0]['downloadable_entity_ids']);
+        $this->assertSame('size', $productPayloads[1]['configurable_options'][0]['attribute_code']);
+        $this->assertSame('configurable-hoodie-black-m', $productPayloads[1]['variants'][0]['sku']);
+
+        $deProductSnapshot = $this->app->make(DomainQueryService::class)->snapshot('product', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deProductPayloads = array_column($deProductSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame(2, $deProductSnapshot['payload']['count']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], array_column($deProductPayloads, 'sku'));
+        $this->assertSame('EUR', $deProductPayloads[0]['currency']);
+        $this->assertSame('Konfigurierbarer Hoodie', $deProductPayloads[1]['name']);
+        $this->assertSame('Groesse', $deProductPayloads[1]['configurable_options'][0]['label']);
+
+        $mediaSnapshot = $this->app->make(DomainQueryService::class)->snapshot('product_media', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $mediaPayloads = array_column($mediaSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('ProductMedia', $mediaSnapshot['feature']['context']);
+        $this->assertSame(2, $mediaSnapshot['payload']['count']);
+        $this->assertSame('simple-shirt', $mediaPayloads[0]['sku']);
+        $this->assertFalse($mediaPayloads[0]['missing_media']);
+        $this->assertSame('catalog/product/simple-shirt/main.jpg', $mediaPayloads[0]['base_image']);
+        $this->assertSame('Simple Shirt front', $mediaPayloads[0]['gallery'][0]['label']);
+        $this->assertSame(['image', 'small_image', 'thumbnail'], $mediaPayloads[0]['gallery'][0]['types']);
+        $this->assertSame('configurable-hoodie', $mediaPayloads[1]['sku']);
+        $this->assertTrue($mediaPayloads[1]['missing_media']);
+        $this->assertSame(['catalog/product/configurable-hoodie/missing-swatch.jpg'], $mediaPayloads[1]['missing_files']);
+
+        $deMediaSnapshot = $this->app->make(DomainQueryService::class)->snapshot('product_media', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame(2, $deMediaSnapshot['payload']['count']);
+        $this->assertSame('Einfaches Hemd Vorderseite', $deMediaSnapshot['payload']['rows'][0]['payload']['gallery'][0]['label']);
+
+        $downloadableSnapshot = $this->app->make(DomainQueryService::class)->snapshot('downloadable', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $downloadablePayload = $downloadableSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertSame('Downloadable', $downloadableSnapshot['feature']['context']);
+        $this->assertSame(1, $downloadableSnapshot['payload']['count']);
+        $this->assertSame('downloadable-size-guide', $downloadablePayload['sku']);
+        $this->assertSame('downloadable/files/size-guide.pdf', $downloadablePayload['file']);
+        $this->assertSame('customer_account_purchase', $downloadablePayload['permission']);
+        $this->assertTrue($downloadablePayload['requires_login']);
+        $this->assertFalse($downloadablePayload['is_shareable']);
+        $this->assertSame(['General'], $downloadablePayload['customer_group_permissions']);
+        $this->assertSame(['simple-shirt', 'configurable-hoodie'], $downloadablePayload['related_product_skus']);
+
+        $deDownloadableSnapshot = $this->app->make(DomainQueryService::class)->snapshot('downloadable', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $this->assertSame(1, $deDownloadableSnapshot['payload']['count']);
+        $this->assertSame('Groessentabelle PDF', $deDownloadableSnapshot['payload']['rows'][0]['payload']['title']);
+        $this->assertSame(['Retail Kunde'], $deDownloadableSnapshot['payload']['rows'][0]['payload']['customer_group_permissions']);
+
         $searchSnapshot = $this->app->make(DomainQueryService::class)->snapshot('search', [
             'store_id' => 9002,
             'store_view' => 'de',
@@ -296,6 +389,18 @@ class DomainFoundationTest extends TestCase
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'customer_address',
             'entity_id' => 6002,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'product_media',
+            'entity_id' => 7004,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'downloadable',
+            'entity_id' => 8002,
             'store_id' => 9002,
             'store_view' => 'de',
         ]);

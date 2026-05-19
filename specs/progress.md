@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 12:17 CEST - Product Detail Workbench Implementation
+
+Changed:
+- Added richer product, product media, and downloadable `domain_facts` fixtures for default and DE store views.
+- Added the `/_modernization/storefront/product-detail` Livewire workbench with product selection, type filtering, overview, media, options, commerce/download states, store-view switching, empty state, and denied-role state.
+- Added product detail route, CSS asset route, responsive CSS, and PHPUnit route/Livewire coverage.
+- Ignored local product detail Playwright screenshots.
+
+Verified:
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationProductDetailRouteTest.php` passed with 10 tests and 200 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/storefront/product-detail` returned HTTP 200.
+- `curl -I --max-time 5 http://magento-lts.test/_modernization/assets/product-detail.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for simple PDP overview, configurable product media missing-state, configurable options, downloadable permission, DE store-view switch, empty product-type state, denied role, and zero console errors.
+- Chrome/Playwright mobile verification passed for responsive single-column layout, DE store-view switch showing the localized product heading in the snapshot, and zero console errors.
+- Parallel subagents supplied Magento PDP implementation scope, deterministic product/media/downloadable fixtures, and Laravel rule review; their findings were consumed before this entry.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 80 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel Boost `search-docs` for this slice failed with DNS resolution errors in the sandbox, and the escalated retry was rejected by the approval reviewer.
+- This is a modernization workbench slice only; final Magento/Laravel parity screenshots, accessibility, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit the product detail workbench slice, then continue implementation-first on the next Magento domain slice with Chrome verification before documentation.
+
 ## 2026-05-19 12:04 CEST - Customer Account Workbench Implementation
 
 Changed:
