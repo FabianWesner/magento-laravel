@@ -92,4 +92,24 @@ class ApiContractFoundationTest extends TestCase
         $response->assertOk();
         $this->assertSame(self::API_FEATURE_IDS, array_column($response->json('data'), 'feature_id'));
     }
+
+    public function test_openapi_documentation_tracks_versioned_contract_paths_security_and_responses(): void
+    {
+        $path = base_path('openapi.yaml');
+
+        $this->assertFileExists($path);
+
+        $openApi = file_get_contents($path);
+        $this->assertIsString($openApi);
+        $this->assertStringContainsString('openapi: 3.1.0', $openApi);
+        $this->assertStringContainsString('version: 1.0.0', $openApi);
+        $this->assertStringContainsString('/contracts:', $openApi);
+        $this->assertStringContainsString('/contracts/{contract}:', $openApi);
+        $this->assertStringContainsString('LegacyOAuth', $openApi);
+        $this->assertStringContainsString('responses:', $openApi);
+
+        foreach (self::API_FEATURE_IDS as $featureId) {
+            $this->assertStringContainsString($featureId, $openApi);
+        }
+    }
 }

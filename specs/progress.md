@@ -30,6 +30,27 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:58 CEST - API OpenAPI Contract
+
+Changed:
+- Added `laravel/openapi.yaml` for the existing versioned legacy API contract inventory endpoints under `/api/v1/contracts`.
+- Added PHPUnit coverage to keep the OpenAPI contract aligned with contract paths, security scheme, responses, version, and API feature IDs `API-001` through `API-006`.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent tests/Feature/ApiContractFoundationTest.php` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/ApiContractFoundationTest.php` passed with 6 tests and 47 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-api-target.php --final` now fails only because final API contract evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 86 tests and 562 assertions.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final API contract evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, ADR 0008 approval, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the API OpenAPI contract, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:53 CEST - Docusaurus Final Content Cleanup
 
 Changed:
