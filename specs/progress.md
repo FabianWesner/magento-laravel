@@ -30,6 +30,28 @@ Next:
 
 ## Entries
 
+## 2026-05-19 09:08 CEST - Docusaurus Dependency Audit Fix
+
+Changed:
+- Updated Docusaurus dependency pins from `3.9.2` to `3.10.1`.
+- Updated Docusaurus dependency overrides to `webpack` `5.106.2` and `serialize-javascript` `7.0.5`.
+- Refreshed `docusaurus/package-lock.json` and local `node_modules` after the approved dependency update.
+
+Verified:
+- Escalated registry checks reported current versions: `@docusaurus/core` `3.10.1`, `webpack` `5.106.2`, and `serialize-javascript` `7.0.5`.
+- Before the update, escalated `npm audit --audit-level=high` in `docusaurus/` reported 19 vulnerabilities through `serialize-javascript` and `webpack`.
+- After the update, escalated `npm audit --audit-level=high` in `docusaurus/` passed with 0 vulnerabilities.
+- `npm ls @docusaurus/core webpack serialize-javascript --depth=4` showed `@docusaurus/core` `3.10.1`, `webpack` `5.106.2`, and `serialize-javascript` `7.0.5`.
+- `npm run build` passed from `docusaurus/`; Docusaurus still reported the existing update-check permission warning for `/Users/fabianwesner/.config`.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final source/dependency inventory evidence, full CI evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, screenshot artifacts, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Docusaurus dependency audit fix, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 09:03 CEST - Operations Runbook
 
 Changed:

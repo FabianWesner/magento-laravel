@@ -9,8 +9,8 @@
     "start": "docusaurus start --host 127.0.0.1 --port 3010"
   },
   "dependencies": {
-    "@docusaurus/core": "3.9.2",
-    "@docusaurus/preset-classic": "3.9.2",
+    "@docusaurus/core": "3.10.1",
+    "@docusaurus/preset-classic": "3.10.1",
     "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
     "prism-react-renderer": "^2.4.1",
@@ -21,6 +21,7 @@
     "playwright": "^1.60.0"
   },
   "overrides": {
-    "webpack": "5.95.0"
+    "webpack": "5.106.2",
+    "serialize-javascript": "7.0.5"
   }
 }
