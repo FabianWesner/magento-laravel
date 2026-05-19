@@ -30,6 +30,21 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:31 CEST - Runtime Tooling Final Verification
+
+Changed:
+- Recorded that the runtime tooling final validator now passes with the existing Laravel PHP `8.5`, Composer lock/platform, root artisan proxy, MCP configuration, install verification, and Boost command checks.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-runtime-tooling.php --final` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-boost-mcp-readiness.php --final` still fails because final Boost MCP evidence is not present yet.
+
+Blocked:
+- Final Boost MCP evidence, broader final release evidence, project overlay, fixture/schema DB evidence, and Livewire dependency approval remain incomplete or unavailable.
+
+Next:
+- Commit this verification ledger update, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:29 CEST - Laravel Schema Preservation Foundation
 
 Changed:
