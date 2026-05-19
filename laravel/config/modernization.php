@@ -1,5 +1,9 @@
 <?php
 
+use App\Events\Modernization\Modules\ModuleRegistryChecked;
+use App\Jobs\Modernization\Modules\VerifyModuleRegistry;
+use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use App\Providers\ModernizationServiceProvider;
 
 return [
@@ -31,14 +35,25 @@ return [
             'commands' => [
                 'modernization:modules',
             ],
-            'events' => [],
-            'listeners' => [],
-            'permissions' => [],
+            'events' => [
+                ModuleRegistryChecked::class,
+            ],
+            'listeners' => [
+                RecordModuleRegistryCheck::class,
+            ],
+            'permissions' => [
+                'modernization.modules.view',
+            ],
             'config' => [
                 'modernization.modules',
             ],
             'views' => [],
-            'jobs' => [],
+            'jobs' => [
+                VerifyModuleRegistry::class,
+            ],
+            'policies' => [
+                ModuleRegistryPolicy::class,
+            ],
         ],
     ],
 ];

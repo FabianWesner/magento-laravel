@@ -18,6 +18,7 @@ final class ModuleManifest
      * @param  list<string>  $config
      * @param  list<string>  $views
      * @param  list<string>  $jobs
+     * @param  list<string>  $policies
      */
     public function __construct(
         public readonly string $id,
@@ -36,6 +37,7 @@ final class ModuleManifest
         public readonly array $config,
         public readonly array $views,
         public readonly array $jobs,
+        public readonly array $policies,
     ) {
         if (! preg_match('/^[a-z][a-z0-9_-]*$/', $id)) {
             throw new InvalidArgumentException("Module manifest id [{$id}] must be a stable lowercase identifier.");
@@ -66,6 +68,7 @@ final class ModuleManifest
             config: self::stringList($manifest, 'config'),
             views: self::stringList($manifest, 'views'),
             jobs: self::stringList($manifest, 'jobs'),
+            policies: self::stringList($manifest, 'policies'),
         );
     }
 
@@ -86,7 +89,8 @@ final class ModuleManifest
      *     permissions: list<string>,
      *     config: list<string>,
      *     views: list<string>,
-     *     jobs: list<string>
+     *     jobs: list<string>,
+     *     policies: list<string>
      * }
      */
     public function toArray(): array
@@ -108,6 +112,7 @@ final class ModuleManifest
             'config' => $this->config,
             'views' => $this->views,
             'jobs' => $this->jobs,
+            'policies' => $this->policies,
         ];
     }
 

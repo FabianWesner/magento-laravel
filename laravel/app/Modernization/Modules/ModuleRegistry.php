@@ -2,9 +2,10 @@
 
 namespace App\Modernization\Modules;
 
+use App\Modernization\Modules\Contracts\ModuleRegistryContract;
 use InvalidArgumentException;
 
-final class ModuleRegistry
+final class ModuleRegistry implements ModuleRegistryContract
 {
     /**
      * @param  list<ModuleManifest>  $manifests

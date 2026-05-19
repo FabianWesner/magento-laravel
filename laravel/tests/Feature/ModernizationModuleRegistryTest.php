@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Modernization\Modules\Contracts\ModuleRegistryContract;
 use App\Modernization\Modules\ModuleRegistry;
+use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use Tests\TestCase;
 
 class ModernizationModuleRegistryTest extends TestCase
@@ -17,6 +19,7 @@ class ModernizationModuleRegistryTest extends TestCase
         $this->assertSame('Laravel Foundation', $foundation->name);
         $this->assertSame(['ARCH'], $foundation->featureIds);
         $this->assertSame([], $registry->errors());
+        $this->assertSame($registry, $this->app->make(ModuleRegistryContract::class));
     }
 
     public function test_module_registry_diagnostic_route_returns_health_and_manifests(): void
@@ -59,6 +62,7 @@ class ModernizationModuleRegistryTest extends TestCase
                 'config' => [],
                 'views' => [],
                 'jobs' => [],
+                'policies' => [],
             ],
             [
                 'id' => 'catalog',
@@ -77,6 +81,7 @@ class ModernizationModuleRegistryTest extends TestCase
                 'config' => [],
                 'views' => [],
                 'jobs' => [],
+                'policies' => [],
             ],
         ]);
 
@@ -105,6 +110,7 @@ class ModernizationModuleRegistryTest extends TestCase
                 'config' => [],
                 'views' => [],
                 'jobs' => [],
+                'policies' => [],
             ],
             [
                 'id' => 'checkout',
@@ -123,10 +129,18 @@ class ModernizationModuleRegistryTest extends TestCase
                 'config' => [],
                 'views' => [],
                 'jobs' => [],
+                'policies' => [],
             ],
         ]);
 
         $this->assertFalse($registry->healthy());
         $this->assertContains('Module dependency cycle detected: catalog -> checkout -> catalog.', $registry->errors());
+    }
+
+    public function test_module_registry_policy_allows_local_diagnostics(): void
+    {
+        $policy = $this->app->make(ModuleRegistryPolicy::class);
+
+        $this->assertTrue($policy->viewDiagnostics());
     }
 }

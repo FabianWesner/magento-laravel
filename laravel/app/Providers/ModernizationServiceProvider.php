@@ -2,7 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\Modernization\Modules\ModuleRegistryChecked;
+use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Modernization\Modules\Contracts\ModuleRegistryContract;
 use App\Modernization\Modules\ModuleRegistry;
+use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class ModernizationServiceProvider extends ServiceProvider
@@ -17,6 +23,11 @@ class ModernizationServiceProvider extends ServiceProvider
 
             return ModuleRegistry::fromConfig(is_array($modules) ? $modules : []);
         });
+
+        $this->app->singleton(
+            ModuleRegistryContract::class,
+            fn (): ModuleRegistry => $this->app->make(ModuleRegistry::class),
+        );
     }
 
     /**
@@ -24,6 +35,7 @@ class ModernizationServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('viewModuleRegistryDiagnostics', [ModuleRegistryPolicy::class, 'viewDiagnostics']);
+        Event::listen(ModuleRegistryChecked::class, RecordModuleRegistryCheck::class);
     }
 }

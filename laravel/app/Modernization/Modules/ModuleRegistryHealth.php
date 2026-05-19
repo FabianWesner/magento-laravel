@@ -2,9 +2,11 @@
 
 namespace App\Modernization\Modules;
 
+use App\Modernization\Modules\Contracts\ModuleRegistryContract;
+
 final readonly class ModuleRegistryHealth
 {
-    public function __construct(private ModuleRegistry $registry) {}
+    public function __construct(private ModuleRegistryContract $registry) {}
 
     /**
      * @return array{

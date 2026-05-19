@@ -1592,3 +1592,34 @@ Blocked:
 
 Next:
 - Commit the Laravel module registry foundation, then continue with the next unblocked Laravel foundation or verification gap.
+
+## 2026-05-19 06:47 CEST - Laravel Module Extension Artifacts
+
+Changed:
+- Added the module registry contract, local/testing diagnostics policy, registry-checked event, queued listener, and registry verification job for the Laravel no-XML module system foundation.
+- Bound the module registry contract in `ModernizationServiceProvider`, registered the diagnostics gate, and registered the event listener through PHP provider code.
+- Extended the module manifest config with providers, commands, events, listeners, permissions, config, views, jobs, and policies metadata.
+- Extended `dev/modernization/validate-module-target.php` final scanning to include Laravel conventional policy, event, listener, and job paths.
+
+Verified:
+- Laravel Boost fallback `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `authorization policies`, `events listeners`, `queue jobs testing`, `service container interfaces`, and `events testing` against Laravel framework `13.x` docs.
+- `php artisan make:interface`, `php artisan make:policy`, `php artisan make:event`, `php artisan make:listener --queued --phpunit`, and `php artisan make:job --phpunit` generated the Laravel artifacts before editing.
+- `php artisan test --compact tests/Feature/ModernizationModuleRegistryTest.php` passed with 6 tests and 20 assertions.
+- `php artisan test --compact tests/Feature/Listeners/Modernization/Modules/RecordModuleRegistryCheckTest.php` passed.
+- `php artisan test --compact tests/Feature/Jobs/Modernization/Modules/VerifyModuleRegistryTest.php` passed.
+- `php artisan test --compact` passed with 10 tests and 24 assertions.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-module-target.php` passed.
+- `php dev/modernization/validate-module-target.php` passed.
+- `php dev/modernization/validate-module-target.php --final` now fails only for missing final module-system evidence.
+- `php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `php dev/modernization/validate-removed-technologies.php` passed for 38 files.
+- `php dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final module-system evidence, full bootstrap foundation evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel module extension artifacts, then continue with the next unblocked Laravel foundation gap.
