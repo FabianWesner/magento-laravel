@@ -1623,3 +1623,34 @@ Blocked:
 
 Next:
 - Commit the Laravel module extension artifacts, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 06:53 CEST - Laravel Bootstrap Foundation Services
+
+Changed:
+- Added `BootstrapServiceProvider` and `InfrastructureServiceProvider` to bind Laravel bootstrap/runtime services through the container.
+- Added `CoreInfrastructure`, `HealthCheck`, `BootstrapHealth`, `DatabaseHealth`, `CacheHealth`, `SessionHealth`, runtime isolation, compatibility adapter expiry metadata, observability context, and error context services.
+- Added the internal `/_modernization/bootstrap` diagnostic route for read-only infrastructure health, module registry health, and runtime isolation status.
+- Added `BootstrapFoundationTest` coverage for web and CLI container resolution, health checks, runtime isolation, compatibility adapter expiry/no-final-runtime-dependency metadata, and structured diagnostics context.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `service providers`, `service container binding`, `health route`, `configuration`, `logging context`, `cache testing`, `database testing`, and `http tests` against Laravel framework `13.x` docs.
+- `php artisan make:provider`, `php artisan make:interface`, `php artisan make:class`, and `php artisan make:test BootstrapFoundationTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `php artisan test --compact tests/Feature/BootstrapFoundationTest.php` passed with 5 tests and 20 assertions.
+- `php artisan route:list --path=_modernization --except-vendor` showed `GET|HEAD _modernization/bootstrap` and `GET|HEAD _modernization/modules`.
+- `php artisan test --compact` passed with 15 tests and 44 assertions.
+- `laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php dev/modernization/validate-bootstrap-target.php` passed.
+- `php dev/modernization/validate-bootstrap-target.php --final` now fails only for missing final bootstrap foundation evidence.
+- `php dev/modernization/validate-removed-technologies.php` passed for 51 files.
+- `php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `php dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel bootstrap foundation services, then continue with the next unblocked Laravel foundation gap.

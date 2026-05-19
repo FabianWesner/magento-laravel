@@ -2,11 +2,17 @@
 
 namespace App\Modernization\Modules;
 
+use App\Modernization\Bootstrap\Contracts\HealthCheck;
 use App\Modernization\Modules\Contracts\ModuleRegistryContract;
 
-final readonly class ModuleRegistryHealth
+final readonly class ModuleRegistryHealth implements HealthCheck
 {
     public function __construct(private ModuleRegistryContract $registry) {}
+
+    public function name(): string
+    {
+        return 'module_registry';
+    }
 
     /**
      * @return array{
