@@ -30,6 +30,43 @@ Next:
 
 ## Entries
 
+## 2026-05-19 18:23 CEST - Storefront Cart Diagnostics Workbench Implementation
+
+Changed:
+- Added the `/_modernization/storefront/cart` Livewire workbench to inspect deterministic quote, cart item, cart totals, shipping rate, and cart problem rows.
+- Added `quote`, `cart_item`, `cart_total`, and `shipping_rate` domain features and deterministic facts across default and DE store views.
+- Covered guest and customer quotes, persistent cart merge state, expired quote cleanup, invalid quantity increments, out-of-stock items, collected and stale totals, free shipping, virtual-only carts, and unavailable shipping estimates.
+- Added the storefront cart route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/domain coverage, modernization module manifest references, and ignored local storefront-cart Playwright screenshots.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after Chrome verification and the normal gate.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied legacy Magento quote/cart/coupon/totals/shipping/inventory constraints and Laravel workbench implementation patterns before finalizing the slice.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/StorefrontCartWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationStorefrontCartRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/DomainFoundationTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l routes/web.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Domain/DomainCatalog.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l config/modernization.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/ModernizationStorefrontCartRouteTest.php tests/Feature/DomainFoundationTest.php tests/Feature/CommerceFoundationTest.php tests/Feature/LivewireParityFoundationTest.php tests/Feature/ComplexFeatureParityCoverageTest.php tests/Feature/RouteFallbackTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 44 tests and 1138 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/storefront/cart` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/storefront-cart.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for summary counts, expired quote filtering, invalid quantity item filtering, unavailable shipping filtering, DE store-view scoping, DE cart totals, aggregated problem rows, empty query state, denied role state, disabled read-only cart actions, and clean current console output.
+- Chrome/Playwright desktop network guard showed only Livewire update POSTs and no Magento `checkout/cart/*`, `wishlist/index/*`, or `adminhtml/sales_order_create/*` POSTs.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, wrapped summary counts, readable problem cards, disabled actions, and clean current console output.
+- Screenshots were captured as `storefront-cart-desktop-2026-05-19.png` and `storefront-cart-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 178 tests and 2451 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final cart, checkout, multishipping, quote, shipping, and inventory parity still need real project fixtures, quote DB delta characterization, shipping carrier sandbox or mock evidence, coupon/totals/order-impact tests, route/auth boundary approval, hosted CI, manual acceptance, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Commit this verified storefront cart diagnostics implementation slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 18:07 CEST - Admin Promotions Workbench Implementation
 
 Changed:

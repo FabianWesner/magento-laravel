@@ -2,6 +2,23 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 18:23 CEST - Why The Storefront Cart Diagnostics Workbench Exists
+
+The storefront cart slice exists because Magento's cart is not a passive page. Even the legacy cart index can reapply estimated shipping data, reset multishipping mode, apply coupons, recollect totals, and save the quote. Add, update, delete, coupon, shipping estimate, wishlist-to-cart, and admin order-create paths all mutate quote or wishlist state, and checkout later subtracts inventory. A Laravel replacement cannot safely start by enabling those actions without retained quote snapshots and dual-runtime DB delta evidence.
+
+I implemented this as a read-only workbench under `/_modernization/storefront/cart`. It shows guest and customer quotes, persistent cart merge state, expired quote cleanup signals, cart items, quantity increment problems, out-of-stock errors, collected and stale totals, free shipping, virtual-only cart shipping behavior, unavailable shipping estimates, DE store-view rows, empty states, denied role behavior, and disabled cart action buttons.
+
+The legacy scan shaped the scope:
+
+- Magento quote lookup depends on customer/guest session state and can merge guest quote items into a customer quote on login, so merge state is visible as a diagnostic rather than hidden.
+- Coupon validity is only known after totals collection and address coupon checks, so coupon data appears with totals/quote rows but apply/remove actions stay disabled.
+- Totals are address-driven and guarded by `totals_collected_flag`, so stale totals are treated as their own problem state.
+- Shipping estimate and method selection write shipping address/session data, so shipping rows are snapshots only.
+- Quantity changes can be normalized, suggested, or rejected by stock observers based on min/max sale qty, increments, salability, and backorder rules; the workbench exposes those messages without changing quote items.
+- Virtual carts and multishipping flags need explicit visibility because Magento routes handle them differently from a normal physical cart.
+
+This creates browser-verifiable local evidence for `SF-007`, `SF-008`, `SF-009`, `CB-001`, `CB-002`, `CB-007`, `CB-009`, and `CJ-006`, but it is not cart or checkout cutover. Real quote fixtures, DB delta characterization, coupon/totals parity, shipping carrier mocks, multishipping traces, route/auth boundary approval, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
 ## 2026-05-19 18:07 CEST - Why The Admin Promotions Workbench Exists
 
 The admin promotions slice exists because Magento promotion administration is directly connected to prices, coupons, cache, indexes, and sales reports. Cart price rules, catalog price rules, generated coupons, coupon usage, catalog rule application, and coupon report aggregation look like normal admin screens, but their write paths can mutate price tables, coupon rows, rule-product mappings, report aggregates, cache state, and order-facing totals. That makes promotion parity too risky to start with save, delete, apply, generate, or report-refresh actions.

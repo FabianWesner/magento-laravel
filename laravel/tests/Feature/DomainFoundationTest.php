@@ -35,6 +35,9 @@ class DomainFoundationTest extends TestCase
         'SF-004',
         'SF-005',
         'SF-006',
+        'SF-007',
+        'SF-008',
+        'SF-009',
         'SF-010',
         'SF-011',
         'SF-012',
@@ -55,11 +58,15 @@ class DomainFoundationTest extends TestCase
         'AD-015',
         'AD-016',
         'AD-017',
+        'CB-001',
+        'CB-002',
         'CB-003',
         'CB-004',
         'CB-005',
         'CB-006',
+        'CB-007',
         'CB-008',
+        'CB-009',
         'CB-010',
         'CB-011',
         'CB-012',
@@ -67,6 +74,7 @@ class DomainFoundationTest extends TestCase
         'CB-014',
         'CJ-001',
         'CJ-002',
+        'CJ-006',
         'CJ-014',
         'CJ-015',
         'CJ-016',
@@ -1057,6 +1065,129 @@ class DomainFoundationTest extends TestCase
         ]);
     }
 
+    public function test_domain_fact_seeder_provides_read_only_cart_diagnostics_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $queryService = $this->app->make(DomainQueryService::class);
+        $defaultQuoteSnapshot = $queryService->snapshot('quote', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deQuoteSnapshot = $queryService->snapshot('quote', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultItemSnapshot = $queryService->snapshot('cart_item', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deItemSnapshot = $queryService->snapshot('cart_item', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultTotalSnapshot = $queryService->snapshot('cart_total', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deTotalSnapshot = $queryService->snapshot('cart_total', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultShippingSnapshot = $queryService->snapshot('shipping_rate', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deShippingSnapshot = $queryService->snapshot('shipping_rate', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $defaultQuotePayloads = array_column($defaultQuoteSnapshot['payload']['rows'], 'payload');
+        $deQuotePayloads = array_column($deQuoteSnapshot['payload']['rows'], 'payload');
+        $defaultItemPayloads = array_column($defaultItemSnapshot['payload']['rows'], 'payload');
+        $deItemPayloads = array_column($deItemSnapshot['payload']['rows'], 'payload');
+        $defaultTotalPayloads = array_column($defaultTotalSnapshot['payload']['rows'], 'payload');
+        $deTotalPayloads = array_column($deTotalSnapshot['payload']['rows'], 'payload');
+        $defaultShippingPayloads = array_column($defaultShippingSnapshot['payload']['rows'], 'payload');
+        $deShippingPayloads = array_column($deShippingSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Quote', $defaultQuoteSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultQuoteSnapshot['payload']['count']);
+        $this->assertSame(['active', 'customer', 'expired'], array_column($defaultQuotePayloads, 'status'));
+        $this->assertSame('WELCOME10', $defaultQuotePayloads[0]['coupon_code']);
+        $this->assertFalse($defaultQuotePayloads[0]['persistent_cart']);
+        $this->assertTrue($defaultQuotePayloads[1]['persistent_cart']);
+        $this->assertSame('guest quote Q-0999 merged on login with coupon retained', $defaultQuotePayloads[1]['merge_state']);
+        $this->assertSame('expired_quote_cleanup_needed', $defaultQuotePayloads[2]['problem_type']);
+        $this->assertSame('sales_clean_quotes', $defaultQuotePayloads[2]['cron']['job']);
+        $this->assertSame('CJ-006', $defaultQuotePayloads[2]['cron']['feature_id']);
+
+        $this->assertSame(2, $deQuoteSnapshot['payload']['count']);
+        $this->assertSame('DE active cart quote', $deQuotePayloads[0]['title']);
+        $this->assertSame('EUR', $deQuotePayloads[0]['currency']);
+        $this->assertSame('de_DE', $deQuotePayloads[0]['store_scope']['locale']);
+
+        $this->assertSame('CartItem', $defaultItemSnapshot['feature']['context']);
+        $this->assertSame(4, $defaultItemSnapshot['payload']['count']);
+        $this->assertSame(['valid', 'low_stock', 'invalid_quantity', 'out_of_stock'], array_column($defaultItemPayloads, 'status'));
+        $this->assertSame('qty_increment_adjustment', $defaultItemPayloads[2]['problem_type']);
+        $this->assertSame('out_of_stock_item', $defaultItemPayloads[3]['problem_type']);
+        $this->assertSame(2, $deItemSnapshot['payload']['count']);
+        $this->assertSame('DE Bundle Quantity Guard', $deItemPayloads[1]['name']);
+        $this->assertSame('qty_increment_adjustment', $deItemPayloads[1]['problem_type']);
+
+        $this->assertSame('CartTotal', $defaultTotalSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultTotalSnapshot['payload']['count']);
+        $this->assertSame(['collected', 'free_shipping', 'stale'], array_column($defaultTotalPayloads, 'status'));
+        $this->assertSame(['nominal', 'subtotal', 'shipping', 'discount', 'tax', 'grand_total'], $defaultTotalPayloads[0]['collector_sequence']);
+        $this->assertSame(134.56, $defaultTotalPayloads[0]['grand_total']);
+        $this->assertSame('stale_totals_after_coupon', $defaultTotalPayloads[2]['problem_type']);
+        $this->assertSame(2, $deTotalSnapshot['payload']['count']);
+        $this->assertSame('DE active cart totals', $deTotalPayloads[0]['title']);
+        $this->assertSame('stale_totals_after_quote_expiration', $deTotalPayloads[1]['problem_type']);
+
+        $this->assertSame('ShippingRate', $defaultShippingSnapshot['feature']['context']);
+        $this->assertSame(4, $defaultShippingSnapshot['payload']['count']);
+        $this->assertSame(['available', 'free_shipping', 'unavailable', 'virtual_only'], array_column($defaultShippingPayloads, 'status'));
+        $this->assertSame('US-CA 94105', $defaultShippingPayloads[0]['destination']);
+        $this->assertSame('missing_shipping_destination', $defaultShippingPayloads[2]['problem_type']);
+        $this->assertSame('Virtual only cart shipping skip', $defaultShippingPayloads[3]['title']);
+        $this->assertSame(2, $deShippingSnapshot['payload']['count']);
+        $this->assertSame('DE DHL standard estimate', $deShippingPayloads[0]['title']);
+        $this->assertSame('DE Missing Destination Rate', $deShippingPayloads[1]['title']);
+
+        $cartFeatureKeys = ['quote', 'cart_item', 'cart_total', 'shipping_rate'];
+
+        $this->assertSame(22, DB::table('domain_facts')->whereIn('feature_key', $cartFeatureKeys)->count());
+        $this->assertSame(14, DB::table('domain_facts')->whereIn('feature_key', $cartFeatureKeys)->where('store_id', 9001)->count());
+        $this->assertSame(8, DB::table('domain_facts')->whereIn('feature_key', $cartFeatureKeys)->where('store_id', 9002)->count());
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'quote',
+            'entity_id' => 12905,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'cart_item',
+            'entity_id' => 13006,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'cart_total',
+            'entity_id' => 13105,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'shipping_rate',
+            'entity_id' => 13206,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
     public function test_domain_fact_seeder_provides_tax_currency_rate_rule_job_and_problem_snapshots(): void
     {
         $this->seed(DomainFactSeeder::class);
@@ -1677,6 +1808,9 @@ class DomainFoundationTest extends TestCase
             'SF-004',
             'SF-005',
             'SF-006',
+            'SF-007',
+            'SF-008',
+            'SF-009',
             'SF-010',
             'SF-011',
             'SF-012',
@@ -1697,11 +1831,15 @@ class DomainFoundationTest extends TestCase
             'AD-015',
             'AD-016',
             'AD-017',
+            'CB-001',
+            'CB-002',
             'CB-003',
             'CB-004',
             'CB-005',
             'CB-006',
+            'CB-007',
             'CB-008',
+            'CB-009',
             'CB-010',
             'CB-011',
             'CB-012',
@@ -1709,6 +1847,7 @@ class DomainFoundationTest extends TestCase
             'CB-014',
             'CJ-001',
             'CJ-002',
+            'CJ-006',
             'CJ-014',
             'CJ-015',
             'CJ-016',

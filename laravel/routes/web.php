@@ -186,6 +186,16 @@ Route::get('/_modernization/assets/admin-promotions.css', function () {
     ]);
 })->name('modernization.assets.admin-promotions');
 
+Route::get('/_modernization/storefront/cart', function () {
+    return view('modernization.storefront-cart');
+})->name('modernization.storefront.cart');
+
+Route::get('/_modernization/assets/storefront-cart.css', function () {
+    return response()->file(public_path('modernization/storefront-cart.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.storefront-cart');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

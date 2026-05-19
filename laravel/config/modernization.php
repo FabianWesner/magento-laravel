@@ -53,6 +53,7 @@ return [
                 '/_modernization/admin/store-operations',
                 '/_modernization/admin/sales-fulfillment',
                 '/_modernization/admin/promotions',
+                '/_modernization/storefront/cart',
             ],
             'commands' => [
                 'modernization:modules',
@@ -96,6 +97,8 @@ return [
                 'livewire.admin-sales-fulfillment-workbench',
                 'modernization.admin-promotions',
                 'livewire.admin-promotions-workbench',
+                'modernization.storefront-cart',
+                'livewire.storefront-cart-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,

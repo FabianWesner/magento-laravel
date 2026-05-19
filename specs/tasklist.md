@@ -19,6 +19,7 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Storefront cart diagnostics workbench | `/_modernization/storefront/cart`, focused PHPUnit, Chrome desktop/mobile, quote/item/total/shipping/problem filters, normal gate. | Not release-ready. |
 | 2026-05-19 | Admin promotions workbench | `/_modernization/admin/promotions`, focused PHPUnit, Chrome desktop/mobile, cart rule/catalog rule/coupon/report/problem filters, normal gate. | Not release-ready. |
 | 2026-05-19 | Admin sales fulfillment workbench | `/_modernization/admin/sales-fulfillment`, focused PHPUnit, Chrome desktop/mobile, order/invoice/shipment/credit memo/transaction/problem filters, normal gate. | Not release-ready. |
 | 2026-05-19 | Admin store operations workbench | `/_modernization/admin/store-operations`, focused PHPUnit, Chrome desktop/mobile, store/backup/system/template/rewrite/sitemap/problem filters, normal gate. | Not release-ready. |
