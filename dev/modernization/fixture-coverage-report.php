@@ -5,12 +5,13 @@ declare(strict_types=1);
 
 function usage(): void
 {
-    echo "Usage: DB_DSN='mysql:host=127.0.0.1;dbname=magento' DB_USER=root DB_PASS=secret php dev/modernization/fixture-coverage-report.php [--format=json|markdown] [--fail-on-gaps]\n";
+    echo "Usage: DB_DSN='mysql:host=127.0.0.1;dbname=magento' DB_USER=root DB_PASS=secret php dev/modernization/fixture-coverage-report.php [--format=json|markdown] [--fail-on-gaps] [--evidence=path]\n";
     echo "Optional: DB_TABLE_PREFIX=prefix_\n";
 }
 
 $format = 'markdown';
 $failOnGaps = false;
+$evidencePath = null;
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--help' || $arg === '-h') {
         usage();
@@ -23,6 +24,11 @@ foreach (array_slice($argv, 1) as $arg) {
     }
     if (str_starts_with($arg, '--format=')) {
         $format = substr($arg, 9);
+
+        continue;
+    }
+    if (str_starts_with($arg, '--evidence=')) {
+        $evidencePath = substr($arg, 11);
     }
 }
 
@@ -120,6 +126,92 @@ function addCheck(array &$checks, string $area, array $featureIds, string $requi
         'evidence' => $evidence,
         'status' => $covered ? 'covered' : 'gap',
     ];
+}
+
+function repoRoot(): string
+{
+    $repoRoot = realpath(__DIR__.'/../..');
+    if ($repoRoot === false) {
+        throw new RuntimeException('Unable to resolve repository root.');
+    }
+
+    return $repoRoot;
+}
+
+function resolveEvidencePath(string $path): string
+{
+    $repoRoot = repoRoot();
+    $directory = dirname($path);
+    if ($directory !== '' && $directory !== '.' && ! is_dir($directory) && ! mkdir($directory, 0775, true) && ! is_dir($directory)) {
+        throw new RuntimeException("Unable to create evidence directory: {$directory}");
+    }
+
+    $absoluteDirectory = realpath($directory === '' ? '.' : $directory);
+    if ($absoluteDirectory === false) {
+        throw new RuntimeException("Unable to resolve evidence directory: {$directory}");
+    }
+
+    $absolutePath = $absoluteDirectory.DIRECTORY_SEPARATOR.basename($path);
+    if ($absolutePath !== $repoRoot && ! str_starts_with($absolutePath, $repoRoot.DIRECTORY_SEPARATOR)) {
+        throw new RuntimeException("Evidence path must stay inside the repository: {$path}");
+    }
+
+    return $absolutePath;
+}
+
+/**
+ * @param  array{database: string, checks: list<array{area: string, feature_ids: list<string>, required: string, evidence: string, status: string}>, summary: array{total: int, covered: int, gaps: int}}  $report
+ */
+function renderMarkdownReport(array $report): string
+{
+    $lines = [
+        '# Fixture Coverage Report',
+        '',
+        "- Database: `{$report['database']}`",
+        "- Checks: {$report['summary']['total']}",
+        "- Covered: {$report['summary']['covered']}",
+        "- Gaps: {$report['summary']['gaps']}",
+        '',
+        '| Area | Feature IDs | Required Coverage | Current Evidence | Status |',
+        '| --- | --- | --- | --- | --- |',
+    ];
+
+    foreach ($report['checks'] as $check) {
+        $lines[] = "| {$check['area']} | ".implode(', ', $check['feature_ids'])." | {$check['required']} | {$check['evidence']} | `{$check['status']}` |";
+    }
+
+    $lines[] = '';
+
+    return implode("\n", $lines);
+}
+
+/**
+ * @param  array{database: string, checks: list<array{area: string, feature_ids: list<string>, required: string, evidence: string, status: string}>, summary: array{total: int, covered: int, gaps: int}}  $report
+ */
+function writeMarkdownEvidence(string $path, array $report, string $body): void
+{
+    $absolutePath = resolveEvidencePath($path);
+    $status = $report['summary']['gaps'] > 0 ? 'Not release-ready' : 'No fixture gaps observed';
+    $evidence = implode("\n", [
+        '# Sample Fixture Coverage Evidence',
+        '',
+        'Generated At: '.gmdate(DateTimeInterface::ATOM),
+        'Command: php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps --evidence '.$path,
+        'Evidence Scope: Local Magento sample data smoke only; this is not canonical project fixture evidence.',
+        "Status: {$status}",
+        '',
+        $body,
+        '## Notes',
+        '',
+        'This evidence records the local sample database coverage signal only. It does not close fixture manifest, restore evidence, project overlay, sanitized project DB/media, CI restore, visual, or final release defects.',
+        '',
+    ]);
+
+    if (file_put_contents($absolutePath, $evidence) === false) {
+        throw new RuntimeException("Unable to write fixture evidence: {$path}");
+    }
+
+    fwrite(STDERR, "WROTE: {$path}\n");
 }
 
 /**
@@ -407,6 +499,11 @@ $report = [
 ];
 
 if ($format === 'json') {
+    if ($evidencePath !== null) {
+        fwrite(STDERR, "--evidence is only supported with --format=markdown.\n");
+        exit(1);
+    }
+
     echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
     exit($failOnGaps && $gaps > 0 ? 1 : 0);
 }
@@ -416,15 +513,17 @@ if ($format !== 'markdown') {
     exit(1);
 }
 
-echo "# Fixture Coverage Report\n\n";
-echo "- Database: `{$report['database']}`\n";
-echo "- Checks: {$report['summary']['total']}\n";
-echo "- Covered: {$report['summary']['covered']}\n";
-echo "- Gaps: {$report['summary']['gaps']}\n\n";
-echo "| Area | Feature IDs | Required Coverage | Current Evidence | Status |\n";
-echo "| --- | --- | --- | --- | --- |\n";
-foreach ($report['checks'] as $check) {
-    echo "| {$check['area']} | ".implode(', ', $check['feature_ids'])." | {$check['required']} | {$check['evidence']} | `{$check['status']}` |\n";
+$body = renderMarkdownReport($report);
+
+if ($evidencePath !== null) {
+    try {
+        writeMarkdownEvidence($evidencePath, $report, $body);
+    } catch (Throwable $throwable) {
+        fwrite(STDERR, "Fixture coverage evidence failed: {$throwable->getMessage()}\n");
+        exit(1);
+    }
 }
+
+echo $body;
 
 exit($failOnGaps && $gaps > 0 ? 1 : 0);

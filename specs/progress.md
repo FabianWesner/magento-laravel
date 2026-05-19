@@ -2557,3 +2557,23 @@ Blocked:
 
 Next:
 - Commit the Docusaurus smoke fallback and defect parser fix, then continue with the next release blocker that has real local evidence available.
+
+## 2026-05-19 10:22 CEST - Sample Fixture Coverage Evidence Artifact
+
+Changed:
+- Added `--evidence=path` support to `dev/modernization/fixture-coverage-report.php` for retaining scoped Markdown evidence while preserving strict non-zero exit behavior when fixture gaps exist.
+- Added `specs/modernization/sample-fixture-coverage-evidence.md` from the local Magento sample database.
+- Linked the retained sample evidence from `specs/modernization/data-fixtures.md` and kept it explicitly scoped away from final canonical fixture readiness.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 -l dev/modernization/fixture-coverage-report.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- Escalated `DB_DSN='mysql:host=127.0.0.1;port=3317;dbname=magento1945' DB_USER=magento DB_PASS=magento /Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps --evidence=specs/modernization/sample-fixture-coverage-evidence.md` wrote retained evidence and exited `1` as expected because the sample database still has 8 fixture gaps.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 71 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- The retained sample evidence is not final canonical fixture evidence. Project overlay, sanitized project DB/media, fixture manifest, restore evidence, CI restore, final DB reports, and media evidence remain absent.
+
+Next:
+- Commit the sample fixture coverage evidence artifact, then continue with the next release blocker that has real local evidence available.

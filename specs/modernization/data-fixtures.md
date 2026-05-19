@@ -86,6 +86,8 @@ Summary: Magento sample data covers 6 of 14 checked fixture areas and leaves 8 k
 
 Rechecked on 2026-05-19 against local Docker MySQL `magento1945` with `--fail-on-gaps`: the report still covers 6 of 14 areas and fails on the 8 known fixture gaps above. The companion schema report observed 362 tables and schema signature `08e8347b5d88af787ad673c71ad689fe1acd3dc0cf79dec68a8feac4ba0a9de6`.
 
+Retained sample evidence is recorded in `specs/modernization/sample-fixture-coverage-evidence.md`. It is a local Magento sample data coverage signal only and is not final fixture manifest, restore, CI, project database, or project media evidence.
+
 ## Fixture Traceability
 
 Every fixture record must identify which feature IDs it proves. Use this table shape in the fixture manifest:
