@@ -52,10 +52,12 @@ class DomainFoundationTest extends TestCase
         'AD-015',
         'AD-016',
         'AD-017',
+        'CB-014',
         'CB-006',
         'CB-011',
         'CB-012',
         'CB-013',
+        'CJ-001',
         'CJ-002',
         'CJ-016',
         'CJ-019',
@@ -412,11 +414,19 @@ class DomainFoundationTest extends TestCase
         $this->assertContains('Widget', $this->domainContexts());
         $this->assertContains('Sitemap', $this->domainContexts());
         $this->assertContains('UrlRewrite', $this->domainContexts());
+        $this->assertContains('Backup', $this->domainContexts());
+        $this->assertContains('SystemInfo', $this->domainContexts());
+        $this->assertContains('EmailTemplate', $this->domainContexts());
         $this->assertContains('no-route', $catalog->get('cms_page')->states);
         $this->assertContains('404', $catalog->get('cms_page')->states);
         $this->assertContains('AD-009', $catalog->get('cms_page')->featureIds);
         $this->assertContains('AD-009', $catalog->get('cms_block')->featureIds);
         $this->assertContains('AD-009', $catalog->get('widget')->featureIds);
+        $this->assertContains('AD-017', $catalog->get('backup')->featureIds);
+        $this->assertContains('AD-017', $catalog->get('system_info')->featureIds);
+        $this->assertContains('AD-017', $catalog->get('email_template')->featureIds);
+        $this->assertContains('AD-017', $catalog->get('sitemap')->featureIds);
+        $this->assertContains('AD-017', $catalog->get('url_rewrite')->featureIds);
         $this->assertTrue($rewrite['redirect']);
         $this->assertTrue($rewrite['sitemap']);
         $this->assertTrue($rewrite['RSS']);
@@ -678,6 +688,84 @@ class DomainFoundationTest extends TestCase
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'system_config',
             'entity_id' => 11208,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
+    public function test_domain_fact_seeder_provides_admin_store_operations_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $queryService = $this->app->make(DomainQueryService::class);
+        $defaultBackupSnapshot = $queryService->snapshot('backup', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deBackupSnapshot = $queryService->snapshot('backup', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultSystemSnapshot = $queryService->snapshot('system_info', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $defaultTemplateSnapshot = $queryService->snapshot('email_template', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deTemplateSnapshot = $queryService->snapshot('email_template', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $defaultBackupPayloads = array_column($defaultBackupSnapshot['payload']['rows'], 'payload');
+        $deBackupPayloads = array_column($deBackupSnapshot['payload']['rows'], 'payload');
+        $defaultSystemPayloads = array_column($defaultSystemSnapshot['payload']['rows'], 'payload');
+        $defaultTemplatePayloads = array_column($defaultTemplateSnapshot['payload']['rows'], 'payload');
+        $deTemplatePayloads = array_column($deTemplateSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Backup', $defaultBackupSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultBackupSnapshot['payload']['count']);
+        $this->assertSame(['completed', 'failed'], array_column($defaultBackupPayloads, 'status'));
+        $this->assertSame('backup_directory_not_writable', $defaultBackupPayloads[1]['failure_reason']);
+        $this->assertTrue($defaultBackupPayloads[1]['is_problem']);
+        $this->assertSame(1, $deBackupSnapshot['payload']['count']);
+        $this->assertSame('scheduled', $deBackupPayloads[0]['status']);
+        $this->assertSame('30 2 * * *', $deBackupPayloads[0]['schedule']);
+
+        $this->assertSame('SystemInfo', $defaultSystemSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultSystemSnapshot['payload']['count']);
+        $this->assertSame(['healthy', 'warning'], array_column($defaultSystemPayloads, 'status'));
+        $this->assertSame('8.5.5', $defaultSystemPayloads[0]['runtime']['php']);
+        $this->assertSame('Project overlay and DB_DSN fixture checks are unavailable in this environment.', $defaultSystemPayloads[1]['warning']);
+        $this->assertTrue($defaultSystemPayloads[1]['is_problem']);
+
+        $this->assertSame('EmailTemplate', $defaultTemplateSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultTemplateSnapshot['payload']['count']);
+        $this->assertSame(['customized', 'default', 'invalid'], array_column($defaultTemplatePayloads, 'status'));
+        $this->assertSame('sales_email_order_template', $defaultTemplatePayloads[0]['code']);
+        $this->assertSame('subject_missing', $defaultTemplatePayloads[2]['problem']);
+        $this->assertTrue($defaultTemplatePayloads[2]['is_problem']);
+        $this->assertSame(1, $deTemplateSnapshot['payload']['count']);
+        $this->assertSame('de_DE', $deTemplatePayloads[0]['locale']);
+        $this->assertSame('Kundenkonto Willkommen', $deTemplatePayloads[0]['label']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'backup',
+            'entity_id' => 11703,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'system_info',
+            'entity_id' => 11802,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'email_template',
+            'entity_id' => 11903,
             'store_id' => 9002,
             'store_view' => 'de',
         ]);
@@ -1319,10 +1407,12 @@ class DomainFoundationTest extends TestCase
             'AD-015',
             'AD-016',
             'AD-017',
+            'CB-014',
             'CB-006',
             'CB-011',
             'CB-012',
             'CB-013',
+            'CJ-001',
             'CJ-002',
             'CJ-016',
             'CJ-019',

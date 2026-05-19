@@ -156,6 +156,16 @@ Route::get('/_modernization/assets/admin-newsletter-polls.css', function () {
     ]);
 })->name('modernization.assets.admin-newsletter-polls');
 
+Route::get('/_modernization/admin/store-operations', function () {
+    return view('modernization.admin-store-operations');
+})->name('modernization.admin.store-operations');
+
+Route::get('/_modernization/assets/admin-store-operations.css', function () {
+    return response()->file(public_path('modernization/admin-store-operations.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.admin-store-operations');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

@@ -24,7 +24,7 @@ class ModernizationCmsSeoRouteTest extends TestCase
             ->assertSee(route('modernization.assets.cms-seo'))
             ->assertSee('CMS SEO workbench')
             ->assertSee('CMS page, CMS block, Widget output, Sitemap and RSS, URL rewrite')
-            ->assertSee('SF-001, SF-013, AD-007, AD-009, SF-014, CJ-025, CB-012, SF-002')
+            ->assertSee('SF-001, SF-013, AD-007, AD-009, SF-014, AD-017, CJ-025, CB-012, SF-002')
             ->assertSee('About Us')
             ->assertSee('Spring Sale Legacy');
 

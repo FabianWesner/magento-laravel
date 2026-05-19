@@ -19,6 +19,7 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Admin store operations workbench | `/_modernization/admin/store-operations`, focused PHPUnit, Chrome desktop/mobile, store/backup/system/template/rewrite/sitemap/problem filters, normal gate. | Not release-ready. |
 | 2026-05-19 | Admin newsletter/polls workbench | `/_modernization/admin/newsletter-polls`, focused PHPUnit, Chrome desktop/mobile, subscriber/template/queue/poll/answer/problem filters, normal gate. | Not release-ready. |
 | 2026-05-19 | Admin CMS/design workbench | `/_modernization/admin/cms-design`, focused PHPUnit, Chrome desktop/mobile, page/block/widget/design/rewrite/problem filters. | Not release-ready. |
 | 2026-05-19 | Admin customer management workbench | `/_modernization/admin/customer-management`, focused PHPUnit, Chrome desktop/mobile, customer/address/activity/moderation/problem filters. | Not release-ready. |
@@ -44,7 +45,7 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 | Priority | Task | Dependencies | Notes |
 | --- | --- | --- | --- |
 | P0 | Pick the next low-risk, browser-verifiable storefront/admin slice. | Existing domain facts and routes. | Prefer slices that can be verified in Chrome without touching checkout, payment, order writes, or destructive schema changes. |
-| P1 | Expand deterministic domain facts where the next slice needs them. | Domain catalog and legacy behavior scan. | Keep fixture work isolated and test-backed. |
+| P1 | Expand deterministic domain facts where the next slice needs them. | Domain catalog and legacy behavior scan. | Keep fixture work isolated, read-only, and test-backed. |
 | P1 | Continue non-scripted Chrome checks at each working increment. | Herd URL and seeded data. | Use desktop and mobile viewports; record console state and screenshots. |
 
 ## Release-Critical Work Not Yet Started

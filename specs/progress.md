@@ -30,6 +30,42 @@ Next:
 
 ## Entries
 
+## 2026-05-19 17:24 CEST - Admin Store Operations Workbench Implementation
+
+Changed:
+- Added the `/_modernization/admin/store-operations` Livewire workbench to inspect deterministic store hierarchy, backup, system readiness, transactional email template, URL rewrite, sitemap, RSS, and problem rows.
+- Added `backup`, `system_info`, and `email_template` domain features and deterministic facts for completed, failed, scheduled, healthy, warning, customized, default, invalid, and DE localized states.
+- Added the admin store operations route, CSS asset route, wrapper Blade view, responsive CSS, focused PHPUnit route/Livewire/domain coverage, modernization module manifest references, and ignored local admin-store-operations Playwright screenshots.
+- Linked AD-017 into backup, system-info, email-template, sitemap, URL-rewrite, and store-scope domain catalog coverage, while keeping every workbench action disabled and read-only.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after Chrome verification and the normal gate.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied legacy Magento store/backups/email-template/URL-rewrite/sitemap constraints, Laravel implementation patterns, and project rule constraints before finalizing the slice.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/AdminStoreOperationsWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationAdminStoreOperationsRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l routes/web.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Modernization/Domain/DomainCatalog.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l config/modernization.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/ModernizationAdminStoreOperationsRouteTest.php tests/Feature/ModernizationCmsSeoRouteTest.php tests/Feature/ModernizationSystemConfigRouteTest.php tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationModuleRegistryTest.php` passed with 31 tests and 944 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/admin/store-operations` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/admin-store-operations.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for store summaries, failed backup filtering, system warning filtering, DE template scoping, DE rewrite redirects, stale RSS rows, problem rows, empty query state, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, wrapped summary counts, DE template readability, disabled actions, and clean current console output.
+- Browser/focused verification improved the implementation by changing email template cards from code-first titles to human labels and updating the CMS/SEO feature-id assertion after AD-017 was linked to sitemap and URL rewrite.
+- Screenshots were captured as `admin-store-operations-desktop-2026-05-19.png` and `admin-store-operations-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 163 tests and 2119 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final admin store operations parity still needs real project store/backups/email-template/URL-rewrite/sitemap fixtures, destructive operation characterization, storage/backup credential handling, admin ACL integration, hosted CI, manual acceptance, and final Magento/Laravel screenshot evidence.
+
+Next:
+- Commit this verified admin store operations implementation slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 17:00 CEST - Admin Newsletter/Polls Workbench Implementation
 
 Changed:

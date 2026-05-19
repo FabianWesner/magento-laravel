@@ -2,6 +2,29 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 17:24 CEST - Why The Admin Store Operations Workbench Exists
+
+The admin store operations slice exists because Magento's store operations are a cluster of unrelated-looking screens that share operational risk: System > Manage Stores, backups, transactional email templates, URL rewrite management, Google Sitemap, RSS feeds, and store-scoped configuration. Treating them as one diagnostic workbench makes the migration risk visible without pretending the final admin tools are ready.
+
+I implemented this as a read-only workbench under `/_modernization/admin/store-operations`. It does not create or delete websites, groups, or store views; does not generate, download, restore, or delete backups; does not render email previews; does not regenerate URL rewrites; and does not generate or unlink sitemap files. The useful increment is a Chrome-verifiable surface for store hierarchy, failed and scheduled backups, runtime/readiness warnings, customized/default/invalid email templates, canonical and redirect rewrites, fresh and stale sitemaps/RSS feeds, DE store-view scoping, empty states, and denied viewer behavior.
+
+The legacy scan shaped the scope:
+
+- Manage Stores has a three-level website > store group > store-view hierarchy, default protections, code validation, delete restrictions, and optional backup prompts. This slice shows store-view diagnostics only and keeps deletes out of scope.
+- Backup admin has rollback, download, media exclusion, maintenance mode, password validation, and FTP credential paths. Those are too risky without storage, credential, restore, and audit requirements, so backup rows are inspection-only.
+- CE core's system information page is effectively placeholder/sample data; the slice represents safe runtime/readiness diagnostics instead of claiming final System Information parity.
+- Transactional emails require default-template loading, locale handling, variables, HTML/text preview, malicious-code filtering, and config usage cleanup. The workbench exposes template state and leaves preview disabled.
+- URL rewrites and sitemaps have filesystem, uniqueness, validation, generated-file, and cron side effects, so this slice surfaces state without mutating paths or generated artifacts.
+- The first focused test pass made template titles feel code-heavy, so the UI now uses human labels first and keeps codes as supporting detail.
+
+This improves local inspection for `AD-017` and adds related evidence for `SF-013`, `SF-014`, `CB-014`, `CJ-001`, and `CJ-025`, but it is not final store operations cutover. Real project fixtures, destructive operation characterization, ACL integration, filesystem/storage policy, hosted CI, manual acceptance, production runbooks, and final Magento/Laravel screenshot evidence remain open.
+
+## 2026-05-19 17:20 CEST - Why The Tracking Backlog Was Clarified
+
+The project already has three separate tracking surfaces: `specs/tasklist.md` for day-to-day execution, `specs/modernization/backlog.md` for the canonical migration backlog, and `specs/open-issues.md` for active blockers and defects. I kept those as the authoritative places instead of creating duplicate files, because multiple competing tasklists would make release readiness harder to reason about.
+
+The immediate correction was to mark AD-017 as the current implementation focus and in-progress backlog item without claiming release readiness. That preserves the user's implementation-first direction while still making the active work visible.
+
 ## 2026-05-19 17:00 CEST - Why The Admin Newsletter/Polls Workbench Exists
 
 The admin newsletter/polls slice exists because Magento treats customer communication and polls as operational admin surfaces, not just content records. Newsletter subscribers, templates, queue states, cron sends, problem reports, suppression behavior, poll questions, answer validation, vote guards, close/reopen rules, and store scope all carry migration risk. A replacement that starts with write-capable admin screens would be premature without mail artifacts, scheduler evidence, and final fixtures.
