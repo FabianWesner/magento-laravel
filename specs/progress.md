@@ -30,6 +30,34 @@ Next:
 
 ## Entries
 
+## 2026-05-19 02:13 CEST - Fixture And Media Target Gate
+
+Changed:
+- Added `dev/modernization/validate-fixture-media-target.php` to validate deterministic database fixture, media fixture, feature-ID mapping, local restore, CI restore, sanitization, rollback, and strict fixture coverage requirements from `specs/GOAL.md`.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires fixture manifests, restore evidence, PHPUnit coverage, CI workflow coverage, strict coverage evidence, schema signatures, media-reference checks, and sanitization proof.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Default CLI `php` is currently Herd PHP `8.4.17`, which cannot run Laravel Boost from `laravel/` because the Laravel target requires PHP `>=8.5.0`.
+- Herd PHP `8.5.5` is installed at `/Users/fabianwesner/Library/Application Support/Herd/bin/php85`; using it directly, Laravel Boost `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated retry succeeded for filesystem testing, database testing, console command testing, and file assertion docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-fixture-media-target.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-fixture-media-target.php` passed.
+- `php dev/modernization/validate-fixture-media-target.php --final` failed as expected because no fixture manifest, fixture restore evidence, fixture PHPUnit coverage, or CI fixture workflow coverage exists yet.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the fixture/media target template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation placeholders, missing UI screenshot manifest, release readiness, defect evidence, CI workflow/evidence, fixture/media manifests and evidence, performance budgets, operations/security/accessibility/production evidence, missing Laravel target implementations, placeholder project overlay, missing DB-backed fixture/schema checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `git diff --check` passed.
+
+Blocked:
+- Project database fixture, project media fixture, sanitized fixture manifest, local/CI fixture restore evidence, fixture media-reference evidence, strict fixture coverage evidence, fixture PHPUnit coverage, project overlay, CI workflow/evidence, schema preservation evidence, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, final defect register/acceptance evidence, completed user/developer documentation evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the fixture/media target gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 02:27 CEST - CI Readiness Gate
 
 Changed:
