@@ -30,7 +30,25 @@ Next:
 
 ## Entries
 
-## 2026-05-19 11:09 CEST - Livewire UI Evidence
+## 2026-05-19 10:54 CEST - Final Gate Recheck
+
+Changed:
+- Updated the defect-register final gate snapshot after schema-preservation and Livewire evidence were retained.
+- Corrected the new schema-preservation and Livewire evidence timestamps to match the local clock.
+
+Verified:
+- `date '+%Y-%m-%d %H:%M %Z'` reported `2026-05-19 10:54 CEST`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` still failed for the current non-release state.
+- The same final gate now passes schema preservation, Livewire target, Docusaurus retained browser smoke evidence, feature traceability, source/dependency, runtime tooling, Boost MCP, Laravel target implementation checks, no-new-XML, removed-technology, Laravel tests, MkDocs, and Docusaurus build.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Final gate still fails for spec-currency evidence, completion audit, UI screenshot manifest, release checklist, manual acceptance/support/cutover/production readiness, open P0/P1 defects, hosted CI evidence, canonical fixture/media restore evidence, project overlay, complex and edge/resilience evidence, performance budgets, security/accessibility, route fallback/auth evidence and ADR approval, `DB_DSN`, fixture coverage report, and schema report.
+
+Next:
+- Commit the final gate snapshot update, then continue with the next evidence gap that does not require unavailable project data or rejected browser escalation.
+
+## 2026-05-19 10:53 CEST - Livewire UI Evidence
 
 Changed:
 - Added `specs/modernization/livewire-ui-evidence.md` for the current storefront and admin Livewire foundation components, fixture IDs, and component tests.
@@ -49,7 +67,7 @@ Blocked:
 Next:
 - Commit the retained Livewire UI evidence, then continue with the next unblocked final-gate evidence gap.
 
-## 2026-05-19 11:03 CEST - Schema Preservation Evidence
+## 2026-05-19 10:49 CEST - Schema Preservation Evidence
 
 Changed:
 - Added `specs/modernization/schema-preservation-evidence.md` tying the current schema-preservation foundation to the retained sample schema report, policy/repository code, and PHPUnit coverage.

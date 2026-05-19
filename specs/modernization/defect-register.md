@@ -6,23 +6,23 @@ The current register is not release acceptance. Open P0 and P1 rows block final 
 
 ## Final Gate Snapshot
 
-Command run on 2026-05-19 10:07 CEST:
+Command run on 2026-05-19 10:54 CEST:
 
 ```bash
 env PATH=/private/tmp/magento-lts-php85-bin:$PATH MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh
 ```
 
-The final gate failed, as expected for the current non-release state. The run confirmed that several implementation and documentation checks pass, while release evidence, approvals, project fixture data, and browser smoke evidence remain open.
+The final gate failed, as expected for the current non-release state. The run confirmed that several implementation and documentation checks pass, while release evidence, approvals, project fixture data, project overlay, final screenshot manifest, and DB-backed reports remain open.
 
 | Gate Area | Result | Tracked By | Current Evidence State |
 | --- | --- | --- | --- |
 | Documentation content | Pass | DEF-010 | Docusaurus and MkDocs content checks pass, but final spec-currency and completion audit evidence are absent. |
 | Feature traceability | Pass | DEF-004, DEF-009 | All 79 feature IDs are traceable, but rows still point to non-release-ready evidence states. |
 | Source/dependency, runtime tooling, Boost MCP | Pass | DEF-008 | Local source, dependency, runtime, and Boost checks pass; hosted CI evidence is absent. |
-| Laravel implementation target checks | Pass | DEF-004, DEF-005 | Bootstrap, EAV, module, cron/job, API, commerce, report, domain, integration, and config checks pass. |
+| Laravel implementation target checks | Pass | DEF-003, DEF-004, DEF-005 | Bootstrap, schema preservation, Livewire, EAV, module, cron/job, API, commerce, report, domain, integration, and config checks pass. Schema and Livewire evidence are scoped foundation evidence, not release approval. |
 | Operations runbook | Pass | DEF-009 | Runbook content passes; rehearsal, cutover, support, production, and manual acceptance evidence are absent. |
 | No-new-XML and removed technology | Pass | DEF-004 | Static migration policy checks pass for the Laravel target. |
-| UI screenshot inventory | Fail | DEF-003 | Screenshot manifest and retained Magento/Laravel screenshot artifacts are absent. |
+| UI screenshot inventory | Fail | DEF-003 | Final screenshot manifest and retained Magento/Laravel comparison artifacts are absent; local Magento smoke and Livewire foundation evidence are retained but not sufficient. |
 | Fixture/media and DB-backed reports | Fail | DEF-002 | Fixture manifest, restore evidence, `DB_DSN`, fixture coverage report, and schema report are absent from the final run. |
 | Magento baseline and docroot | Fail | DEF-001 | `project/` remains placeholder-only. |
 | Complex, edge, resilience, and parity evidence | Fail | DEF-004 | Approved complex reverse-engineering evidence and retained dual-runtime artifacts are absent. |
@@ -31,9 +31,9 @@ The final gate failed, as expected for the current non-release state. The run co
 | Performance budgets | Fail | DEF-007 | Approved numeric budget manifest and retained measurements are absent. |
 | Manual acceptance, support, cutover, production readiness | Fail | DEF-009 | Acceptance, support, cutover, and production readiness evidence are absent. |
 | Release checklist and defect closure | Fail | DEF-001 through DEF-010 | Release checklist remains unchecked and every P0/P1 defect in this register is still open. |
-| Docusaurus browser smoke | Fail in sandbox final mode | DEF-010 | Build passes; browser smoke cannot bind `127.0.0.1:3012` in the sandbox and requires the escalated smoke command for evidence. |
+| Docusaurus browser smoke | Pass via retained evidence | DEF-010 | Live browser smoke cannot bind `127.0.0.1:3012` in the sandbox, but retained Docusaurus smoke evidence with source hash validates successfully. |
 
-After this snapshot, an escalated Playwright/Chrome smoke run wrote `specs/modernization/docusaurus-browser-smoke-evidence.md`. The final gate now validates that retained evidence, including its Docusaurus source hash, when live browser smoke is unavailable in the restricted sandbox. That evidence proves the Docusaurus static site rendered the home, user, and developer docs locally, but it does not close the broader spec-currency, completion audit, CI, fixture, visual, security, accessibility, cutover, or release checklist defects.
+The retained Docusaurus evidence proves the static site rendered the home, user, and developer docs locally, but it does not close the broader spec-currency, completion audit, CI, fixture, visual, security, accessibility, cutover, or release checklist defects.
 
 | Defect ID | Severity | Status | Owner | Feature IDs | Evidence | Acceptance | Accepted By | Accepted At | Resolution | Workaround |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
