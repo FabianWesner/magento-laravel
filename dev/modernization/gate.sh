@@ -112,6 +112,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "release readiness final check" php dev/modernization/validate-release-readiness.php --final
   run_optional "defect readiness final check" php dev/modernization/validate-defect-readiness.php --final
   run_optional "CI readiness final check" php dev/modernization/validate-ci-readiness.php --final
+  run_optional "source/dependency target final check" php dev/modernization/validate-source-dependency-target.php --final
   run_optional "fixture/media target final check" php dev/modernization/validate-fixture-media-target.php --final
   run_optional "performance budgets final check" php dev/modernization/validate-performance-budgets.php --final
   run_optional "operations readiness final check" php dev/modernization/validate-operations-readiness.php --final
@@ -138,6 +139,7 @@ else
   run_optional "release readiness template check" php dev/modernization/validate-release-readiness.php
   run_optional "defect readiness template check" php dev/modernization/validate-defect-readiness.php
   run_optional "CI readiness template check" php dev/modernization/validate-ci-readiness.php
+  run_optional "source/dependency target template check" php dev/modernization/validate-source-dependency-target.php
   run_optional "fixture/media target template check" php dev/modernization/validate-fixture-media-target.php
   run_optional "performance budgets template check" php dev/modernization/validate-performance-budgets.php
   run_optional "operations readiness template check" php dev/modernization/validate-operations-readiness.php
