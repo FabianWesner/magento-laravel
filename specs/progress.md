@@ -30,6 +30,25 @@ Next:
 
 ## Entries
 
+## 2026-05-19 11:09 CEST - Livewire UI Evidence
+
+Changed:
+- Added `specs/modernization/livewire-ui-evidence.md` for the current storefront and admin Livewire foundation components, fixture IDs, and component tests.
+- Linked the Livewire evidence from DEF-003 while keeping the final screenshot manifest and visual approval blockers open.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/LivewireParityFoundationTest.php` passed from `laravel/` with 2 tests and 19 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-livewire-target.php --final` failed before the evidence file only because Livewire UI evidence was not present.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-livewire-target.php --final` passed after adding the evidence file.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 78 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel comparison screenshots, final screenshot manifest, visual diff approval, accessibility evidence, and manual acceptance remain incomplete.
+
+Next:
+- Commit the retained Livewire UI evidence, then continue with the next unblocked final-gate evidence gap.
+
 ## 2026-05-19 11:03 CEST - Schema Preservation Evidence
 
 Changed:
