@@ -92,6 +92,92 @@ Every fixture record must identify which feature IDs it proves. Use this table s
 | --- | --- | --- | --- | --- | --- |
 | demo-configurable-discount-tax | SF-005, SF-007, CB-002, CB-003, CB-004, CB-006 | Fixture script or dump name | Legacy quote/order snapshots | Laravel parity test IDs | Configurable product with coupon and tax rounding. |
 
+## Per-Feature Fixture Traceability
+
+This table tracks fixture coverage per catalog feature ID. It separates current sample or Laravel foundation fixture coverage from the canonical project fixture set that still needs a restorable database and matching media package.
+
+| Feature ID | Fixture Area | Current Fixture Evidence | Additional Data Needed | Status |
+| --- | --- | --- | --- | --- |
+| SF-001 | Storefront shell | Sample data smoke coverage only. | Project theme, media, and screenshot fixture. | Not release-ready |
+| SF-002 | CMS content | Sample CMS rows and domain foundation snapshots. | Project CMS content and media references. | Not release-ready |
+| SF-003 | Category browsing | Sample categories and domain foundation snapshots. | Deep category tree, disabled category, scoped category media. | Not release-ready |
+| SF-004 | Product listings | Sample products and domain foundation snapshots. | Listing states for all view modes and stock states. | Not release-ready |
+| SF-005 | Product detail | Sample products, media rows, domain and commerce foundation fixtures. | Full product-type media and option fixture set. | Not release-ready |
+| SF-006 | Search | Domain foundation search fixture labels. | Search index data, redirect and empty-result fixtures. | Not release-ready |
+| SF-007 | Cart | Commerce foundation quote and totals payloads. | Restorable quote/cart fixture with coupons and estimates. | Not release-ready |
+| SF-008 | Checkout | Commerce foundation checkout-adjacent payloads. | Guest, registered, multishipping, payment, and failure fixtures. | Not release-ready |
+| SF-009 | Multishipping checkout | Commerce foundation order payloads only. | Multi-address quote and order fixture. | Not release-ready |
+| SF-010 | Customer account | Sample customers plus domain foundation fixture rows. | Account, address, password, and order-history fixture. | Not release-ready |
+| SF-011 | Customer commerce features | Domain foundation wishlist, compare, review, tag, newsletter labels. | Wishlist, compare, review, tag, recurring, and billing agreement records. | Not release-ready |
+| SF-012 | Multistore and localization | Sample stores and scoped config foundation fixture. | Project store views, locales, currencies, and scoped content. | Not release-ready |
+| SF-013 | Transactional communication | Domain mail and notification fakes plus commerce email labels. | Template, queue, attachment, and localization records. | Not release-ready |
+| SF-014 | SEO and feeds | Domain SEO and sitemap labels. | URL rewrite, canonical, RSS, and sitemap file fixtures. | Not release-ready |
+| SF-015 | External payment redirects | Integration foundation sandbox payloads. | Payment callback, return, cancel, review, and failure fixtures. | Not release-ready |
+| SF-016 | Optional storefront modules | Domain and integration foundation labels. | Poll, analytics, Google Base, and XmlConnect project fixtures. | Not release-ready |
+| AD-001 | Admin shell and auth | Auth/security foundation test sessions. | Admin roles, denied states, dashboard, and screenshot fixture. | Not release-ready |
+| AD-002 | Catalog products | Sample products plus domain and commerce foundation fixtures. | Admin product edit fixture for every product type. | Not release-ready |
+| AD-003 | Catalog categories | Sample categories plus domain foundation fixtures. | Admin category edit and product assignment fixture. | Not release-ready |
+| AD-004 | EAV attributes | EAV foundation fixture tables. | Attribute sets, groups, option labels, and backend/source model records. | Not release-ready |
+| AD-005 | Sales orders | Sample orders plus commerce/report foundation snapshots. | Admin order state, comments, reorder, and guest lookup records. | Not release-ready |
+| AD-006 | Invoices, shipments, refunds | Sample sales lifecycle plus commerce/report snapshots. | Partial invoice, shipment, tracking, refund, PDF, and email records. | Not release-ready |
+| AD-007 | Customers | Sample customers plus domain foundation rows. | Customer grid, address, group, online, cart, wishlist, and review records. | Not release-ready |
+| AD-008 | Promotions | Sample rules plus commerce/report foundation snapshots. | Full catalog/cart rule, coupon, and scheduled apply records. | Not release-ready |
+| AD-009 | CMS and design | Sample CMS plus domain foundation labels. | Widget, layout assignment, WYSIWYG media, and variable records. | Not release-ready |
+| AD-010 | System configuration | Scoped config foundation fixture. | Project system config, encrypted fields, and inherited-value records. | Not release-ready |
+| AD-011 | Cache, indexes, compiler | Livewire admin parity labels and commerce stale-state labels. | Cache/index process state and stale data records. | Not release-ready |
+| AD-012 | Users, roles, API permissions | Auth/security and API contract foundation rows. | Admin users, ACL resources, API roles, API2 attributes, and OAuth records. | Not release-ready |
+| AD-013 | Import/export and dataflow | Domain import/export validation fixtures. | Import batches, export files, dataflow profiles, and error files. | Not release-ready |
+| AD-014 | Reports | Report foundation `report_facts` fixture. | Full sales, tax, shipping, product, customer, search, cart, review, tag, and bestseller report records. | Not release-ready |
+| AD-015 | Newsletter and polls | Domain newsletter and communication labels. | Newsletter templates, queues, subscribers, problem reports, poll records. | Not release-ready |
+| AD-016 | Tax and currency | Commerce and config foundation fixtures. | Tax classes, rates, rules, import/export rates, currency rates, symbols. | Not release-ready |
+| AD-017 | Store operations | Domain store operation labels. | Store/website/store-view management, backup, email template, URL rewrite, sitemap records. | Not release-ready |
+| AD-018 | Integration admin | Integration foundation sandbox config. | Payment, shipping, Google Base, XmlConnect, notification, and credential records. | Not release-ready |
+| CB-001 | Quote lifecycle | Commerce foundation quote snapshot. | Guest, customer, merge, persistent, multishipping, and expiration records. | Not release-ready |
+| CB-002 | Product type behavior | Commerce and domain product-type labels. | Complete simple, grouped, configurable, virtual, bundle, downloadable, and option records. | Not release-ready |
+| CB-003 | Price resolution | Commerce totals fixture. | Base, special, tier, group, catalog rule, option, bundle, currency, and rounding records. | Not release-ready |
+| CB-004 | Cart price rules | Commerce discount fixture. | Percent, fixed, coupon, free shipping, stop-rule, usage-limit, and group records. | Not release-ready |
+| CB-005 | Catalog price rules | Commerce pricing labels. | Website, customer group, date scope, priority, daily apply, and index records. | Not release-ready |
+| CB-006 | Tax calculation | Commerce tax fixture. | Cross-border, shipping tax, discount before/after tax, included/excluded display, and rounding records. | Not release-ready |
+| CB-007 | Shipping rates | Integration and commerce sandbox labels. | Free, flat, table, UPS, USPS, FedEx, DHL, virtual, split-address, and tracking records. | Not release-ready |
+| CB-008 | Payment lifecycle | Integration and commerce sandbox labels. | Authorize, capture, sale, void, refund, review, fraud, redirect, and webhook records. | Not release-ready |
+| CB-009 | Inventory and stock | Commerce inventory labels. | Backorder, min/max sale quantity, increments, visibility, and stock index records. | Not release-ready |
+| CB-010 | Order state machine | Commerce order labels. | Quote-to-order, status, invoice, shipment, credit memo, email, and PDF records. | Not release-ready |
+| CB-011 | EAV scope semantics | EAV and config foundation fixture tables. | Store labels, option labels, entity defaults, backend/source model, and validation records. | Not release-ready |
+| CB-012 | Indexing | Commerce/domain index labels. | Product EAV, price, URL rewrite, flat, category product, stock, search, and tag summary records. | Not release-ready |
+| CB-013 | Cache and session behavior | Commerce/config stale cache labels. | Config, layout/block, full page cache, session, form key, and invalidation records. | Not release-ready |
+| CB-014 | Email queue | Commerce and cron email labels. | Queue insert, send, cleanup, failure, template, and localization records. | Not release-ready |
+| API-001 | SOAP API | API contract foundation row. | SOAP user, WSDL, catalog, customer, sales, and error payload fixtures. | Not release-ready |
+| API-002 | XML-RPC API | API contract foundation row. | XML-RPC user, catalog, customer, sales, and error payload fixtures. | Not release-ready |
+| API-003 | REST/API2 | API contract foundation row. | OAuth token, admin/customer/guest role, JSON/XML renderer, and permission fixtures. | Not release-ready |
+| API-004 | Payment integrations | API and integration foundation sandbox rows. | Payment provider, saved CC if enabled, PayPal, Authorize.Net, Paygate, and Skrill fixtures. | Not release-ready |
+| API-005 | Shipping integrations | API and integration foundation sandbox rows. | Free, flat, table, UPS, USPS, FedEx, DHL, and DHL international fixtures. | Not release-ready |
+| API-006 | External services | API and integration foundation sandbox rows. | Currency, analytics, Google Base, email, ERP, PIM, CRM, and feed fixtures. | Not release-ready |
+| CJ-001 | scheduled backup | Cron config fixture row. | Backup command and restore rehearsal records. | Not release-ready |
+| CJ-002 | currency rate update | Cron and integration sandbox rows. | Provider response, rate update, and failure log records. | Not release-ready |
+| CJ-003 | delete customer flow password | Cron config fixture row. | Expired reset token records. | Not release-ready |
+| CJ-004 | PayPal fetch reports | Cron, integration, and report foundation rows. | Sandbox report and idempotent import records. | Not release-ready |
+| CJ-005 | log cleanup | Cron config fixture row. | Log retention records. | Not release-ready |
+| CJ-006 | clean expired quotes | Cron config fixture row. | Expired quote and active quote control records. | Not release-ready |
+| CJ-007 | aggregate sales orders | Cron and report foundation rows. | Sales order report rows. | Not release-ready |
+| CJ-008 | aggregate sales shipments | Cron and report foundation rows. | Sales shipment report rows. | Not release-ready |
+| CJ-009 | aggregate sales invoiced | Cron and report foundation rows. | Sales invoiced report rows. | Not release-ready |
+| CJ-010 | aggregate sales refunded | Cron and report foundation rows. | Sales refunded report rows. | Not release-ready |
+| CJ-011 | aggregate bestsellers | Cron and report foundation rows. | Bestseller report rows. | Not release-ready |
+| CJ-012 | clear expired persistent sessions | Cron config fixture row. | Persistent session cleanup records. | Not release-ready |
+| CJ-013 | XmlConnect scheduled send | Cron config fixture row. | Retain, bridge, or retire decision records. | Not release-ready |
+| CJ-014 | daily catalog rule update | Cron and commerce foundation rows. | Rule price and index records. | Not release-ready |
+| CJ-015 | aggregate coupon reports | Cron and report foundation rows. | Coupon report rows. | Not release-ready |
+| CJ-016 | clean cache | Cron and commerce foundation rows. | Cache cleanup records. | Not release-ready |
+| CJ-017 | send email queue | Cron, integration, and commerce foundation rows. | Queued email send and retry records. | Not release-ready |
+| CJ-018 | clean email queue | Cron config fixture row. | Queue retention records. | Not release-ready |
+| CJ-019 | product alerts | Cron and domain foundation rows. | Price and stock alert email records. | Not release-ready |
+| CJ-020 | aggregate tax reports | Cron and report foundation rows. | Tax report rows. | Not release-ready |
+| CJ-021 | reindex product prices | Cron and commerce foundation rows. | Price index records. | Not release-ready |
+| CJ-022 | newsletter scheduled send | Cron and domain foundation rows. | Newsletter queue and failure records. | Not release-ready |
+| CJ-023 | delete old captcha attempts | Cron config fixture row. | Captcha attempt records. | Not release-ready |
+| CJ-024 | delete expired captcha images | Cron config fixture row. | Captcha image records. | Not release-ready |
+| CJ-025 | generate sitemaps | Cron and domain foundation rows. | Sitemap file and URL records. | Not release-ready |
+
 ## Rules
 
 - Do not destructively migrate the commerce schema.

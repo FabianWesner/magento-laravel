@@ -2350,3 +2350,23 @@ Blocked:
 
 Next:
 - Commit the backlog traceability update, then continue filling traceability rows in fixture, UI, complex behavior, and Docusaurus docs.
+
+## 2026-05-19 10:24 CEST - Fixture Per-Feature Traceability Rows
+
+Changed:
+- Added a per-feature fixture traceability matrix to `specs/modernization/data-fixtures.md` with one row for every catalog feature ID.
+- Each row separates current sample or Laravel foundation fixture evidence from the canonical restorable project fixture data/media package that is still absent.
+- Rows remain `Not release-ready` where the canonical fixture manifest, restore evidence, DB-backed schema report, or media fixture is unavailable.
+
+Verified:
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|" specs/modernization/data-fixtures.md | wc -l` returned 79.
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|.*\\b(TBD|Pending|To inventory|Required|Required where applicable|Operational evidence required)\\b" specs/modernization/data-fixtures.md` returned no matches.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-feature-traceability.php --final` no longer reports missing per-feature rows in `specs/modernization/data-fixtures.md`; it still fails for test-plan placeholders, UI rows, complex reverse-engineering rows, and Docusaurus per-feature documentation rows.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final fixture/media readiness still requires a real fixture manifest, restore evidence, project data/media inputs, and DB-backed fixture/schema reports.
+
+Next:
+- Commit the fixture traceability update, then continue with UI, complex behavior, test-plan, and Docusaurus traceability rows.
