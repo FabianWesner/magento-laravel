@@ -1,0 +1,173 @@
+name: Modernization
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  laravel-modernization:
+    name: Laravel and modernization gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.5.x
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          extensions: ctype, curl, dom, fileinfo, filter, hash, json, libxml, mbstring, openssl, pcre, pdo, pdo_sqlite, session, tokenizer, xml
+          tools: composer:v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: docusaurus/package-lock.json
+
+      - name: Setup Python for MkDocs
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install MkDocs
+        run: python -m pip install mkdocs-material
+
+      - name: PHP and Composer platform check
+        working-directory: laravel
+        run: |
+          php -v
+          composer validate --no-check-publish
+          composer install --no-interaction --prefer-dist --no-progress
+          php artisan --version
+
+      - name: Prepare Laravel environment
+        working-directory: laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+
+      - name: Laravel tests
+        working-directory: laravel
+        run: php artisan test --compact
+
+      - name: Pint style check
+        working-directory: laravel
+        run: |
+          php vendor/bin/pint --format agent app config routes database tests
+          git -C .. diff --exit-code -- laravel
+
+      - name: PHPStan or Larastan static analysis readiness
+        run: |
+          if [ -x laravel/vendor/bin/phpstan ]; then
+            laravel/vendor/bin/phpstan analyse --memory-limit=1G
+          elif composer --working-dir=laravel run-script --list | grep -q 'phpstan:test'; then
+            composer --working-dir=laravel run phpstan:test
+          else
+            echo "::notice title=Static analysis::PHPStan/Larastan is not configured yet; keep this job until composer run phpstan:test is available."
+          fi
+
+      - name: Architecture gates
+        run: |
+          php dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs
+          php dev/modernization/validate-removed-technologies.php
+
+      - name: Fixture restore and schema reports
+        env:
+          DB_DSN: ${{ secrets.MAGENTO_FIXTURE_DB_DSN }}
+          DB_USER: ${{ secrets.MAGENTO_FIXTURE_DB_USER }}
+          DB_PASS: ${{ secrets.MAGENTO_FIXTURE_DB_PASS }}
+          FIXTURE_SQL: ${{ secrets.MAGENTO_FIXTURE_SQL_PATH }}
+          MEDIA_ROOT: ${{ secrets.MAGENTO_MEDIA_FIXTURE_PATH }}
+          FIXTURE_COVERAGE_STRICT: '1'
+        run: |
+          mkdir -p artifacts/reports
+          if [ -n "${FIXTURE_SQL}" ]; then
+            if [ -n "${MEDIA_ROOT}" ]; then
+              bash dev/modernization/fixture-restore-check.sh --fixture="${FIXTURE_SQL}" --media="${MEDIA_ROOT}" | tee artifacts/reports/fixture-restore.log
+            else
+              bash dev/modernization/fixture-restore-check.sh --fixture="${FIXTURE_SQL}" | tee artifacts/reports/fixture-restore.log
+            fi
+          else
+            echo "Fixture restore command skipped until MAGENTO_FIXTURE_SQL_PATH is configured." | tee artifacts/reports/fixture-restore-skipped.log
+          fi
+          if [ -n "${DB_DSN}" ]; then
+            php dev/modernization/fixture-coverage-report.php --format=markdown --fail-on-gaps | tee artifacts/reports/fixture-coverage.md
+            php dev/modernization/schema-report.php --format=markdown | tee artifacts/reports/schema-report.md
+          else
+            echo "DB_DSN not configured; fixture coverage and schema checksum reports are skipped until CI secrets are provided." | tee artifacts/reports/fixture-schema-skipped.log
+          fi
+          if [ -d project/media ]; then
+            mkdir -p artifacts/media-fixture
+            rsync -a --delete project/media/ artifacts/media-fixture/
+          else
+            echo "Project media fixture is not present yet." | tee artifacts/reports/media-fixture-skipped.log
+          fi
+
+      - name: MkDocs strict build
+        run: env DISABLE_MKDOCS_2_WARNING=true mkdocs build --strict
+
+      - name: Docusaurus install
+        run: npm ci --prefix docusaurus
+
+      - name: Docusaurus build
+        run: npm --prefix docusaurus run build
+
+      - name: Install Playwright Chrome
+        run: npx --prefix docusaurus playwright install --with-deps chromium
+
+      - name: Docusaurus browser smoke
+        run: node dev/modernization/smoke-docusaurus.mjs
+
+      - name: Modernization gate script
+        run: bash dev/modernization/gate.sh
+
+      - name: Final modernization gate dry run
+        continue-on-error: true
+        env:
+          MODERNIZATION_FINAL: '1'
+          FIXTURE_COVERAGE_STRICT: '1'
+        run: bash dev/modernization/gate.sh
+
+      - name: Retain reports and docs artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: modernization-reports
+          path: |
+            artifacts/reports
+            artifacts/media-fixture
+            site
+            docusaurus/build
+          retention-days: 30
+
+  legacy-magento-baseline-smoke:
+    name: Legacy Magento baseline smoke on isolated PHP 7.4
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup legacy PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          extensions: ctype, curl, dom, fileinfo, filter, hash, json, libxml, mbstring, openssl, pcre, pdo, session, simplexml, xml
+
+      - name: Build Magento docroot
+        run: bash dev/magento/build-docroot.sh
+
+      - name: Legacy Magento baseline smoke
+        run: |
+          php -v
+          php dev/modernization/verify-magento-docroot.php

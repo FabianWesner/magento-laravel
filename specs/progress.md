@@ -30,6 +30,26 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:24 CEST - GitHub Actions Modernization Workflow
+
+Changed:
+- Added `.github/workflows/modernization.yml` with GitHub Actions coverage for PHP `8.5` Laravel setup, Composer validation/install, PHPUnit, Pint style enforcement, static-analysis readiness, architecture gates, fixture restore/schema report hooks, MkDocs, Docusaurus build and browser smoke, retained artifacts, the modernization gate script, and a non-blocking final gate dry run.
+- Added an isolated legacy Magento baseline smoke job on PHP `7.4` that builds the generated docroot and runs the Magento docroot verification without moving the Laravel target off PHP `8.5`.
+
+Verified:
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated PHP `8.5.5` retry succeeded for testing, console tests, database testing, and HTTP client testing docs.
+- `ruby -e 'require "yaml"; YAML.load_file(".github/workflows/modernization.yml"); puts "YAML ok"'` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-ci-readiness.php --final` failed only because final CI evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-fixture-media-target.php --final` now no longer reports missing CI workflow coverage for fixture restore, strict fixture coverage, schema report, media fixture restore, or artifact retention.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- CI evidence, fixture manifest, fixture restore evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, PHPStan/Larastan dependency/config strictness, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the CI workflow, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:17 CEST - Laravel Commerce Foundation
 
 Changed:
