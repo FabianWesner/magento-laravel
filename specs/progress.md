@@ -30,6 +30,28 @@ Next:
 
 ## Entries
 
+## 2026-05-19 02:25 CEST - Cutover Readiness Gate
+
+Changed:
+- Added `dev/modernization/validate-cutover-readiness.php` to validate final route cutover requirements from `specs/GOAL.md`, including legacy runtime retention, side-by-side comparison, route group ownership, feature flags, staging/production observation, rollback, monitoring, and approval evidence.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires cutover readiness evidence before route groups or the full application can move to Laravel.
+
+Verified:
+- `php -l dev/modernization/validate-cutover-readiness.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-cutover-readiness.php` passed.
+- `php dev/modernization/validate-cutover-readiness.php --final` failed as expected because no cutover readiness evidence exists yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the cutover readiness template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation placeholders, missing UI screenshot manifest, release readiness, manual acceptance/support evidence, missing cutover readiness evidence, defect evidence, CI workflow/evidence, source/dependency evidence, fixture/media evidence, performance budgets, operations/security/accessibility/production evidence, missing Laravel target implementations, placeholder project overlay, missing DB-backed fixture/schema checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Cutover readiness evidence, route group ownership evidence, feature-flag rollback evidence, staging/production observation, stakeholder approval, project overlay, full UI baseline, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the cutover readiness gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 02:23 CEST - Manual Acceptance And Support Readiness Gate
 
 Changed:
