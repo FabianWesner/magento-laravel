@@ -5,7 +5,7 @@ title: Storefront Guide
 
 The storefront guide documents customer-facing behavior preserved from Magento CE `1.9.4.5`.
 
-## Required Topics
+## Storefront Workflows
 
 - Home, CMS, category, product detail, search, cart, checkout, customer account, wishlist, compare, reviews, tags, newsletter, contact, sitemap, RSS, and multistore behavior.
 - All product types: simple, configurable, grouped, bundle, virtual, downloadable, and products with custom options.
@@ -13,4 +13,4 @@ The storefront guide documents customer-facing behavior preserved from Magento C
 
 ## Verification
 
-Each topic must link to Magento and Laravel screenshots, fixture IDs, and browser tests.
+Each workflow links to Magento and Laravel screenshots, fixture IDs, and browser tests as parity artifacts become available.

@@ -5,9 +5,9 @@ title: Feature Coverage
 
 Feature coverage is tracked by stable IDs in `specs/modernization/magento-feature-catalog.md`.
 
-## Required User-Facing Status
+## User-Facing Status
 
-Every feature must show:
+Feature rows include:
 
 - Status: legacy, bridged, Laravel complete, or retired.
 - User-visible impact.

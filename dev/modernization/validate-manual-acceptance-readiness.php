@@ -50,7 +50,7 @@ function validateManualAcceptancePlanning(array &$errors): void
         ],
         'docusaurus/docs/user/index.md' => [
             'operators, merchandisers, support teams, and business users',
-            'The final version must cover every preserved or replaced user-visible feature',
+            'Coverage follows every preserved or replaced user-visible feature',
         ],
         'docusaurus/docs/user/feature-coverage.md' => [
             'Known limitations.',

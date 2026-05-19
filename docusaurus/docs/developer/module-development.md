@@ -14,6 +14,6 @@ Modules are PHP-first. They must not introduce Magento XML registration, routing
 - Livewire components for interactive UI.
 - Tests covering happy paths, edge cases, permissions, validation, failures, and side effects.
 
-## Completion Rule
+## Module Acceptance
 
-A module is complete only when it has feature IDs, fixture coverage, characterization tests, Laravel tests, visual evidence if visible, security review, performance evidence where applicable, and user/developer documentation.
+A module reaches release readiness with feature IDs, fixture coverage, characterization tests, Laravel tests, visual evidence if visible, security review, performance evidence where applicable, and user/developer documentation.

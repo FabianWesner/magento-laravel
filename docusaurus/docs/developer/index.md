@@ -6,9 +6,9 @@ slug: /developer/
 
 This section explains how to build, test, extend, operate, and safely migrate the Laravel target.
 
-The final version must be specific enough for a developer to implement a module, add a Livewire screen, use EAV repositories, add a scheduled job, and prove parity against Magento without reading legacy XML as an implementation model.
+The developer material is organized around the implementation tasks needed to add a module, add a Livewire screen, use EAV repositories, add a scheduled job, and prove parity against Magento without reading legacy XML as an implementation model.
 
-## Required Coverage
+## Coverage Map
 
 - Laravel bootstrap and route strangler.
 - PHP module manifests, service providers, policies, events, jobs, typed config, and no-new-XML rules.

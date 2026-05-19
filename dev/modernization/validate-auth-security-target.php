@@ -93,7 +93,7 @@ function validateAuthSecuritySpecs(array &$errors): void
         ],
         'docusaurus/docs/user/admin-guide.md' => [
             'Permission-specific behavior for full, partial, read-only, and denied admin roles.',
-            'Each retained admin screen must have screenshot evidence, feature IDs, fixtures, and permission tests.',
+            'Each retained admin screen is tracked with screenshot evidence, feature IDs, fixtures, and permission tests',
         ],
         'docusaurus/docs/user/storefront-guide.md' => [
             'session expiration',

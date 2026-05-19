@@ -5,7 +5,7 @@ title: Admin Guide
 
 The admin guide documents retained back-office workflows and permissions.
 
-## Required Topics
+## Admin Workflows
 
 - Login, dashboard, catalog, categories, products, attributes, customers, sales, invoices, shipments, credit memos, promotions, CMS, reports, tax, currency, cache, indexes, users, roles, APIs, import/export, newsletter, and store configuration.
 - Scope behavior for default, website, and store-view configuration.
@@ -14,4 +14,4 @@ The admin guide documents retained back-office workflows and permissions.
 
 ## Verification
 
-Each retained admin screen must have screenshot evidence, feature IDs, fixtures, and permission tests.
+Each retained admin screen is tracked with screenshot evidence, feature IDs, fixtures, and permission tests as parity artifacts become available.

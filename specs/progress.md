@@ -30,6 +30,31 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:53 CEST - Docusaurus Final Content Cleanup
+
+Changed:
+- Reworded existing Docusaurus user and developer pages to remove planning-template phrases while keeping feature coverage, storefront/admin, module development, and developer guidance scoped to current modernization artifacts.
+- Updated the user and developer index pages, storefront guide, admin guide, feature coverage page, and module development page without adding new documentation evidence files.
+- Updated the manual acceptance/support and auth/security template validators to recognize the non-template Docusaurus wording that the final documentation check allows.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-docs-content.php --final` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed.
+- `rg` found no remaining final documentation planning phrases under `docusaurus/docs`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 -l dev/modernization/validate-manual-acceptance-readiness.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 -l dev/modernization/validate-auth-security-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-manual-acceptance-readiness.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-auth-security-target.php` passed.
+- `npm run build` passed from `docusaurus/`; Docusaurus still reported the existing update-check permission warning for `/Users/fabianwesner/.config`.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final evidence documents, feature traceability rows, screenshot manifests, release readiness approvals, DB-backed fixture/schema checks, project overlay, and project database/media fixtures remain incomplete or unavailable.
+
+Next:
+- Commit the Docusaurus content cleanup, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:50 CEST - Fixture Media PHPUnit Coverage
 
 Changed:
