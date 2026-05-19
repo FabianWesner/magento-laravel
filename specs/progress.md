@@ -1747,3 +1747,36 @@ Blocked:
 
 Next:
 - Commit the Laravel cron and scheduler foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:24 CEST - Laravel API Contract Foundation
+
+Changed:
+- Enabled Laravel API route loading in `bootstrap/app.php` and added versioned `/api/v1/contracts` API routes with `apiResource`, throttling middleware, and JSON legacy fallback.
+- Added `api_contracts.php` with one contract inventory row for `API-001` through `API-006`, covering SOAP, XML-RPC, REST/API2 OAuth, payment integrations, shipping integrations, and external services.
+- Added `LegacyApiContract`, `LegacyApiContractRepository`, `LegacyApiContractController`, `LegacyApiContractResource`, `LegacyApiContractIndexRequest`, `LegacyApiContractPolicy`, and `ExternalIntegrationProbe`.
+- Registered the API rate limiter, policy mapping, API route/config/resource/request metadata, and module manifest API metadata.
+- Added PHPUnit coverage for JSON API requests, SOAP and XML-RPC contract availability, REST/API2 OAuth roles, error payload/status codes, payment/shipping external integration mocks with timeout/retry behavior, and all API feature IDs.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits; applied API routing, resources, form request validation, policies, HTTP client, and testing guidance locally because sub-agents require an explicit user request.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `api resource`, `form request validation`, `api routing apiResource`, `http tests json`, `http client fake retry`, and `rate limiting middleware` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:controller Api/LegacyApiContractController --api --no-interaction`, `make:resource`, `make:request`, `make:policy`, `make:class`, and `make:test ApiContractFoundationTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/ApiContractFoundationTest.php` passed with 5 tests and 33 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan route:list --path=api/v1 --except-vendor` showed six versioned API routes for `api/v1/contracts` and legacy API fallback.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 34 tests and 213 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed after formatting the dirty PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Http/Controllers/Api/LegacyApiContractController.php app/Http/Requests/Api/LegacyApiContractIndexRequest.php app/Http/Resources/LegacyApiContractResource.php app/Modernization/Api app/Policies/LegacyApiContractPolicy.php app/Providers/AppServiceProvider.php app/Providers/ModernizationServiceProvider.php config/api_contracts.php config/modernization.php routes/api.php tests/Feature/ApiContractFoundationTest.php bootstrap/app.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-api-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-api-target.php --final` now fails only for missing OpenAPI documentation and final API contract evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 77 files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- OpenAPI documentation, final API contract evidence, final cron/job evidence, ADR 0008 approval, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel API contract foundation, then continue with the next unblocked Laravel foundation gap.

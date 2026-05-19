@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Events\Modernization\Modules\ModuleRegistryChecked;
 use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Modernization\Api\LegacyApiContract;
 use App\Modernization\Modules\Contracts\ModuleRegistryContract;
 use App\Modernization\Modules\ModuleRegistry;
+use App\Policies\LegacyApiContractPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -35,6 +37,7 @@ class ModernizationServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(LegacyApiContract::class, LegacyApiContractPolicy::class);
         Gate::define('viewModuleRegistryDiagnostics', [ModuleRegistryPolicy::class, 'viewDiagnostics']);
         Event::listen(ModuleRegistryChecked::class, RecordModuleRegistryCheck::class);
     }

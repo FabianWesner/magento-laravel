@@ -1,9 +1,13 @@
 <?php
 
 use App\Events\Modernization\Modules\ModuleRegistryChecked;
+use App\Http\Controllers\Api\LegacyApiContractController;
+use App\Http\Requests\Api\LegacyApiContractIndexRequest;
+use App\Http\Resources\LegacyApiContractResource;
 use App\Jobs\Modernization\Cron\CaptureCronParitySnapshot;
 use App\Jobs\Modernization\Modules\VerifyModuleRegistry;
 use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Policies\LegacyApiContractPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use App\Providers\ModernizationServiceProvider;
 
@@ -31,6 +35,7 @@ return [
                 ModernizationServiceProvider::class,
             ],
             'routes' => [
+                '/api/v1/contracts',
                 '/_modernization/modules',
             ],
             'commands' => [
@@ -47,6 +52,7 @@ return [
                 'modernization.modules.view',
             ],
             'config' => [
+                'api_contracts.contracts',
                 'cron_jobs.jobs',
                 'modernization.modules',
             ],
@@ -56,7 +62,13 @@ return [
                 VerifyModuleRegistry::class,
             ],
             'policies' => [
+                LegacyApiContractPolicy::class,
                 ModuleRegistryPolicy::class,
+            ],
+            'api' => [
+                LegacyApiContractController::class,
+                LegacyApiContractIndexRequest::class,
+                LegacyApiContractResource::class,
             ],
         ],
     ],
