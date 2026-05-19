@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 02:46 CEST - Spec Currency Linkage Gate
+
+Changed:
+- Added `dev/modernization/validate-spec-currency-linkage.php` to enforce the `specs/GOAL.md` acceptance rule that the core `specs/modernization` architecture, feature catalog, UI inventory, complex behavior, fixture strategy, backlog, risk, release, operations, security, and test-plan files exist, remain internally linked, and have final review evidence.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires spec currency/linkage evidence and removal of unresolved placeholders or blockers from the core modernization specs.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated PHP `8.5.5` retry succeeded for console tests, file testing, and PHPUnit assertion docs.
+- `php -l dev/modernization/validate-spec-currency-linkage.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-spec-currency-linkage.php` passed.
+- `php dev/modernization/validate-spec-currency-linkage.php --final` failed as expected because no spec currency/linkage evidence exists and core modernization specs still contain placeholders or blockers.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the spec currency/linkage template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation placeholders, missing spec currency/linkage evidence, missing UI screenshot manifest, release readiness, manual acceptance/support evidence, cutover evidence, defect evidence, CI workflow/evidence, source/dependency evidence, fixture/media evidence, source-only Magento baseline evidence, complex reverse-engineering evidence, edge/failure evidence, performance budgets, operations/security/accessibility/production evidence, missing Laravel target implementations, placeholder project overlay, missing DB-backed fixture/schema checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php` and `git diff --check` passed.
+
+Blocked:
+- Spec currency/linkage approval evidence, unresolved placeholder cleanup, project overlay, project database/media fixtures, per-feature evidence, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the spec currency/linkage gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 02:42 CEST - Edge Failure Resilience Readiness Gate
 
 Changed:
