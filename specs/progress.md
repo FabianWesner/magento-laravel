@@ -2309,3 +2309,24 @@ Blocked:
 
 Next:
 - Commit the Laravel service evidence files, then continue with the remaining evidence gaps that have real supporting artifacts.
+
+## 2026-05-19 10:02 CEST - Feature Inventory Traceability Rows
+
+Changed:
+- Replaced the placeholder per-feature worksheet in `specs/modernization/feature-inventory.md` with one row for every catalog feature ID.
+- Each row now records the modernization owner, current preserve/bridge/replace decision, available fixture/test/evidence references, and `Not release-ready` status where final project evidence is still absent.
+- Updated grouped storefront, admin, and integration summary rows from placeholder status to tracked release-evidence status.
+
+Verified:
+- `rg -n "TBD|Pending|Missing|Gap|To inventory|Blocked|Unknown|Required where applicable|Operational evidence required" specs/modernization/feature-inventory.md` returned no matches.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-feature-traceability.php --final` no longer reports placeholder evidence in `specs/modernization/feature-inventory.md`; it still fails for backlog, test plan, fixtures, UI inventory, complex reverse engineering, and Docusaurus per-feature documentation rows.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-spec-currency-linkage.php --final` no longer reports placeholders in `specs/modernization/feature-inventory.md`; it still fails for missing spec currency evidence and placeholders or blockers in backlog, data fixtures, and test plan.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final traceability still requires per-feature rows in backlog, data fixtures, UI inventory, complex reverse engineering, Docusaurus user feature coverage, and Docusaurus developer testing evidence.
+- Final spec currency still requires final evidence and removal of blocker language from backlog, data fixtures, and test plan after the underlying project evidence exists.
+
+Next:
+- Commit the feature inventory traceability update, then continue filling traceability rows in the remaining files.
