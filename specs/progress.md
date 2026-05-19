@@ -30,6 +30,29 @@ Next:
 
 ## Entries
 
+## 2026-05-19 10:58 CEST - Route And Auth Evidence
+
+Changed:
+- Added `specs/modernization/route-fallback-evidence.md` for current route ownership, fallback, feature flag, store scope, URL rewrite, admin frontname, session, CSRF, rollback, and logging coverage.
+- Added `specs/modernization/auth-security-evidence.md` for current customer/admin auth, permission matrix, CSRF/form-key, session/cookie, password hash/reset, API auth, legacy comparison, and rollback coverage.
+- Updated DEF-005 to show evidence now exists while ADR 0008 remains `Proposed`.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/RouteFallbackTest.php tests/Feature/AuthSecurityFoundationTest.php` passed from `laravel/` with 12 tests and 80 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-route-fallback-target.php --final` failed before evidence because ADR 0008 remains `Proposed` and route fallback evidence was not present.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-auth-security-target.php --final` failed before evidence because ADR 0008 remains `Proposed` and auth/security evidence was not present.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-route-fallback-target.php --final` failed after evidence only because ADR 0008 remains `Proposed`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-auth-security-target.php --final` failed after evidence only because ADR 0008 remains `Proposed`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 80 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- ADR 0008 is still `Proposed`; final route fallback and auth/security checks must keep failing until the user approves or revises the boundary.
+- Final security review, accessibility evidence, manual acceptance, cutover readiness, and production readiness remain incomplete.
+
+Next:
+- Commit the route and auth evidence, then continue with the next unblocked final-gate evidence gap.
+
 ## 2026-05-19 10:54 CEST - Final Gate Recheck
 
 Changed:
