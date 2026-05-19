@@ -30,6 +30,42 @@ Next:
 
 ## Entries
 
+## 2026-05-19 14:39 CEST - Admin System Configuration Workbench Implementation
+
+Changed:
+- Added deterministic `system_config` `domain_facts` fixtures for scoped base URLs, list-mode source models, invalid source model input, masked secret/backend model values, environment overrides, DE locale/currency, inherited values, and scoped config cache states.
+- Added the `system_config` domain catalog entry covering `SF-012`, `AD-010`, `CB-011`, and `CB-013`, and linked `store_scope` to multistore scope coverage.
+- Added the `/_modernization/admin/system-config` Livewire workbench with config, scopes, validation, secrets/cache, store-view, state, group, empty-state, and denied-role states.
+- Added the system-config route, CSS asset route, responsive CSS, focused PHPUnit route/Livewire coverage, and public filter normalization.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after browser verification.
+- Ignored local system-config Playwright screenshots.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel implementation pattern review and Magento system configuration behavior context before integration.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/SystemConfigWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationSystemConfigRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/DomainFoundationTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l routes/web.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationSystemConfigRouteTest.php tests/Feature/ScopedConfigTest.php` passed with 22 tests and 769 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/admin/system-config` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/system-config.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial config rows, validation rows, secrets/cache rows, DE store-view filter, inherited/catalog filtering, empty query state, denied role, disabled read-only actions, masked secret display, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, DE secrets/cache state, disabled actions, and clean current console output.
+- Screenshots were captured as `system-config-desktop-2026-05-19.png` and `system-config-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 123 tests and 1577 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final Magento/Laravel parity screenshots, canonical fixtures, broader multistore hierarchy fixtures, admin ACL integration, accessibility, performance, hosted CI, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit this verified admin system configuration workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 14:20 CEST - Admin Import Export Dataflow Workbench Implementation
 
 Changed:

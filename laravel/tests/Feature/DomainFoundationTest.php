@@ -37,6 +37,7 @@ class DomainFoundationTest extends TestCase
         'SF-006',
         'SF-010',
         'SF-011',
+        'SF-012',
         'SF-013',
         'SF-014',
         'SF-016',
@@ -45,10 +46,12 @@ class DomainFoundationTest extends TestCase
         'AD-004',
         'AD-007',
         'AD-009',
+        'AD-010',
         'AD-011',
         'AD-013',
         'AD-015',
         'AD-017',
+        'CB-011',
         'CB-012',
         'CB-013',
         'CJ-016',
@@ -593,6 +596,49 @@ class DomainFoundationTest extends TestCase
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'store_scope',
             'entity_id' => 10502,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
+    public function test_domain_fact_seeder_provides_system_config_scope_validation_and_secret_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $queryService = $this->app->make(DomainQueryService::class);
+        $defaultSnapshot = $queryService->snapshot('system_config', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deSnapshot = $queryService->snapshot('system_config', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $defaultPayloads = array_column($defaultSnapshot['payload']['rows'], 'payload');
+        $dePayloads = array_column($deSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('SystemConfig', $defaultSnapshot['feature']['context']);
+        $this->assertSame(5, $defaultSnapshot['payload']['count']);
+        $this->assertSame(3, $deSnapshot['payload']['count']);
+        $this->assertSame('gallery', $defaultPayloads[2]['attempted_value']);
+        $this->assertSame('invalid', $defaultPayloads[2]['validation_state']);
+        $this->assertTrue($defaultPayloads[3]['is_secret']);
+        $this->assertSame('********', $defaultPayloads[3]['effective_value']);
+        $this->assertTrue($defaultPayloads[4]['is_env_override']);
+        $this->assertSame('de_DE', $dePayloads[0]['effective_value']);
+        $this->assertTrue($dePayloads[1]['inherited']);
+        $this->assertSame('invalidated_on_inherit', $dePayloads[2]['cache_state']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'system_config',
+            'entity_id' => 11204,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'system_config',
+            'entity_id' => 11208,
             'store_id' => 9002,
             'store_view' => 'de',
         ]);
@@ -1156,6 +1202,7 @@ class DomainFoundationTest extends TestCase
             'SF-006',
             'SF-010',
             'SF-011',
+            'SF-012',
             'SF-013',
             'SF-014',
             'SF-016',
@@ -1164,10 +1211,12 @@ class DomainFoundationTest extends TestCase
             'AD-004',
             'AD-007',
             'AD-009',
+            'AD-010',
             'AD-011',
             'AD-013',
             'AD-015',
             'AD-017',
+            'CB-011',
             'CB-012',
             'CB-013',
             'CJ-016',

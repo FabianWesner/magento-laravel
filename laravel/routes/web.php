@@ -66,6 +66,16 @@ Route::get('/_modernization/assets/import-export.css', function () {
     ]);
 })->name('modernization.assets.import-export');
 
+Route::get('/_modernization/admin/system-config', function () {
+    return view('modernization.system-config');
+})->name('modernization.admin.system-config');
+
+Route::get('/_modernization/assets/system-config.css', function () {
+    return response()->file(public_path('modernization/system-config.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.system-config');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

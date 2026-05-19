@@ -34,7 +34,8 @@ class DomainCatalog
             'url_rewrite' => new DomainFeature('url_rewrite', 'UrlRewrite', 'URL rewrite', ['SF-014', 'CB-012'], ['url rewrite', 'canonical', 'redirect'], true),
             'import_export' => new DomainFeature('import_export', 'ImportExport', 'Import export', ['AD-013'], ['CSV', 'validation', 'generated file', 'error file'], false),
             'dataflow' => new DomainFeature('dataflow', 'Dataflow', 'Dataflow profiles', ['AD-013'], ['profile', 'batch', 'failed import', 'generated file'], false),
-            'store_scope' => new DomainFeature('store_scope', 'StoreScope', 'Store scope', ['SF-001', 'SF-002'], ['website', 'store view', 'config'], true),
+            'system_config' => new DomainFeature('system_config', 'SystemConfig', 'System configuration', ['SF-012', 'AD-010', 'CB-011', 'CB-013'], ['scope fallback', 'inherited value', 'source model', 'backend model', 'secret', 'env override'], true),
+            'store_scope' => new DomainFeature('store_scope', 'StoreScope', 'Store scope', ['SF-001', 'SF-002', 'SF-012', 'AD-017'], ['website', 'store view', 'config'], true),
             'media_storage' => new DomainFeature('media_storage', 'MediaStorage', 'Media storage', ['SF-005', 'AD-013'], ['Filesystem', 'path traversal', 'missing media'], true),
             'downloadable' => new DomainFeature('downloadable', 'Downloadable', 'Downloadable products', ['SF-005'], ['downloadable file', 'permission'], true),
         ];

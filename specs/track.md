@@ -19,6 +19,23 @@ The core reasoning was:
 
 The tradeoff is that this improves characterization and local Laravel-side inspection, not production import/export parity. Final project overlay rows, real fixture restore, generated-file retention policy, admin ACL integration, final screenshots, accessibility, performance, CI, and cutover evidence remain open.
 
+## 2026-05-19 14:39 CEST - Why The System Config Workbench Exists
+
+The system configuration slice exists because Magento admin configuration is not just a table of key/value settings. The legacy implementation combines section-level ACL, request-driven default/website/store scope, fallback from stores to websites to default, inherited values represented by missing current-scope rows, source model option lists, backend model save hooks, encrypted/obscured secret fields, environment overrides, and cache invalidation after save or inherit operations.
+
+I kept this implementation read-only because saving system configuration too early would create a false sense of parity. The current useful increment is to expose the behavior shape in Chrome: default and DE store-view rows, inherited website/store values, invalid source-model input, masked gateway token, environment override, cache invalidation states, and denied-role behavior.
+
+The core reasoning was:
+
+- Add `system_config` as its own domain because `AD-010` needs a direct admin configuration surface, while also linking it to `SF-012`, `CB-011`, and `CB-013`.
+- Reuse `store_scope` as the companion data because multistore behavior is inseparable from configuration fallback and inherited values.
+- Keep secrets masked and treat backend/source model flags as diagnostics instead of editable controls.
+- Use deterministic facts instead of touching `core_config_data` from the browser route, because the workbench should be inspectable without mutating configuration state.
+- Normalize every public Livewire filter before querying, since store scope, group, state, section, and role are browser-controlled.
+- Use subagents in parallel: one checked Laravel conventions and existing config services, while another scanned Magento system configuration behavior and fixture gaps.
+
+The tradeoff is explicit: this improves local characterization and Laravel-side inspection, not final Magento/Laravel system configuration parity. The legacy scan also surfaced fixture gaps for second websites, disabled store views, field definitions, obscured encrypted save behavior, URL validation, and full screenshot coverage. Those remain release work.
+
 ## 2026-05-19 14:04 CEST - Why The Cache/Index Workbench Exists
 
 The cache/index slice exists because Magento's admin cache screen is an operations surface, not a simple settings page. It combines cache-type enablement, invalidated tags, stale output, compiler controls, index process state, unprocessed index events, cron scheduling, lock ownership, and failure diagnostics. Those details are easy to flatten away if the replacement starts directly with a final admin controller.

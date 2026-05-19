@@ -2,7 +2,7 @@
 
 This file is the human-readable open-issues backlog for ongoing execution. The canonical release-blocking defect register remains `specs/modernization/defect-register.md`; this file summarizes active blockers and working issues so they are easy to review.
 
-Last reviewed: 2026-05-19 14:20 CEST after admin import/export dataflow Chrome verification. No release-blocking issue was closed by this local workbench slice.
+Last reviewed: 2026-05-19 14:42 CEST after admin system configuration Chrome verification and normal gate. No release-blocking issue was closed by this local workbench slice.
 
 ## Maintenance Rules
 
@@ -26,7 +26,7 @@ Last reviewed: 2026-05-19 14:20 CEST after admin import/export dataflow Chrome v
 
 | Issue | Status | Impact | Current Handling |
 | --- | --- | --- | --- |
-| Laravel Boost `search-docs` cannot resolve `boost.laravel.com` from the sandbox, and the escalated retry is rejected. | Open | Required docs lookup cannot complete before code changes. | Record the failure per slice; rely on existing app conventions and local rules without bypassing the approval rejection. |
+| Laravel documentation lookup cannot complete from this environment. Earlier Boost attempts could not resolve `boost.laravel.com`; the current local docs command tries to open a remote Laravel docs URL from the sandbox. | Open | Required docs lookup cannot complete before code changes. | Record the failure per slice; rely on existing app conventions and local rules without bypassing sandbox or approval restrictions. |
 | Boost `get-absolute-url` returns `http://localhost/...`, but the working Herd host is `http://magento-lts.test/...`. | Open | Browser verification must use the reachable Herd URL. | Use Boost result as a signal, then verify with the working Herd URL and record the difference. |
 | Boost browser logs currently report no browser log file. | Open | Browser console validation relies on Playwright console output for this slice. | Use Playwright console checks and note the missing Boost browser log file. |
 | Normal gate skips DB fixture coverage/schema because `DB_DSN` is unset. | Open | Full fixture/schema evidence remains unavailable. | Treat normal gate as local development evidence only. |

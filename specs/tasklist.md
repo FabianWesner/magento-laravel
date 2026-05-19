@@ -13,13 +13,14 @@ This is the working tasklist for day-to-day execution. `specs/GOAL.md` remains t
 
 | Status | Task | Why It Matters | Verification |
 | --- | --- | --- | --- |
-| Pending | Pick next low-risk, browser-verifiable Magento domain slice. | Keeps implementation moving while avoiding checkout, payment, order writes, and destructive schema changes until release blockers are reduced. | Not started. |
-| Pending | Expand deterministic domain facts for the next selected slice. | Keeps the next workbench testable in PHPUnit and Chrome before final parity replacement work. | Not started. |
+| Pending | Pick the next low-risk, browser-verifiable Magento domain slice. | Keeps implementation moving while avoiding checkout, payment, order writes, and destructive schema changes until release blockers are reduced. | Not started. |
+| Pending | Expand deterministic domain facts where the next slice needs them. | Keeps the next workbench testable in PHPUnit and Chrome before final parity replacement work. | Not started. |
 
 ## Recently Completed Local Slices
 
 | Date | Slice | Local Evidence | Release Status |
 | --- | --- | --- | --- |
+| 2026-05-19 | Admin system configuration and multistore scope workbench | `/_modernization/admin/system-config`, focused PHPUnit, Chrome desktop/mobile, config/scope/validation/secret/cache filters. | Not release-ready. |
 | 2026-05-19 | Admin import/export dataflow workbench | `/_modernization/admin/import-export`, focused PHPUnit, Chrome desktop/mobile, import/export/profile/file filters. | Not release-ready. |
 | 2026-05-19 | Admin cache/index workbench | `/_modernization/admin/cache-index`, focused PHPUnit, Chrome desktop/mobile, cache/index/cron/lock filters. | Not release-ready. |
 | 2026-05-19 | Storefront communications workbench | `/_modernization/storefront/communications`, focused PHPUnit, Chrome desktop/mobile, markdown check, normal gate. | Not release-ready. |
