@@ -30,6 +30,43 @@ Next:
 
 ## Entries
 
+## 2026-05-19 14:55 CEST - Admin Tax Currency Workbench Implementation
+
+Changed:
+- Added deterministic `tax` and `currency` `domain_facts` fixtures for tax classes, rates, rules, calculation examples, invalid rate validation, tax report aggregation, currency config, currency rates, scheduled imports, failed imports, stale rates, and symbol overrides.
+- Added `tax` and `currency` domain catalog entries covering `AD-016`, `CB-006`, `CJ-002`, and `CJ-020`.
+- Added the `/_modernization/admin/tax-currency` Livewire workbench with tax, currency, jobs, problems, store-view, status, type, empty-state, and denied-role states.
+- Added the tax/currency route, CSS asset route, responsive CSS, focused PHPUnit route/Livewire coverage, and public filter normalization.
+- Updated tasklist, open-issues, backlog, and reasoning tracking after browser verification.
+- Ignored local tax/currency Playwright screenshots.
+
+Verified:
+- Required Laravel docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel implementation pattern review and Magento tax/currency behavior context before integration.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/TaxCurrencyWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationTaxCurrencyRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/DomainFoundationTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l database/seeders/DomainFactSeeder.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l routes/web.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationTaxCurrencyRouteTest.php tests/Feature/ReportFoundationTest.php tests/Feature/ScopedConfigTest.php` passed with 30 tests and 830 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/admin/tax-currency` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/tax-currency.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial tax rows, currency rows, jobs, problems, DE store-view tax filtering, stale currency filtering, empty query state, denied role, disabled read-only actions, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column controls, visible summary counts, tax cards, DE problem filtering with an empty problem state, and clean current console output.
+- Screenshots were captured as `tax-currency-desktop-2026-05-19.png` and `tax-currency-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `git diff --check` passed.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 127 tests and 1647 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final Magento/Laravel parity screenshots, canonical fixtures, address/range tax matrices, real project rates, admin ACL integration, accessibility, performance, hosted CI, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit this verified admin tax/currency workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 14:39 CEST - Admin System Configuration Workbench Implementation
 
 Changed:

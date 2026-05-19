@@ -30,6 +30,8 @@ class DomainCatalog
             'contact' => new DomainFeature('contact', 'Contact', 'Contact and send to friend', ['SF-016', 'AD-017'], ['contact', 'product alert', 'send to friend', 'email'], true),
             'cache' => new DomainFeature('cache', 'Cache', 'Cache and compiler operations', ['AD-011', 'CB-013', 'CJ-016'], ['enabled', 'disabled', 'invalidated', 'stale cache', 'compiler'], true),
             'index' => new DomainFeature('index', 'Index', 'Index management', ['AD-011', 'CB-012', 'CJ-021'], ['ready', 'processing', 'reindex required', 'update required', 'lock'], true),
+            'tax' => new DomainFeature('tax', 'Tax', 'Tax rates and rules', ['AD-016', 'CB-006', 'CJ-020'], ['tax class', 'rate', 'rule', 'calculation', 'report aggregation'], true),
+            'currency' => new DomainFeature('currency', 'Currency', 'Currency rates and symbols', ['AD-016', 'CJ-002'], ['base currency', 'display currency', 'rate import', 'symbol override', 'scheduled update'], true),
             'sitemap' => new DomainFeature('sitemap', 'Sitemap', 'Sitemap and RSS', ['SF-014', 'CJ-025'], ['sitemap', 'RSS', 'SEO'], true),
             'url_rewrite' => new DomainFeature('url_rewrite', 'UrlRewrite', 'URL rewrite', ['SF-014', 'CB-012'], ['url rewrite', 'canonical', 'redirect'], true),
             'import_export' => new DomainFeature('import_export', 'ImportExport', 'Import export', ['AD-013'], ['CSV', 'validation', 'generated file', 'error file'], false),

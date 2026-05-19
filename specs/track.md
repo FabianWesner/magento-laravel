@@ -2,6 +2,23 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 14:55 CEST - Why The Tax/Currency Workbench Exists
+
+The tax/currency slice exists because Magento tax and currency behavior is both high-risk and heavily operational. Tax classes, tax rates, rule combinations, calculation settings, cross-border trade, report aggregation, currency rates, symbol overrides, and scheduled imports all influence money-facing behavior. Starting with a final write-capable admin replacement would be premature without canonical fixtures and final parity evidence.
+
+I implemented this as a read-only workbench so the behavior can be inspected in Chrome without saving rates, changing rules, running imports, touching order totals, or mutating configuration. The useful increment is to make the states visible: tax classes, CA and DE rates, retail and VAT rules, a discount-before-tax calculation example, an invalid percent rate, tax report aggregation, base/display currency settings, current and stale currency rates, scheduled and failed import jobs, symbol overrides, empty states, and denied-role behavior.
+
+The legacy scan shaped the scope:
+
+- Tax rules expand across customer classes, product classes, and rates, so the fixture rows carry combination data instead of treating a rule as a single scalar.
+- Tax lookup depends on country, region, postcode, range matching, priority, and compound behavior, so this slice exposes rule and rate diagnostics without claiming full calculation parity.
+- Cross-border trade and prices-including-tax affect totals, so calculation examples are kept explicit and narrow.
+- Currency rates can be direct, inverted, stale, or failed to import, so current and stale rates plus job failures are first-class rows.
+- Currency symbol overrides live in serialized configuration and invalidate cache, so the workbench keeps them visible as configuration-sensitive diagnostics.
+- Tax reports read aggregate tables refreshed by cron rather than live order totals, so report aggregation appears in the jobs/problem surface instead of being hidden behind normal tax rows.
+
+The tradeoff is intentional: this improves local characterization and Laravel-side inspection for `AD-016`, `CB-006`, `CJ-002`, and `CJ-020`, but it is not final release parity. Full fixture restore, address/range matrices, real project rates, admin ACL integration, Magento/Laravel screenshot manifests, accessibility, performance, hosted CI, production readiness, and cutover evidence remain open.
+
 ## 2026-05-19 14:20 CEST - Why The Import/Export Dataflow Workbench Exists
 
 The import/export slice exists because Magento has two overlapping admin concepts here: modern ImportExport screens for CSV product/customer movement, and older Dataflow profiles for wizard-based or advanced batch jobs. They share operational concerns such as uploaded files, generated exports, validation messages, row counts, batch history, failed rows, and permission boundaries, but they do not behave like a simple CRUD grid.

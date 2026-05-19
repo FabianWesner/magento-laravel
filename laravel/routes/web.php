@@ -76,6 +76,16 @@ Route::get('/_modernization/assets/system-config.css', function () {
     ]);
 })->name('modernization.assets.system-config');
 
+Route::get('/_modernization/admin/tax-currency', function () {
+    return view('modernization.tax-currency');
+})->name('modernization.admin.tax-currency');
+
+Route::get('/_modernization/assets/tax-currency.css', function () {
+    return response()->file(public_path('modernization/tax-currency.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.tax-currency');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

@@ -50,12 +50,16 @@ class DomainFoundationTest extends TestCase
         'AD-011',
         'AD-013',
         'AD-015',
+        'AD-016',
         'AD-017',
+        'CB-006',
         'CB-011',
         'CB-012',
         'CB-013',
+        'CJ-002',
         'CJ-016',
         'CJ-019',
+        'CJ-020',
         'CJ-021',
         'CJ-022',
         'CJ-025',
@@ -644,6 +648,69 @@ class DomainFoundationTest extends TestCase
         ]);
     }
 
+    public function test_domain_fact_seeder_provides_tax_currency_rate_rule_job_and_problem_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $queryService = $this->app->make(DomainQueryService::class);
+        $defaultTaxSnapshot = $queryService->snapshot('tax', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deTaxSnapshot = $queryService->snapshot('tax', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultCurrencySnapshot = $queryService->snapshot('currency', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deCurrencySnapshot = $queryService->snapshot('currency', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $defaultTaxPayloads = array_column($defaultTaxSnapshot['payload']['rows'], 'payload');
+        $deTaxPayloads = array_column($deTaxSnapshot['payload']['rows'], 'payload');
+        $defaultCurrencyPayloads = array_column($defaultCurrencySnapshot['payload']['rows'], 'payload');
+        $deCurrencyPayloads = array_column($deCurrencySnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Tax', $defaultTaxSnapshot['feature']['context']);
+        $this->assertSame('Currency', $defaultCurrencySnapshot['feature']['context']);
+        $this->assertSame(6, $defaultTaxSnapshot['payload']['count']);
+        $this->assertSame(2, $deTaxSnapshot['payload']['count']);
+        $this->assertSame(5, $defaultCurrencySnapshot['payload']['count']);
+        $this->assertSame(2, $deCurrencySnapshot['payload']['count']);
+        $this->assertSame('Taxable Goods', $defaultTaxPayloads[0]['product_tax_class']);
+        $this->assertSame('US-CA 8.25', $defaultTaxPayloads[1]['label']);
+        $this->assertSame(['Retail Customer x Taxable Goods x US-CA 8.25'], $defaultTaxPayloads[2]['combinations']);
+        $this->assertSame(7.43, $defaultTaxPayloads[3]['tax_amount']);
+        $this->assertSame('invalid', $defaultTaxPayloads[4]['validation_state']);
+        $this->assertSame('aggregate_sales_report_tax_data', $defaultTaxPayloads[5]['cron_job']);
+        $this->assertSame('DE VAT Standard', $deTaxPayloads[0]['label']);
+        $this->assertSame('EU VAT Rule', $deTaxPayloads[1]['label']);
+        $this->assertSame('USD', $defaultCurrencyPayloads[0]['base_currency']);
+        $this->assertSame(0.92, $defaultCurrencyPayloads[1]['rate']);
+        $this->assertTrue($defaultCurrencyPayloads[2]['is_stale']);
+        $this->assertSame('currency_rates_update', $defaultCurrencyPayloads[3]['cron_job']);
+        $this->assertSame('failed', $defaultCurrencyPayloads[4]['status']);
+        $this->assertSame('EUR', $deCurrencyPayloads[0]['display_currency']);
+        $this->assertSame('EUR', $deCurrencyPayloads[1]['symbol']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'tax',
+            'entity_id' => 11308,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'currency',
+            'entity_id' => 11406,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+    }
+
     public function test_import_export_dataflow_validation_and_failure_behavior(): void
     {
         $dataflow = $this->app->make(ImportExportDataflow::class);
@@ -1215,12 +1282,16 @@ class DomainFoundationTest extends TestCase
             'AD-011',
             'AD-013',
             'AD-015',
+            'AD-016',
             'AD-017',
+            'CB-006',
             'CB-011',
             'CB-012',
             'CB-013',
+            'CJ-002',
             'CJ-016',
             'CJ-019',
+            'CJ-020',
             'CJ-021',
             'CJ-022',
             'CJ-025',
