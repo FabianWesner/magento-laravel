@@ -30,6 +30,32 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:29 CEST - Laravel Schema Preservation Foundation
+
+Changed:
+- Added Laravel schema preservation policy and snapshot services for existing Magento commerce/EAV tables, approved isolated infrastructure tables, schema signatures, EAV table signatures, core entity row-count snapshots, fixture restore command integration, schema-report command integration, and DB delta tracking.
+- Added PHPUnit schema preservation coverage for schema checksum stability before/after Laravel boot, blocked destructive migration operations against commerce/EAV tables, approved infrastructure table isolation, fixture restore locally and in CI markers, original seed/sample/project data compatibility, EAV signatures, core entity snapshots, schema-report checksums, and DB side-effect deltas.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel edits.
+- Laravel Boost `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated PHP `8.5.5` retry succeeded for database testing assertions, schema builder migrations, query builder, and collections docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Schema tests/Feature/SchemaPreservationFoundationTest.php` passed from `laravel/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/SchemaPreservationFoundationTest.php` passed with 5 tests and 26 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-schema-preservation-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-schema-preservation-target.php --final` failed only because final schema preservation evidence is not present yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 78 tests and 512 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 136 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final schema preservation evidence, DB-backed fixture/schema checks, fixture manifest/restore evidence, project overlay, project database/media fixtures, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel schema preservation foundation, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:24 CEST - GitHub Actions Modernization Workflow
 
 Changed:
