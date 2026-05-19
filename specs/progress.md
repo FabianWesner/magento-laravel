@@ -1811,3 +1811,34 @@ Blocked:
 
 Next:
 - Commit the Laravel scoped config foundation, then continue with the next unblocked Laravel foundation gap.
+
+## 2026-05-19 07:41 CEST - Laravel Auth Security Foundation
+
+Changed:
+- Added customer and admin session guards, providers, and password brokers to `config/auth.php`.
+- Added `auth_compatibility.php` for customer/admin session boundaries, cookie flags, Magento form-key compatibility, password hash upgrade planning, and rollback behavior.
+- Added auth compatibility services for customer sessions, admin sessions, form keys, password hashes, permission manifests, and session/cookie logout invalidation.
+- Added modernization auth boundary routes and controller actions using `guest`, `auth:customer`, `auth:admin`, and `can:admin.access` middleware.
+- Added PHPUnit coverage for auth/security feature IDs `SF-010`, `AD-001`, `AD-012`, `API-001`, `API-002`, `API-003`, and `CB-013`.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits; applied auth, authorization, CSRF, routing, validation, and testing guidance locally because sub-agents require an explicit user request.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `authentication guards`, `password reset broker`, `authorization gates policies`, and `csrf protection` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:class` generated the auth compatibility service classes, `make:controller Modernization/AuthBoundaryController --no-interaction` generated the controller, and `make:test AuthSecurityFoundationTest --phpunit --no-interaction` generated the PHPUnit test before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/AuthSecurityFoundationTest.php` passed with 7 tests and 48 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 47 tests and 279 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` fixed route import ordering.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Auth app/Http/Controllers/Modernization/AuthBoundaryController.php app/Providers/ModernizationServiceProvider.php config/auth.php config/auth_compatibility.php routes/web.php tests/Feature/AuthSecurityFoundationTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-auth-security-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-auth-security-target.php --final` now fails only for ADR 0008 not being approved/accepted and missing final auth/security evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 100 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- ADR 0008 approval, final auth/security evidence, final config parity evidence, OpenAPI documentation, final API contract evidence, final cron/job evidence, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel auth/security foundation, then continue with the next unblocked Laravel foundation gap.

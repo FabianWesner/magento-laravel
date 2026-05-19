@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Events\Modernization\Modules\ModuleRegistryChecked;
 use App\Listeners\Modernization\Modules\RecordModuleRegistryCheck;
+use App\Models\User;
 use App\Modernization\Api\LegacyApiContract;
+use App\Modernization\Auth\PermissionManifest;
 use App\Modernization\Config\ConfigRepository;
 use App\Modernization\Config\Contracts\ConfigRepositoryContract;
 use App\Modernization\Modules\Contracts\ModuleRegistryContract;
@@ -46,6 +48,9 @@ class ModernizationServiceProvider extends ServiceProvider
     {
         Gate::policy(LegacyApiContract::class, LegacyApiContractPolicy::class);
         Gate::define('viewModuleRegistryDiagnostics', [ModuleRegistryPolicy::class, 'viewDiagnostics']);
+        Gate::define('admin.access', function (User $user, string $permission = 'admin.dashboard'): bool {
+            return app(PermissionManifest::class)->allows((string) $user->getAttribute('role'), $permission);
+        });
         Event::listen(ModuleRegistryChecked::class, RecordModuleRegistryCheck::class);
     }
 }
