@@ -30,6 +30,25 @@ Next:
 
 ## Entries
 
+## 2026-05-19 10:45 CEST - Magento Category Visual Smoke
+
+Changed:
+- Added retained local Magento category/listing smoke evidence at `specs/modernization/magento-category-visual-smoke-evidence.md` for `SF-003` and `SF-004`.
+- Linked the category/listing smoke evidence from the visual baseline strategy and DEF-003 without treating it as final visual manifest evidence.
+
+Verified:
+- `curl -I http://127.0.0.1:8090/women/new-arrivals.html` returned HTTP 200 from the local Magento sample-data runtime.
+- Escalated `node dev/modernization/capture-visual-baseline.mjs --url=http://127.0.0.1:8090/women/new-arrivals.html --out=.localdev/visual-baseline/magento/storefront/SF-CATEGORY/women-new-arrivals-default --runtime=magento --screen-id=SF-CATEGORY --feature-ids=SF-003,SF-004 --role=guest --fixture-id=sample-data --state=category-default --parity-decision=preserve --evidence=specs/modernization/magento-category-visual-smoke-evidence.md` captured desktop, laptop, tablet, and mobile PNG artifacts with HTTP 200 and page title `New Arrivals - Women`.
+- `file .localdev/visual-baseline/magento/storefront/SF-CATEGORY/women-new-arrivals-default/*.png` reported valid PNG screenshots for all four captured artifacts.
+
+Blocked:
+- The final visual screenshot manifest remains absent.
+- Product detail capture is still pending; the attempted Playwright escalation for `http://127.0.0.1:8090/women/new-arrivals/tori-tank-463.html` was rejected by the approval reviewer.
+- Laravel comparison screenshots, all storefront/admin screens, required roles, all UI states, visual diff approval, accessibility review, and manual acceptance remain incomplete.
+
+Next:
+- Run markdown checks and the normal modernization gate, then commit the retained category/listing smoke evidence.
+
 ## 2026-05-19 10:42 CEST - Magento Admin Dashboard Visual Smoke
 
 Changed:
