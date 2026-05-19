@@ -30,6 +30,26 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:45 CEST - Laravel Frontend Lockfile
+
+Changed:
+- Added `laravel/package-lock.json` so the Laravel frontend dependency graph is locked in the same root as `laravel/package.json`.
+
+Verified:
+- Escalated `npm install --package-lock-only --ignore-scripts` completed from `laravel/`; npm reported Node engine warnings for the local Node `v21.3.0` against packages requiring `^20.19.0 || >=22.12.0`, but wrote the lockfile and found 0 vulnerabilities.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-source-dependency-target.php --final` no longer reports the missing same-root Laravel package lockfile; it still fails for final source/dependency inventory and audit evidence.
+- `npm audit --omit=dev --audit-level=high` passed from `laravel/` with 0 vulnerabilities.
+- Escalated `npm audit --audit-level=high` passed from `laravel/` with 0 vulnerabilities.
+- Escalated `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 /Users/fabianwesner/Library/Application Support/Herd/bin/composer audit` passed from `laravel/` with no security vulnerability advisories.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final source/dependency inventory evidence, dependency audit evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel frontend lockfile, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:42 CEST - Livewire Foundation
 
 Changed:
