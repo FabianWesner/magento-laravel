@@ -35,10 +35,10 @@ Every mask must list the screen ID, selector/region, reason, owner, and expiry p
 ## Override Manifest
 
 Overrides are exceptions, not defaults. They require product/design approval and must expire by a named migration phase.
+No override rows are approved in this repository state.
 
 | Screen ID | Viewport | State | Region | Override | Approver | Rationale | Expiry |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
 
 ## Approval Rules
 

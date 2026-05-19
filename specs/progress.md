@@ -30,6 +30,24 @@ Next:
 
 ## Entries
 
+## 2026-05-19 08:59 CEST - Visual Override Manifest Cleanup
+
+Changed:
+- Removed the placeholder visual override manifest row from `specs/modernization/visual-tolerances.md`.
+- Recorded that no visual override rows are approved in the current repository state.
+
+Verified:
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-visual-tolerances.php --final` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- UI screenshot manifest, final visual evidence, DB-backed fixture/schema checks, project overlay, project database/media fixtures, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the visual override manifest cleanup, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 08:58 CEST - API OpenAPI Contract
 
 Changed:
