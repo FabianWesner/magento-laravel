@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Modernization\LegacyFallbackController;
 use App\Modernization\Bootstrap\CoreInfrastructure;
 use App\Modernization\Bootstrap\RuntimeIsolation;
 use App\Modernization\Http\Controllers\ModernizationDiagnosticsController;
@@ -19,3 +20,10 @@ Route::get('/_modernization/bootstrap', function (CoreInfrastructure $infrastruc
         'runtime_isolation' => $runtimeIsolation->report(),
     ]);
 })->name('modernization.bootstrap');
+
+Route::match(['POST', 'PUT', 'PATCH', 'DELETE'], '{legacyFallbackPath}', LegacyFallbackController::class)
+    ->where('legacyFallbackPath', '.*')
+    ->name('modernization.legacy-stateful-fallback');
+
+Route::fallback(LegacyFallbackController::class)
+    ->name('modernization.legacy-fallback');

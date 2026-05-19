@@ -1685,3 +1685,33 @@ Blocked:
 
 Next:
 - Commit the Laravel EAV read repository foundation, then continue with the next unblocked parity slice.
+
+## 2026-05-19 07:09 CEST - Laravel Route Fallback Boundary Foundation
+
+Changed:
+- Added PHP route ownership metadata in `laravel/config/route_ownership.php` for Laravel, legacy, and bridge ownership, feature flags, rollback targets, admin frontname, store codes, and explicit non-sharing session boundaries.
+- Added `RouteOwner`, `RouteOwnershipDecision`, and `RouteOwnership` services to resolve request ownership, store code, admin frontname, form-key presence, session boundary state, feature flag, rollback, and fallback availability.
+- Added `LegacyFallbackController` and web fallback routes for observable legacy fallback decisions, including state-changing fallback requests that need CSRF/form-key boundary coverage.
+- Added PHPUnit coverage for route ownership, fallback to legacy, store code URL rewrite handling, admin frontname and admin session boundary, CSRF/form-key/customer session boundary, rollback feature flags, and fallback logging/observability.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before Laravel PHP edits; applied routing, security, config, and testing guidance locally because sub-agents require an explicit user request.
+- Sandbox Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `fallback routes`, `routing fallback`, `csrf protection`, `logging context`, `configuration testing`, and `http tests` against Laravel framework `13.x` docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan make:controller Modernization/LegacyFallbackController --invokable --no-interaction`, `make:class` for the routing services, and `make:test RouteFallbackTest --phpunit --no-interaction` generated the Laravel files before editing.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact tests/Feature/RouteFallbackTest.php` passed with 5 tests and 32 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 artisan test --compact` passed with 25 tests and 84 assertions.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --dirty --format agent` passed after formatting the dirty PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 vendor/bin/pint --format agent app/Modernization/Routing app/Http/Controllers/Modernization/LegacyFallbackController.php config/route_ownership.php routes/web.php tests/Feature/RouteFallbackTest.php` passed for newly generated PHP files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-route-fallback-target.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-route-fallback-target.php --final` now fails only because ADR 0008 is not approved and final route fallback evidence has not been produced.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-no-new-xml.php specs laravel/app laravel/config laravel/routes laravel/resources laravel/database laravel/modules laravel/packages docs/content/modernization docusaurus/docs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 65 files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` and `git diff --check` passed.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- ADR 0008 approval, final route fallback evidence, final EAV parity evidence, final bootstrap foundation evidence, final module-system evidence, project overlay, project database fixture, project media fixture, full UI baseline, per-feature characterization evidence, Laravel parity implementation, DB-backed fixture/schema checks, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the Laravel route fallback boundary foundation, then continue with the next unblocked Laravel foundation gap.
