@@ -2370,3 +2370,23 @@ Blocked:
 
 Next:
 - Commit the fixture traceability update, then continue with UI, complex behavior, test-plan, and Docusaurus traceability rows.
+
+## 2026-05-19 10:35 CEST - UI Per-Feature Traceability Rows
+
+Changed:
+- Added a per-feature UI traceability matrix to `specs/modernization/ui-screen-inventory.md` for visible SF-001 through SF-016 and AD-001 through AD-018 feature IDs.
+- Rows map feature IDs to expected screen coverage, runtime pair, role/state, fixture reference, current evidence, screenshot status, parity decision, and release status.
+- The table is intentionally separate from the final screenshot manifest and does not claim captured screenshot artifacts.
+
+Verified:
+- `rg -n "^\\|\\s*(SF|AD)-[0-9]{3}\\s*\\|" specs/modernization/ui-screen-inventory.md | wc -l` returned 34.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-feature-traceability.php --final` no longer reports missing per-feature rows in `specs/modernization/ui-screen-inventory.md`; it still fails for test-plan placeholders, complex reverse-engineering rows, and Docusaurus per-feature documentation rows.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-ui-screen-inventory.php --final` still fails for the real screenshot manifest, as expected, because screenshots and artifact paths are not present.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final UI readiness still requires a screenshot manifest with Magento and Laravel PNG artifacts for all visible feature IDs, roles, states, and viewports.
+
+Next:
+- Commit the UI traceability update, then continue with complex behavior, test-plan, and Docusaurus traceability rows.

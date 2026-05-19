@@ -91,6 +91,47 @@ Every interactive screen must capture:
 - Store-view or website-scope override state.
 - Disabled/read-only state where permissions or config apply.
 
+## Per-Feature UI Traceability
+
+This table maps each visible catalog feature ID to the screen evidence still needed for release. It is separate from the final screenshot manifest; no row below is a captured screenshot artifact.
+
+| Feature ID | Screen Coverage | Runtime Pair | Role Or State | Fixture Reference | Current UI Evidence | Screenshot Status | Parity Decision | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| SF-001 | Storefront shell, header, navigation, mini cart, search, footer | Magento and Laravel | Guest, customer, store switch | Fixture package absent | Catalog scope defined | Screenshot set absent | preserve | Not release-ready |
+| SF-002 | Home, CMS page, CMS block, widget, no-route, redirect | Magento and Laravel | Guest, store scope | CMS fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-003 | Category listing, layered navigation, pagination, view modes | Magento and Laravel | Guest, customer, store scope | Category fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-004 | Product listing item, price, tax, stock, ratings, wishlist, compare | Magento and Laravel | Guest, customer | Product fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-005 | Product detail for all product types, media, related, reviews, alerts | Magento and Laravel | Guest, customer, store scope | Product fixture package absent | Domain and commerce evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-006 | Quick search, advanced search, results, empty results | Magento and Laravel | Guest, customer | Search fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-007 | Empty cart, populated cart, coupon, estimate shipping and tax | Magento and Laravel | Guest, customer, persistent cart | Cart fixture package absent | Commerce evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-008 | Onepage checkout, billing, shipping, payment, review, success, failure | Magento and Laravel | Guest, customer | Checkout fixture package absent | Commerce evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-009 | Multishipping addresses, methods, overview, success, failure | Magento and Laravel | Customer | Multishipping fixture package absent | Commerce evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-010 | Register, login, dashboard, addresses, orders, password reset | Magento and Laravel | Guest, customer, denied state | Customer fixture package absent | Domain and auth evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-011 | Wishlist, compare, reviews, tags, newsletter, downloadable products | Magento and Laravel | Customer | Customer commerce fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-012 | Website/store switch, locale, currency, scoped content | Magento and Laravel | Guest, customer, store scope | Multistore fixture package absent | Config evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-013 | Contact, send friend, product alerts, newsletter, email states | Magento and Laravel | Guest, customer, validation states | Communication fixture package absent | Domain and commerce evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-014 | URL rewrites, canonical output, HTML sitemap, XML sitemap, RSS | Magento and Laravel | Guest, store scope | SEO fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| SF-015 | External payment redirect, review, cancel, return callback | Magento and Laravel | Checkout customer | Payment sandbox fixture absent | Integration evidence | Screenshot set absent | bridge | Not release-ready |
+| SF-016 | Polls, tags, analytics, Google Base, XmlConnect surfaces | Magento and Laravel | Guest, admin-enabled module states | Optional module fixture absent | Domain and integration evidence | Screenshot set absent | bridge | Not release-ready |
+| AD-001 | Login, logout, reset password, dashboard, menu, notifications, denied page | Magento and Laravel | Admin, denied role, timeout state | Admin fixture package absent | Auth evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-002 | Product grid, filters, mass actions, product edit tabs | Magento and Laravel | Catalog admin, denied role | Product admin fixture package absent | Domain and commerce evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-003 | Category tree, edit form, product assignment, URL key and design settings | Magento and Laravel | Catalog admin, store scope | Category admin fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-004 | Attribute grid, attribute sets, options, labels, validation | Magento and Laravel | Catalog admin, denied role | EAV admin fixture package absent | EAV evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-005 | Order grid, order view, comments, status, reorder, admin create | Magento and Laravel | Sales admin, denied role | Sales order fixture package absent | Commerce and report evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-006 | Invoice, shipment, credit memo, refund, tracking, PDFs | Magento and Laravel | Sales admin, denied role | Fulfillment fixture package absent | Commerce and report evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-007 | Customer grid, edit, addresses, groups, carts, wishlists | Magento and Laravel | Customer service admin, denied role | Customer admin fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-008 | Catalog rules, cart rules, coupons, conditions, actions, reports | Magento and Laravel | Marketing admin, denied role | Promotion fixture package absent | Commerce and report evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-009 | CMS pages, blocks, widgets, design assignments, media browser | Magento and Laravel | CMS admin, store scope | CMS admin fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-010 | System config scopes, inherited values, secrets, validation | Magento and Laravel | Full admin, scoped config state | Config fixture package absent | Config evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-011 | Cache management, index management, compiler controls | Magento and Laravel | Full admin, stale state | Cache/index fixture package absent | Livewire and commerce labels | Screenshot set absent | preserve | Not release-ready |
+| AD-012 | Admin users, roles, ACL, API users, OAuth consumers | Magento and Laravel | Full admin, denied role | Permission fixture package absent | API and auth evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-013 | Import, export, dataflow, validation, batch execution, error files | Magento and Laravel | Operations admin | Import/export fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-014 | Report grids, filters, exports, refresh statistics | Magento and Laravel | Report admin, denied role | Report fixture package absent | Report evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-015 | Newsletter templates, queues, subscribers, polls | Magento and Laravel | Marketing admin | Newsletter fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-016 | Tax classes, rates, rules, currency rates, symbols | Magento and Laravel | Finance admin, store scope | Tax/currency fixture package absent | Commerce and config evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-017 | Stores, backups, system info, email templates, URL rewrites, sitemaps | Magento and Laravel | Operations admin | Store operation fixture package absent | Domain service evidence | Screenshot set absent | preserve | Not release-ready |
+| AD-018 | Payment and shipping settings, Google integrations, mobile app admin | Magento and Laravel | Integration admin, sandbox state | Integration fixture package absent | Integration evidence | Screenshot set absent | bridge | Not release-ready |
+
 ## Acceptance Criteria
 
 - `specs/modernization/magento-feature-catalog.md` maps every feature to one or more screen IDs or explicitly marks it non-UI.
