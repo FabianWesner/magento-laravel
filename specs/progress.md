@@ -30,6 +30,28 @@ Next:
 
 ## Entries
 
+## 2026-05-19 09:10 CEST - Source Dependency Evidence
+
+Changed:
+- Added `specs/modernization/source-dependency-inventory.md` with repository metadata, lockfile hashes, PHP/Node versions, extension inventory, package roots, and source/dependency status.
+- Added `specs/modernization/dependency-audit-evidence.md` with Composer validate/audit, npm audit, banned dependency scan, local gate, and Docusaurus remediation evidence.
+
+Verified:
+- Escalated `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 /Users/fabianwesner/Library/Application Support/Herd/bin/composer audit` passed from `laravel/` with no security vulnerability advisories.
+- Escalated `npm audit --audit-level=high` passed from `laravel/` with 0 vulnerabilities.
+- Escalated `npm audit --audit-level=high` passed from `docusaurus/` with 0 vulnerabilities after the Docusaurus dependency audit fix.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-removed-technologies.php` passed for 142 files.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-source-dependency-target.php --final` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 56 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` is unset and Docusaurus browser smoke skipped by sandbox bind restrictions.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- CI hosted run evidence, project overlay, project database/media fixtures, DB-backed fixture/schema checks, screenshot artifacts, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the source/dependency evidence, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 09:08 CEST - Docusaurus Dependency Audit Fix
 
 Changed:
