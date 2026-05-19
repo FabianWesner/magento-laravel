@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 02:42 CEST - Edge Failure Resilience Readiness Gate
+
+Changed:
+- Added `dev/modernization/validate-edge-failure-readiness.php` to enforce the `specs/GOAL.md` acceptance rule that happy-path smoke tests are never enough and every critical feature needs edge-case, failure-path, invalid-input, permission-denial, concurrency, stale-cache/index, integration-outage, observability, recovery, and rollback evidence.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires per-feature edge/failure evidence and Laravel PHPUnit coverage across the catalog feature IDs.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated PHP `8.5.5` retry succeeded for console tests, HTTP tests, database testing, logging testing, and PHPUnit docs.
+- `php -l dev/modernization/validate-edge-failure-readiness.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-edge-failure-readiness.php` passed.
+- `php dev/modernization/validate-edge-failure-readiness.php --final` failed as expected because no per-feature edge/failure evidence or complete Laravel PHPUnit edge/failure coverage exists yet.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the edge/failure/resilience readiness template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation placeholders, missing UI screenshot manifest, release readiness, manual acceptance/support evidence, cutover evidence, defect evidence, CI workflow/evidence, source/dependency evidence, fixture/media evidence, source-only Magento baseline evidence, complex reverse-engineering evidence, missing edge/failure evidence and tests, performance budgets, operations/security/accessibility/production evidence, missing Laravel target implementations, placeholder project overlay, missing DB-backed fixture/schema checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php` and `git diff --check` passed.
+
+Blocked:
+- Per-feature edge/failure evidence, Laravel edge/failure PHPUnit coverage, fixture scenarios for failure and resilience, project overlay, project database/media fixtures, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the edge/failure/resilience readiness gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 02:37 CEST - Magento Baseline Readiness Gate
 
 Changed:

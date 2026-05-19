@@ -118,6 +118,7 @@ if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
   run_optional "fixture/media target final check" php dev/modernization/validate-fixture-media-target.php --final
   run_optional "Magento baseline readiness final check" php dev/modernization/validate-magento-baseline-readiness.php --final
   run_optional "complex reverse-engineering readiness final check" php dev/modernization/validate-complex-reverse-engineering-readiness.php --final
+  run_optional "edge/failure/resilience readiness final check" php dev/modernization/validate-edge-failure-readiness.php --final
   run_optional "performance budgets final check" php dev/modernization/validate-performance-budgets.php --final
   run_optional "operations readiness final check" php dev/modernization/validate-operations-readiness.php --final
   run_optional "security/accessibility final check" php dev/modernization/validate-security-accessibility.php --final
@@ -149,6 +150,7 @@ else
   run_optional "fixture/media target template check" php dev/modernization/validate-fixture-media-target.php
   run_optional "Magento baseline readiness template check" php dev/modernization/validate-magento-baseline-readiness.php
   run_optional "complex reverse-engineering readiness template check" php dev/modernization/validate-complex-reverse-engineering-readiness.php
+  run_optional "edge/failure/resilience readiness template check" php dev/modernization/validate-edge-failure-readiness.php
   run_optional "performance budgets template check" php dev/modernization/validate-performance-budgets.php
   run_optional "operations readiness template check" php dev/modernization/validate-operations-readiness.php
   run_optional "security/accessibility template check" php dev/modernization/validate-security-accessibility.php
