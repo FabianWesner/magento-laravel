@@ -553,85 +553,85 @@ The final test report must include this matrix populated for every ID in `specs/
 
 | Feature ID | Fixture IDs | Legacy Test/Evidence | Laravel Test/Evidence | Visual Evidence | Performance/Security Evidence | Final Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| SF-001 | Required | Required | Required | Required | Required where applicable | Pending |
-| SF-002 | Required | Required | Required | Required | Required where applicable | Pending |
-| SF-003 | Required | Required | Required | Required | Required where applicable | Pending |
-| SF-004 | Required | Required | Required | Required | Required where applicable | Pending |
-| SF-005 | Required | Required | Required | Required | Required where applicable | Pending |
-| SF-006 | Required | Required | Required | Required | Required where applicable | Pending |
-| SF-007 | Required | Required | Required | Required | Required | Pending |
-| SF-008 | Required | Required | Required | Required | Required | Pending |
-| SF-009 | Required | Required | Required | Required | Required | Pending |
-| SF-010 | Required | Required | Required | Required | Required | Pending |
-| SF-011 | Required | Required | Required | Required | Required | Pending |
-| SF-012 | Required | Required | Required | Required | Required | Pending |
-| SF-013 | Required | Required | Required | Required | Required | Pending |
-| SF-014 | Required | Required | Required | Required | Required | Pending |
-| SF-015 | Required | Required | Required | Required | Required | Pending |
-| SF-016 | Required | Required | Required | Required | Required | Pending |
-| AD-001 | Required | Required | Required | Required | Required | Pending |
-| AD-002 | Required | Required | Required | Required | Required | Pending |
-| AD-003 | Required | Required | Required | Required | Required | Pending |
-| AD-004 | Required | Required | Required | Required | Required | Pending |
-| AD-005 | Required | Required | Required | Required | Required | Pending |
-| AD-006 | Required | Required | Required | Required | Required | Pending |
-| AD-007 | Required | Required | Required | Required | Required | Pending |
-| AD-008 | Required | Required | Required | Required | Required | Pending |
-| AD-009 | Required | Required | Required | Required | Required | Pending |
-| AD-010 | Required | Required | Required | Required | Required | Pending |
-| AD-011 | Required | Required | Required | Required | Required | Pending |
-| AD-012 | Required | Required | Required | Required | Required | Pending |
-| AD-013 | Required | Required | Required | Required | Required | Pending |
-| AD-014 | Required | Required | Required | Required | Required | Pending |
-| AD-015 | Required | Required | Required | Required | Required | Pending |
-| AD-016 | Required | Required | Required | Required | Required | Pending |
-| AD-017 | Required | Required | Required | Required | Required | Pending |
-| AD-018 | Required | Required | Required | Required | Required | Pending |
-| CB-001 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-002 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-003 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-004 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-005 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-006 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-007 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-008 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-009 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-010 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-011 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-012 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-013 | Required | Required | Required | N/A unless visible | Required | Pending |
-| CB-014 | Required | Required | Required | N/A unless visible | Required | Pending |
-| API-001 | Required | Required | Required | N/A | Required | Pending |
-| API-002 | Required | Required | Required | N/A | Required | Pending |
-| API-003 | Required | Required | Required | N/A | Required | Pending |
-| API-004 | Required | Required | Required | N/A | Required | Pending |
-| API-005 | Required | Required | Required | N/A | Required | Pending |
-| API-006 | Required | Required | Required | N/A | Required | Pending |
-| CJ-001 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-002 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-003 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-004 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-005 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-006 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-007 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-008 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-009 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-010 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-011 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-012 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-013 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-014 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-015 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-016 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-017 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-018 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-019 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-020 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-021 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-022 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-023 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-024 | Required | Required | Required | N/A | Operational evidence required | Pending |
-| CJ-025 | Required | Required | Required | N/A | Operational evidence required | Pending |
+| SF-001 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-002 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-003 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-004 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-005 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-006 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-007 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-008 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-009 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-010 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-011 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-012 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-013 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-014 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-015 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| SF-016 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-001 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-002 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-003 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-004 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-005 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-006 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-007 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-008 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-009 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-010 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-011 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-012 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-013 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-014 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-015 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-016 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-017 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| AD-018 | Fixture trace row exists; restorable project fixture absent. | Legacy characterization artifact absent. | Laravel parity test artifact absent. | UI inventory row exists; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-001 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-002 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-003 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-004 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-005 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-006 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-007 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-008 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-009 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-010 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-011 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-012 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-013 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| CB-014 | Fixture trace row exists; restorable project fixture absent. | Legacy commerce characterization artifact absent. | Laravel parity test artifact absent. | See visible surface rows; screenshot artifact absent. | Approved performance/security artifact absent. | Not release-ready. |
+| API-001 | Fixture trace row exists; restorable project fixture absent. | Legacy API characterization artifact absent. | Laravel API contract artifact absent. | Non-visual feature; contract artifact absent. | Approved security/performance artifact absent. | Not release-ready. |
+| API-002 | Fixture trace row exists; restorable project fixture absent. | Legacy API characterization artifact absent. | Laravel API contract artifact absent. | Non-visual feature; contract artifact absent. | Approved security/performance artifact absent. | Not release-ready. |
+| API-003 | Fixture trace row exists; restorable project fixture absent. | Legacy API characterization artifact absent. | Laravel API contract artifact absent. | Non-visual feature; contract artifact absent. | Approved security/performance artifact absent. | Not release-ready. |
+| API-004 | Fixture trace row exists; restorable project fixture absent. | Legacy API characterization artifact absent. | Laravel API contract artifact absent. | Non-visual feature; contract artifact absent. | Approved security/performance artifact absent. | Not release-ready. |
+| API-005 | Fixture trace row exists; restorable project fixture absent. | Legacy API characterization artifact absent. | Laravel API contract artifact absent. | Non-visual feature; contract artifact absent. | Approved security/performance artifact absent. | Not release-ready. |
+| API-006 | Fixture trace row exists; restorable project fixture absent. | Legacy API characterization artifact absent. | Laravel API contract artifact absent. | Non-visual feature; contract artifact absent. | Approved security/performance artifact absent. | Not release-ready. |
+| CJ-001 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-002 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-003 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-004 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-005 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-006 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-007 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-008 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-009 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-010 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-011 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-012 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-013 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-014 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-015 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-016 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-017 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-018 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-019 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-020 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-021 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-022 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-023 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-024 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
+| CJ-025 | Fixture trace row exists; restorable project fixture absent. | Legacy cron side-effect artifact absent. | Laravel scheduler test artifact absent. | Non-visual job; operations artifact absent. | Approved operations/security artifact absent. | Not release-ready. |
 
 The final report must keep one row per `SF-*`, `AD-*`, `CB-*`, `API-*`, and `CJ-*` ID from `specs/modernization/magento-feature-catalog.md`; grouped ranges are not accepted in the final release report.
 

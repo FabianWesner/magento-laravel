@@ -2410,3 +2410,27 @@ Blocked:
 
 Next:
 - Commit the complex behavior traceability update, then continue with test-plan and Docusaurus traceability rows.
+
+## 2026-05-19 09:52 CEST - Test Plan And Docusaurus Feature Traceability Rows
+
+Changed:
+- Replaced placeholder feature rows in `specs/modernization/test-plan.md` with explicit per-feature evidence status for all 79 catalog IDs.
+- Added per-feature coverage rows to `docusaurus/docs/user/feature-coverage.md` for every storefront, admin, commerce, API, and scheduled-job feature ID.
+- Added per-feature verification rows to `docusaurus/docs/developer/testing-and-verification.md` for every catalog feature ID.
+- Rows intentionally record absent retained test, screenshot, contract, scheduler, and release artifacts as `Not release-ready` instead of claiming final acceptance.
+
+Verified:
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|" specs/modernization/test-plan.md docusaurus/docs/user/feature-coverage.md docusaurus/docs/developer/testing-and-verification.md | wc -l` returned 237.
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|.*\\b(TBD|Pending|To inventory|Required|Required where applicable|Operational evidence required)\\b" specs/modernization/test-plan.md docusaurus/docs/user/feature-coverage.md docusaurus/docs/developer/testing-and-verification.md` returned no matches.
+- `rg -n "\\b(TBD|Pending|To inventory|Required where applicable|Operational evidence required)\\b" docusaurus/docs/user/feature-coverage.md docusaurus/docs/developer/testing-and-verification.md` returned no matches.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-feature-traceability.php --final` passed for 79 catalog IDs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- `node dev/modernization/smoke-docusaurus.mjs` passed outside the sandbox for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Final release readiness still requires real retained artifacts for characterization tests, Laravel parity tests, UI screenshots, fixture restore, DB/schema reports, CI, security, accessibility, performance, manual acceptance, cutover, and production readiness.
+- The final modernization gate remains blocked by non-documentary release evidence and stakeholder approvals that are not present in this checkout.
+
+Next:
+- Commit the test-plan and Docusaurus traceability update, then continue with final-gate blockers that can be advanced without fabricating release evidence.
