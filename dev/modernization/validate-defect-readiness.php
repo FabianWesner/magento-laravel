@@ -128,35 +128,28 @@ function validateDefectRegister(array &$errors): void
         $errors[] = "{$path}: final defect register still contains placeholders";
     }
 
-    $rows = markdownTableRows($content);
-    if ($rows === []) {
-        $errors[] = "{$path}: final defect register requires at least one markdown table";
-
-        return;
-    }
-
-    $header = defectRegisterHeader($rows);
-    if ($header === null) {
+    $table = defectRegisterTable($content);
+    if ($table === null) {
         $errors[] = "{$path}: unable to locate a defect register table with Defect ID, Severity, and Status columns";
 
         return;
     }
 
-    foreach ($rows as $rowNumber => $row) {
+    foreach ($table['rows'] as $rowNumber => $row) {
         $cells = splitMarkdownRow($row);
-        if ($cells === [] || isSeparatorRow($cells) || cellsEqual($cells, $header['cells'])) {
+        if ($cells === [] || isSeparatorRow($cells) || cellsEqual($cells, $table['cells'])) {
             continue;
         }
 
-        $defectId = cellValue($cells, $header['indexes']['Defect ID']);
-        $severity = strtoupper(cellValue($cells, $header['indexes']['Severity']));
-        $status = strtolower(cellValue($cells, $header['indexes']['Status']));
-        $acceptance = cellValue($cells, $header['indexes']['Acceptance'] ?? null);
-        $acceptedBy = cellValue($cells, $header['indexes']['Accepted By'] ?? null);
-        $acceptedAt = cellValue($cells, $header['indexes']['Accepted At'] ?? null);
+        $defectId = cellValue($cells, $table['indexes']['Defect ID']);
+        $severity = strtoupper(cellValue($cells, $table['indexes']['Severity']));
+        $status = strtolower(cellValue($cells, $table['indexes']['Status']));
+        $acceptance = cellValue($cells, $table['indexes']['Acceptance'] ?? null);
+        $acceptedBy = cellValue($cells, $table['indexes']['Accepted By'] ?? null);
+        $acceptedAt = cellValue($cells, $table['indexes']['Accepted At'] ?? null);
 
         if ($defectId === '') {
-            $errors[] = "{$path}: defect table row {$rowNumber} is missing a Defect ID";
+            $errors[] = "{$path}: defect table row ".($rowNumber + 1).' is missing a Defect ID';
         }
 
         if (! in_array($severity, ['P0', 'P1', 'P2', 'P3'], true)) {
@@ -176,36 +169,43 @@ function validateDefectRegister(array &$errors): void
 }
 
 /**
- * @return list<string>
+ * @return array{cells: list<string>, indexes: array<string, int>, rows: list<string>}|null
  */
-function markdownTableRows(string $content): array
+function defectRegisterTable(string $content): ?array
 {
-    preg_match_all('/^\|.*\|\s*$/m', $content, $matches);
+    $lines = preg_split('/\R/', $content) ?: [];
+    $lineCount = count($lines);
 
-    return array_values($matches[0] ?? []);
-}
-
-/**
- * @param  list<string>  $rows
- * @return array{cells: list<string>, indexes: array<string, int>}|null
- */
-function defectRegisterHeader(array $rows): ?array
-{
-    foreach ($rows as $row) {
-        $cells = splitMarkdownRow($row);
+    for ($lineIndex = 0; $lineIndex < $lineCount - 1; $lineIndex++) {
+        $cells = splitMarkdownRow($lines[$lineIndex]);
         $required = ['Defect ID', 'Severity', 'Status'];
         if ($cells === [] || array_diff($required, $cells) !== []) {
             continue;
         }
 
+        $separatorCells = splitMarkdownRow($lines[$lineIndex + 1] ?? '');
+        if ($separatorCells === [] || ! isSeparatorRow($separatorCells)) {
+            continue;
+        }
+
         $indexes = [];
-        foreach ($cells as $index => $cell) {
-            $indexes[$cell] = $index;
+        foreach ($cells as $cellIndex => $cell) {
+            $indexes[$cell] = $cellIndex;
+        }
+
+        $rows = [];
+        for ($rowIndex = $lineIndex + 2; $rowIndex < $lineCount; $rowIndex++) {
+            if (splitMarkdownRow($lines[$rowIndex]) === []) {
+                break;
+            }
+
+            $rows[] = $lines[$rowIndex];
         }
 
         return [
             'cells' => $cells,
             'indexes' => $indexes,
+            'rows' => $rows,
         ];
     }
 

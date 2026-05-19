@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
 import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
-import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -16,6 +17,16 @@ const paths = ['/', '/user/', '/developer/'];
 const require = createRequire(import.meta.url);
 const evidencePath = parseEvidencePath(process.argv.slice(2));
 const startedAt = new Date();
+const sourceHashEntries = [
+  'docusaurus/docs',
+  'docusaurus/src',
+  'docusaurus/static',
+  'docusaurus/docusaurus.config.js',
+  'docusaurus/sidebars.js',
+  'docusaurus/package.json',
+  'docusaurus/package-lock.json',
+  'dev/modernization/smoke-docusaurus.mjs',
+];
 
 let chromium;
 try {
@@ -87,6 +98,58 @@ async function resolveFile(pathname) {
   }
 }
 
+async function docusaurusSourceHash() {
+  const files = [];
+  for (const entry of sourceHashEntries) {
+    files.push(...await collectSourceFiles(resolve(repoRoot, entry)));
+  }
+
+  files.sort((left, right) => relativePath(left).localeCompare(relativePath(right)));
+
+  const hash = createHash('sha256');
+  for (const file of files) {
+    hash.update(relativePath(file));
+    hash.update('\0');
+    hash.update(await readFile(file));
+    hash.update('\0');
+  }
+
+  return `sha256:${hash.digest('hex')}`;
+}
+
+async function collectSourceFiles(path) {
+  let fileStat;
+  try {
+    fileStat = await stat(path);
+  } catch {
+    return [];
+  }
+
+  if (fileStat.isFile()) {
+    return [path];
+  }
+
+  if (!fileStat.isDirectory()) {
+    return [];
+  }
+
+  const files = [];
+  const entries = await readdir(path, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.name === 'build' || entry.name === 'node_modules') {
+      continue;
+    }
+
+    files.push(...await collectSourceFiles(resolve(path, entry.name)));
+  }
+
+  return files;
+}
+
+function relativePath(path) {
+  return path.slice(repoRoot.length + 1).split(sep).join('/');
+}
+
 const server = createServer(async (request, response) => {
   const file = await resolveFile(request.url ?? '/');
   if (file === null) {
@@ -114,6 +177,7 @@ async function writeEvidence(results, consoleMessages) {
   }
 
   const relativeEvidencePath = evidencePath.slice(repoRoot.length + 1);
+  const sourceHash = await docusaurusSourceHash();
   const lines = [
     '# Docusaurus Browser Smoke Evidence',
     '',
@@ -122,6 +186,7 @@ async function writeEvidence(results, consoleMessages) {
     `Command: node dev/modernization/smoke-docusaurus.mjs --evidence ${relativeEvidencePath}`,
     `Base URL: ${baseUrl}`,
     'Browser: Chrome via Playwright',
+    `Source Hash: ${sourceHash}`,
     'Status: Pass',
     '',
     '| Path | HTTP Status | Page Title |',

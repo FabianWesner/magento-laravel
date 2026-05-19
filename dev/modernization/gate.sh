@@ -69,6 +69,25 @@ run_schema_report() {
   php dev/modernization/schema-report.php --format=markdown
 }
 
+run_docusaurus_browser_smoke() {
+  local evidence_path="${DOCUSAURUS_SMOKE_EVIDENCE:-specs/modernization/docusaurus-browser-smoke-evidence.md}"
+
+  if [ "${MODERNIZATION_FINAL:-0}" = "1" ]; then
+    node dev/modernization/smoke-docusaurus.mjs --evidence "$evidence_path"
+    local smoke_status=$?
+
+    if [ "$smoke_status" -eq 2 ]; then
+      echo "Live Docusaurus browser smoke is unavailable; validating retained evidence."
+      php dev/modernization/validate-docusaurus-browser-smoke-evidence.php "$evidence_path"
+      return $?
+    fi
+
+    return "$smoke_status"
+  fi
+
+  node dev/modernization/smoke-docusaurus.mjs
+}
+
 run_laravel_boost_smoke() {
   if [ ! -x artisan ]; then
     echo "Repository root artisan proxy is missing or not executable."
@@ -241,7 +260,7 @@ fi
 
 if [ -f docusaurus/package.json ] && command -v npm >/dev/null 2>&1; then
   run_optional "docusaurus build" npm --prefix docusaurus run build
-  run_maybe_unavailable "docusaurus browser smoke" node dev/modernization/smoke-docusaurus.mjs
+  run_maybe_unavailable "docusaurus browser smoke" run_docusaurus_browser_smoke
 elif [ -f docusaurus/package.json ]; then
   echo "SKIP: docusaurus build (npm not found)"
 else

@@ -2530,3 +2530,30 @@ Blocked:
 
 Next:
 - Commit the Docusaurus smoke evidence update, then continue with the next release blocker that has real local evidence available.
+
+## 2026-05-19 10:16 CEST - Docusaurus Smoke Evidence Fallback
+
+Changed:
+- Added `dev/modernization/validate-docusaurus-browser-smoke-evidence.php` to validate retained Docusaurus browser smoke evidence.
+- Added a Docusaurus source hash to `dev/modernization/smoke-docusaurus.mjs` evidence output so retained evidence cannot silently pass after Docusaurus source or smoke-script changes.
+- Updated `dev/modernization/gate.sh` so final mode falls back to validated retained evidence only when live browser smoke exits unavailable with code `2`.
+- Updated `dev/modernization/validate-defect-readiness.php` so the defect parser only reads the `Defect ID` table and ignores the final gate snapshot table in the same document.
+- Refreshed `specs/modernization/docusaurus-browser-smoke-evidence.md` with the current source hash from an escalated Playwright/Chrome run.
+- Updated `specs/modernization/install-verification.md` and `specs/modernization/defect-register.md` to describe the retained-evidence fallback.
+
+Verified:
+- `node --check dev/modernization/smoke-docusaurus.mjs` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 -l dev/modernization/validate-docusaurus-browser-smoke-evidence.php` passed.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs --evidence specs/modernization/docusaurus-browser-smoke-evidence.md` passed for `/`, `/user/`, and `/developer/`.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-docusaurus-browser-smoke-evidence.php` passed against the retained evidence.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-defect-readiness.php --final` now reports only the unchecked release item and the ten open P0/P1 defects, without misreading the snapshot table as defect rows.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 70 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage/schema skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` still failed for the known release blockers, but the `docusaurus browser smoke` step passed by validating retained evidence after sandbox `EPERM`.
+
+Blocked:
+- This only removes the sandbox-specific browser smoke false-negative path; final release remains blocked by open P0/P1 defects and absent release evidence.
+
+Next:
+- Commit the Docusaurus smoke fallback and defect parser fix, then continue with the next release blocker that has real local evidence available.

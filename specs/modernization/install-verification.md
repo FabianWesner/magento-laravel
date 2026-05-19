@@ -152,8 +152,9 @@ Retained evidence recorded on 2026-05-19:
 | Check | Evidence |
 | --- | --- |
 | Browser smoke | `specs/modernization/docusaurus-browser-smoke-evidence.md` records an escalated Playwright/Chrome smoke run for `/`, `/user/`, and `/developer/`. |
+| Evidence validation | `php dev/modernization/validate-docusaurus-browser-smoke-evidence.php` verifies the retained smoke evidence, including the Docusaurus source hash. |
 | Browser console | The retained evidence reports no browser console warnings or errors. |
-| Sandbox note | The final gate can still fail the browser smoke step inside the restricted sandbox because the script cannot bind `127.0.0.1:3012`; run the same smoke command outside the sandbox to refresh retained evidence. |
+| Sandbox note | The restricted sandbox cannot bind `127.0.0.1:3012`; final mode validates retained evidence when live smoke is unavailable. Run the smoke command outside the sandbox to refresh retained evidence after Docusaurus source changes. |
 
 The Docusaurus static build output remains ignored under `docusaurus/build/`; source docs and lockfile are committed.
 

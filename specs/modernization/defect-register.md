@@ -33,7 +33,7 @@ The final gate failed, as expected for the current non-release state. The run co
 | Release checklist and defect closure | Fail | DEF-001 through DEF-010 | Release checklist remains unchecked and every P0/P1 defect in this register is still open. |
 | Docusaurus browser smoke | Fail in sandbox final mode | DEF-010 | Build passes; browser smoke cannot bind `127.0.0.1:3012` in the sandbox and requires the escalated smoke command for evidence. |
 
-After this snapshot, an escalated Playwright/Chrome smoke run wrote `specs/modernization/docusaurus-browser-smoke-evidence.md`. That evidence proves the Docusaurus static site rendered the home, user, and developer docs locally, but it does not close the broader spec-currency, completion audit, CI, fixture, visual, security, accessibility, cutover, or release checklist defects.
+After this snapshot, an escalated Playwright/Chrome smoke run wrote `specs/modernization/docusaurus-browser-smoke-evidence.md`. The final gate now validates that retained evidence, including its Docusaurus source hash, when live browser smoke is unavailable in the restricted sandbox. That evidence proves the Docusaurus static site rendered the home, user, and developer docs locally, but it does not close the broader spec-currency, completion audit, CI, fixture, visual, security, accessibility, cutover, or release checklist defects.
 
 | Defect ID | Severity | Status | Owner | Feature IDs | Evidence | Acceptance | Accepted By | Accepted At | Resolution | Workaround |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
