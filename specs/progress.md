@@ -2390,3 +2390,23 @@ Blocked:
 
 Next:
 - Commit the UI traceability update, then continue with complex behavior, test-plan, and Docusaurus traceability rows.
+
+## 2026-05-19 10:45 CEST - Complex Behavior Per-Feature Traceability Rows
+
+Changed:
+- Added a per-feature reverse-engineering traceability matrix to `specs/modernization/complex-feature-reverse-engineering.md` with one row for every catalog feature ID.
+- Rows map feature IDs to behavior scope, current reverse-engineering evidence, evidence still needed, and release status.
+- Rows remain `Not release-ready` and do not replace final approved behavior specs or dual-runtime parity evidence.
+
+Verified:
+- `rg -n "^\\|\\s*(SF|AD|CB|API|CJ)-[0-9]{3}\\s*\\|" specs/modernization/complex-feature-reverse-engineering.md | wc -l` returned 79.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-feature-traceability.php --final` no longer reports missing per-feature rows in `specs/modernization/complex-feature-reverse-engineering.md`; it still fails for test-plan placeholders and Docusaurus per-feature documentation rows.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/validate-complex-reverse-engineering-readiness.php --final` still fails for final approved complex reverse-engineering evidence, as expected.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 dev/modernization/markdown-check.php` passed for 68 files.
+- `PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with fixture coverage and schema report skipped because `DB_DSN` was unset and Docusaurus browser smoke skipped because the sandbox could not bind `127.0.0.1:3012`.
+
+Blocked:
+- Final complex reverse-engineering readiness still requires approved evidence files and dual-runtime parity artifacts.
+
+Next:
+- Commit the complex behavior traceability update, then continue with test-plan and Docusaurus traceability rows.
