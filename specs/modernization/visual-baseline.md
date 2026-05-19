@@ -34,6 +34,8 @@ Adjust or add breakpoints if the production analytics show materially different 
 
 `specs/modernization/magento-admin-login-visual-smoke-evidence.md` records a local Magento admin login smoke capture for `AD-001` against the sample data runtime at `http://127.0.0.1:8090/admin`. The screenshots are local artifacts under `.localdev/visual-baseline/magento/admin/AD-LOGIN/login-default/` for desktop, laptop, tablet, and mobile viewports.
 
+`specs/modernization/magento-admin-dashboard-visual-smoke-evidence.md` records a local authenticated Magento admin dashboard smoke capture for `AD-001` against the sample data runtime at `http://127.0.0.1:8090/admin`. The screenshots are local artifacts under `.localdev/visual-baseline/magento/admin/AD-DASHBOARD/dashboard-default/` for desktop, laptop, tablet, and mobile viewports.
+
 This is not the final screenshot manifest. It does not include Laravel comparison screenshots, all storefront/admin screens, required roles, all UI states, visual diff approval, accessibility review, or manual acceptance.
 
 ## Admin Screens

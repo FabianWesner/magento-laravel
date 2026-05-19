@@ -30,6 +30,25 @@ Next:
 
 ## Entries
 
+## 2026-05-19 10:42 CEST - Magento Admin Dashboard Visual Smoke
+
+Changed:
+- Added `--magento-admin-login=1` support to `dev/modernization/capture-visual-baseline.mjs` so authenticated Magento admin captures can use environment-provided credentials without recording secret values.
+- Added retained local Magento admin dashboard smoke evidence at `specs/modernization/magento-admin-dashboard-visual-smoke-evidence.md` for `AD-001`.
+- Linked the admin dashboard smoke evidence from the visual baseline strategy and DEF-003 without treating it as final visual manifest evidence.
+
+Verified:
+- `node --check dev/modernization/capture-visual-baseline.mjs` passed.
+- Escalated authenticated local smoke capture loaded credentials from `.localdev/magento-smoke.env`, captured desktop, laptop, tablet, and mobile PNG artifacts with HTTP 200, and wrote page title `Dashboard / Magento Admin`.
+- `file .localdev/visual-baseline/magento/admin/AD-DASHBOARD/dashboard-default/*.png` reported valid PNG screenshots for all four captured artifacts.
+
+Blocked:
+- The final visual screenshot manifest remains absent.
+- Laravel comparison screenshots, all storefront/admin screens, required roles, all UI states, visual diff approval, accessibility review, and manual acceptance remain incomplete.
+
+Next:
+- Run markdown checks and the normal modernization gate, then commit the authenticated admin dashboard smoke tooling and evidence.
+
 ## 2026-05-19 10:38 CEST - Magento Admin Login Visual Smoke
 
 Changed:

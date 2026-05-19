@@ -27,12 +27,16 @@ if (args.help || !args.url) {
   console.log('  --state=default');
   console.log('  --parity-decision=preserve|bridge|replace|retire');
   console.log('  --evidence=specs/modernization/visual-smoke-evidence.md');
+  console.log('  --magento-admin-login=1');
+  console.log('');
+  console.log('Magento admin login mode requires MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD in the environment.');
   process.exit(args.help ? 0 : 2);
 }
 
 const out = args.out || '.localdev/visual-baseline';
 const manifest = args.manifest || '';
 const manifestContext = manifest ? validateManifestContext(args) : null;
+const magentoAdminLogin = isTruthy(args['magento-admin-login']);
 const viewports = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'laptop', width: 1280, height: 900 },
@@ -59,7 +63,9 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport });
-    const response = await page.goto(args.url, { waitUntil: 'networkidle', timeout: 60000 });
+    const response = magentoAdminLogin
+      ? await loginMagentoAdmin(page, args.url)
+      : await page.goto(args.url, { waitUntil: 'networkidle', timeout: 60000 });
     const screenshotPath = path.join(out, `${viewport.name}.png`);
     await page.screenshot({ path: screenshotPath, fullPage: true });
     const title = await page.title();
@@ -171,6 +177,41 @@ function markdownCell(value) {
 
 function toPosixPath(filePath) {
   return filePath.split(path.sep).join(path.posix.sep);
+}
+
+function isTruthy(value) {
+  return ['1', 'true', 'yes', 'on'].includes(String(value || '').toLowerCase());
+}
+
+async function loginMagentoAdmin(page, url) {
+  const username = process.env.MAGENTO_ADMIN_USERNAME;
+  const password = process.env.MAGENTO_ADMIN_PASSWORD;
+
+  if (!username || !password) {
+    fail('Magento admin login mode requires MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD.');
+  }
+
+  const initialResponse = await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+
+  if (await page.locator('#loginForm').count() === 0) {
+    return initialResponse;
+  }
+
+  await page.fill('#username', username);
+  await page.fill('#login', password);
+
+  const navigationResponse = await Promise.all([
+    page.waitForNavigation({ waitUntil: 'networkidle', timeout: 60000 }).catch(() => null),
+    page.click('#loginForm input[type="submit"]'),
+  ]).then(([response]) => response);
+
+  await page.waitForLoadState('networkidle', { timeout: 60000 }).catch(() => {});
+
+  if (await page.locator('#loginForm').count() > 0) {
+    fail('Magento admin login failed; page remained on the login form.');
+  }
+
+  return navigationResponse ?? initialResponse;
 }
 
 async function writeEvidence(evidencePath, rows, context) {
