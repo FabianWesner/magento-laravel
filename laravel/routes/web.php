@@ -196,6 +196,16 @@ Route::get('/_modernization/assets/storefront-cart.css', function () {
     ]);
 })->name('modernization.assets.storefront-cart');
 
+Route::get('/_modernization/storefront/checkout', function () {
+    return view('modernization.storefront-checkout');
+})->name('modernization.storefront.checkout');
+
+Route::get('/_modernization/assets/storefront-checkout.css', function () {
+    return response()->file(public_path('modernization/storefront-checkout.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.storefront-checkout');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

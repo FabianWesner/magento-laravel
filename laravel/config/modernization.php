@@ -13,6 +13,7 @@ use App\Modernization\Config\ScopedConfig;
 use App\Policies\LegacyApiContractPolicy;
 use App\Policies\Modernization\Auth\AdminPermissionPolicy;
 use App\Policies\Modernization\Cron\CronPolicy;
+use App\Policies\Modernization\Domain\DomainPolicy;
 use App\Policies\Modernization\Integrations\IntegrationPolicy;
 use App\Policies\Modernization\Modules\ModuleRegistryPolicy;
 use App\Providers\ModernizationServiceProvider;
@@ -54,6 +55,7 @@ return [
                 '/_modernization/admin/sales-fulfillment',
                 '/_modernization/admin/promotions',
                 '/_modernization/storefront/cart',
+                '/_modernization/storefront/checkout',
             ],
             'commands' => [
                 'modernization:modules',
@@ -99,6 +101,8 @@ return [
                 'livewire.admin-promotions-workbench',
                 'modernization.storefront-cart',
                 'livewire.storefront-cart-workbench',
+                'modernization.storefront-checkout',
+                'livewire.storefront-checkout-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,
@@ -108,6 +112,7 @@ return [
                 LegacyApiContractPolicy::class,
                 AdminPermissionPolicy::class,
                 CronPolicy::class,
+                DomainPolicy::class,
                 IntegrationPolicy::class,
                 ModuleRegistryPolicy::class,
             ],

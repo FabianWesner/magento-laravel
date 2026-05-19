@@ -43,6 +43,7 @@ class DomainFoundationTest extends TestCase
         'SF-012',
         'SF-013',
         'SF-014',
+        'SF-015',
         'SF-016',
         'AD-002',
         'AD-003',
@@ -1188,6 +1189,139 @@ class DomainFoundationTest extends TestCase
         ]);
     }
 
+    public function test_domain_fact_seeder_provides_read_only_checkout_diagnostics_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $catalog = $this->app->make(DomainCatalog::class);
+        $queryService = $this->app->make(DomainQueryService::class);
+        $defaultStepSnapshot = $queryService->snapshot('checkout_step', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deStepSnapshot = $queryService->snapshot('checkout_step', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultPaymentSnapshot = $queryService->snapshot('checkout_payment', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $dePaymentSnapshot = $queryService->snapshot('checkout_payment', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultReviewSnapshot = $queryService->snapshot('checkout_review', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deReviewSnapshot = $queryService->snapshot('checkout_review', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultMultishippingSnapshot = $queryService->snapshot('multishipping', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deMultishippingSnapshot = $queryService->snapshot('multishipping', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $defaultStepPayloads = array_column($defaultStepSnapshot['payload']['rows'], 'payload');
+        $deStepPayloads = array_column($deStepSnapshot['payload']['rows'], 'payload');
+        $defaultPaymentPayloads = array_column($defaultPaymentSnapshot['payload']['rows'], 'payload');
+        $dePaymentPayloads = array_column($dePaymentSnapshot['payload']['rows'], 'payload');
+        $defaultReviewPayloads = array_column($defaultReviewSnapshot['payload']['rows'], 'payload');
+        $deReviewPayloads = array_column($deReviewSnapshot['payload']['rows'], 'payload');
+        $defaultMultishippingPayloads = array_column($defaultMultishippingSnapshot['payload']['rows'], 'payload');
+        $deMultishippingPayloads = array_column($deMultishippingSnapshot['payload']['rows'], 'payload');
+
+        $this->assertContains('CheckoutStep', $this->domainContexts());
+        $this->assertContains('CheckoutPayment', $this->domainContexts());
+        $this->assertContains('CheckoutReview', $this->domainContexts());
+        $this->assertContains('Multishipping', $this->domainContexts());
+        $this->assertContains('agreement', $catalog->get('checkout_step')->states);
+        $this->assertContains('paypal express', $catalog->get('checkout_payment')->states);
+        $this->assertContains('place order blocked', $catalog->get('checkout_review')->states);
+        $this->assertContains('overview', $catalog->get('multishipping')->states);
+
+        $this->assertSame('CheckoutStep', $defaultStepSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultStepSnapshot['payload']['count']);
+        $this->assertSame(['ready', 'method_required', 'agreement_required'], array_column($defaultStepPayloads, 'status'));
+        $this->assertSame('Guest billing step ready', $defaultStepPayloads[0]['title']);
+        $this->assertSame(['login', 'billing'], $defaultStepPayloads[0]['progress']);
+        $this->assertTrue($defaultStepPayloads[0]['form_key_required']);
+        $this->assertSame('missing_shipping_method', $defaultStepPayloads[1]['problem_type']);
+        $this->assertSame('required_agreement_missing', $defaultStepPayloads[2]['problem_type']);
+        $this->assertSame(2, $deStepSnapshot['payload']['count']);
+        $this->assertSame(['ready', 'invalid_address'], array_column($deStepPayloads, 'status'));
+        $this->assertSame('postcode_required', $deStepPayloads[1]['problem_type']);
+
+        $this->assertSame('CheckoutPayment', $defaultPaymentSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultPaymentSnapshot['payload']['count']);
+        $this->assertSame(['ready', 'payment_review', 'failed_payment'], array_column($defaultPaymentPayloads, 'status'));
+        $this->assertSame('payment[method]', $defaultPaymentPayloads[0]['field_name']);
+        $this->assertSame('paypal_express', $defaultPaymentPayloads[1]['method_code']);
+        $this->assertTrue($defaultPaymentPayloads[1]['redirect_required']);
+        $this->assertSame('missing', $defaultPaymentPayloads[1]['sandbox']['callback_evidence']);
+        $this->assertSame('failed_authorization', $defaultPaymentPayloads[2]['problem_type']);
+        $this->assertSame(1, $dePaymentSnapshot['payload']['count']);
+        $this->assertSame('banktransfer', $dePaymentPayloads[0]['method_code']);
+
+        $this->assertSame('CheckoutReview', $defaultReviewSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultReviewSnapshot['payload']['count']);
+        $this->assertSame(['ready', 'agreement_required'], array_column($defaultReviewPayloads, 'status'));
+        $this->assertSame(134.56, $defaultReviewPayloads[0]['grand_total']);
+        $this->assertFalse($defaultReviewPayloads[0]['place_order_allowed']);
+        $this->assertSame('read_only_diagnostics', $defaultReviewPayloads[0]['disabled_reason']);
+        $this->assertFalse($defaultReviewPayloads[1]['agreements_accepted']);
+        $this->assertSame(1, $deReviewSnapshot['payload']['count']);
+        $this->assertSame('EUR', $deReviewPayloads[0]['currency']);
+        $this->assertSame(157.54, $deReviewPayloads[0]['grand_total']);
+
+        $this->assertSame('Multishipping', $defaultMultishippingSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultMultishippingSnapshot['payload']['count']);
+        $this->assertSame(['addresses', 'blocked'], array_column($defaultMultishippingPayloads, 'status'));
+        $this->assertTrue($defaultMultishippingPayloads[0]['requires_login']);
+        $this->assertFalse($defaultMultishippingPayloads[0]['virtual_allowed']);
+        $this->assertSame(2, $defaultMultishippingPayloads[0]['address_count']);
+        $this->assertSame('multishipping_method_or_payment_missing', $defaultMultishippingPayloads[1]['problem_type']);
+        $this->assertSame(1, $deMultishippingSnapshot['payload']['count']);
+        $this->assertSame('methods', $deMultishippingPayloads[0]['status']);
+        $this->assertSame('banktransfer', $deMultishippingPayloads[0]['payment_method']);
+
+        $checkoutFeatureKeys = ['checkout_step', 'checkout_payment', 'checkout_review', 'multishipping'];
+
+        $this->assertSame(15, DB::table('domain_facts')->whereIn('feature_key', $checkoutFeatureKeys)->count());
+        $this->assertSame(10, DB::table('domain_facts')->whereIn('feature_key', $checkoutFeatureKeys)->where('store_id', 9001)->count());
+        $this->assertSame(5, DB::table('domain_facts')->whereIn('feature_key', $checkoutFeatureKeys)->where('store_id', 9002)->count());
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'checkout_step',
+            'entity_id' => 13305,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'checkout_payment',
+            'entity_id' => 13402,
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'checkout_review',
+            'entity_id' => 13503,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'multishipping',
+            'entity_id' => 13603,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
     public function test_domain_fact_seeder_provides_tax_currency_rate_rule_job_and_problem_snapshots(): void
     {
         $this->seed(DomainFactSeeder::class);
@@ -1816,6 +1950,7 @@ class DomainFoundationTest extends TestCase
             'SF-012',
             'SF-013',
             'SF-014',
+            'SF-015',
             'SF-016',
             'AD-002',
             'AD-003',
