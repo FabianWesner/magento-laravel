@@ -30,6 +30,33 @@ Next:
 
 ## Entries
 
+## 2026-05-19 02:20 CEST - Defect Readiness Gate
+
+Changed:
+- Added `dev/modernization/validate-defect-readiness.php` to validate the GOAL requirement that no P0/P1 defects remain open and open P2 defects require explicit acceptance.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires the release checklist defect item to be checked and a defect register with severity, status, owner, feature IDs, evidence, acceptance, accepted-by, accepted-at, resolution, and workaround metadata.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost fallback `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost fallback `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Laravel Boost fallback `SearchDocs` failed with DNS resolution for `boost.laravel.com`; escalated retry succeeded for `testing`, `validation`, and `database testing` against Laravel framework `13.x` docs.
+- `php laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-defect-readiness.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-defect-readiness.php` passed.
+- `php dev/modernization/validate-defect-readiness.php --final` failed as expected because the release defect checklist item is unchecked and no final defect register exists.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the defect readiness template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation content placeholders, missing UI screenshot manifest, placeholder visual override evidence, unchecked release readiness items, missing final defect register/acceptance evidence, missing approved performance budget manifest, missing operator runbook, missing security/accessibility evidence, missing production readiness evidence, missing bootstrap implementation/evidence, missing schema preservation implementation/evidence, missing Livewire implementation/evidence, missing EAV implementation/evidence, missing module implementation/evidence, missing route fallback approval/implementation/evidence, missing cron/job implementation/evidence, missing API implementation/evidence, missing commerce implementation/evidence, missing auth/security implementation/evidence, missing report implementation/evidence, missing domain implementation/evidence, missing integration implementation/evidence, missing config implementation/evidence, placeholder project overlay, missing DB-backed checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+- `php dev/modernization/markdown-check.php`, `bash -n dev/modernization/gate.sh`, `php -l dev/modernization/validate-defect-readiness.php`, `php dev/modernization/validate-defect-readiness.php`, and `git diff --check` passed.
+
+Blocked:
+- Project overlay, project database fixture, project media fixture, schema preservation evidence, full UI baseline, local Playwright capture runtime, performance baselines, operator runbook, security review evidence, accessibility report evidence, production readiness evidence, final defect register/acceptance evidence, completed user/developer documentation evidence, Laravel bootstrap/foundation implementation/tests/evidence, Livewire package/components/tests/evidence, EAV repository/services/tests/evidence, module manifest/provider/policy/event/job/config/contract implementation and evidence, approved ADR 0008 auth/session boundary, route ownership/fallback implementation and evidence, cron scheduler/command/job/event implementation and evidence, API route/controller/resource/request/auth implementation and contract evidence, commerce domain/services/contracts/DTOs/transaction/locking/retry implementation and evidence, customer/admin auth/session/security implementation and evidence, report services/queries/admin surfaces/tests/evidence, catalog/customer/CMS/newsletter/sitemap/search/import-export/media domain services/tests/evidence, integration matrix/adapters/sandbox-outage-retry-rollback/tests/evidence, typed config/store-scope implementation/tests/evidence, per-feature characterization evidence, Laravel parity implementation, release readiness evidence, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Verify and commit the defect readiness gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 02:13 CEST - Schema Preservation Target Gate
 
 Changed:
