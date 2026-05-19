@@ -46,6 +46,16 @@ Route::get('/_modernization/assets/admin-reports.css', function () {
     ]);
 })->name('modernization.assets.admin-reports');
 
+Route::get('/_modernization/admin/cache-index', function () {
+    return view('modernization.cache-index');
+})->name('modernization.admin.cache-index');
+
+Route::get('/_modernization/assets/cache-index.css', function () {
+    return response()->file(public_path('modernization/cache-index.css'), [
+        'Content-Type' => 'text/css; charset=UTF-8',
+    ]);
+})->name('modernization.assets.cache-index');
+
 Route::get('/_modernization/storefront/catalog', function () {
     return view('modernization.storefront-catalog');
 })->name('modernization.storefront.catalog');

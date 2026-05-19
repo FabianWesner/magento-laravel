@@ -1,0 +1,249 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    color: #1f2528;
+    background: #f3f4f2;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    background: #f3f4f2;
+}
+
+.cache-index-shell {
+    width: min(1240px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 34px 0;
+}
+
+.cache-index-page-header,
+.cache-index-section-header {
+    display: grid;
+    gap: 8px;
+}
+
+.cache-index-page-header {
+    max-width: 930px;
+    margin-bottom: 24px;
+}
+
+.cache-index-page-header p,
+.cache-index-section-header p {
+    margin: 0;
+    color: #667061;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.cache-index-page-header h1,
+.cache-index-section-header h2 {
+    margin: 0;
+    color: #172025;
+    letter-spacing: 0;
+}
+
+.cache-index-page-header h1 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.05;
+}
+
+.cache-index-page-header span,
+.cache-index-section-header span {
+    color: #57625b;
+    line-height: 1.5;
+}
+
+.cache-index-card {
+    border: 1px solid #dbe1dc;
+    border-radius: 8px;
+    padding: 22px;
+    background: #ffffff;
+    box-shadow: 0 16px 38px rgb(34 42 34 / 8%);
+}
+
+.cache-index-section-header {
+    margin-bottom: 20px;
+}
+
+.cache-index-section-header h2 {
+    font-size: 1.45rem;
+}
+
+.cache-index-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+label {
+    display: grid;
+    gap: 6px;
+    color: #535f59;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+select,
+input,
+button {
+    min-height: 2.5rem;
+    border: 1px solid #cbd2cc;
+    border-radius: 6px;
+    padding: 0.55rem 0.7rem;
+    background: #ffffff;
+    color: #1d282c;
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.72;
+}
+
+select:focus,
+input:focus,
+button:focus-visible,
+button:hover:not(:disabled) {
+    border-color: #4c6754;
+    outline: 2px solid #ccddcf;
+    outline-offset: 1px;
+}
+
+.cache-index-toolbar,
+.cache-index-active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.cache-index-summary,
+[role="toolbar"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.cache-index-summary span,
+.cache-index-active-filters span {
+    border: 1px solid #dbe1dc;
+    border-radius: 6px;
+    padding: 0.45rem 0.65rem;
+    background: #f8faf7;
+    color: #48544d;
+    font-weight: 700;
+}
+
+.is-active {
+    border-color: #415f4a;
+    background: #415f4a;
+    color: #ffffff;
+}
+
+.cache-index-grid article,
+.cache-index-state {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    border: 1px solid #e0e5df;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fbfcfa;
+}
+
+.cache-index-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.cache-index-grid article > span {
+    color: #637068;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.cache-index-grid h3,
+.cache-index-grid p,
+.cache-index-grid small,
+.cache-index-grid em,
+.cache-index-grid strong {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.cache-index-grid h3 {
+    color: #172025;
+    font-size: 1.12rem;
+    letter-spacing: 0;
+}
+
+.cache-index-grid p,
+.cache-index-grid small,
+.cache-index-grid em {
+    color: #59675f;
+    line-height: 1.45;
+}
+
+.cache-index-grid strong {
+    color: #2e4937;
+}
+
+.cache-index-grid em {
+    font-style: normal;
+}
+
+.cache-index-state {
+    color: #3d4b43;
+    font-weight: 700;
+}
+
+.cache-index-state-danger {
+    border-color: #e1b3a8;
+    background: #fff4f1;
+    color: #87351f;
+}
+
+.cache-index-problem-card {
+    border-color: #dfb28b;
+    background: #fff8ef;
+}
+
+@media (max-width: 980px) {
+    .cache-index-controls,
+    .cache-index-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .cache-index-shell {
+        width: min(100% - 24px, 680px);
+        padding: 28px 0;
+    }
+
+    .cache-index-card {
+        padding: 18px;
+    }
+
+    .cache-index-controls,
+    .cache-index-grid {
+        grid-template-columns: 1fr;
+    }
+}

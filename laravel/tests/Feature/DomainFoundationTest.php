@@ -45,11 +45,15 @@ class DomainFoundationTest extends TestCase
         'AD-004',
         'AD-007',
         'AD-009',
+        'AD-011',
         'AD-013',
         'AD-015',
         'AD-017',
         'CB-012',
+        'CB-013',
+        'CJ-016',
         'CJ-019',
+        'CJ-021',
         'CJ-022',
         'CJ-025',
     ];
@@ -231,6 +235,129 @@ class DomainFoundationTest extends TestCase
         $this->assertDatabaseHas('domain_facts', [
             'feature_key' => 'contact',
             'entity_id' => 10710,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
+    public function test_domain_fact_seeder_provides_cache_index_cron_and_lock_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $catalog = $this->app->make(DomainCatalog::class);
+
+        $this->assertContains('Cache', $this->domainContexts());
+        $this->assertContains('Index', $this->domainContexts());
+        $this->assertContains('invalidated', $catalog->get('cache')->states);
+        $this->assertContains('stale cache', $catalog->get('cache')->states);
+        $this->assertContains('processing', $catalog->get('index')->states);
+        $this->assertContains('update required', $catalog->get('index')->states);
+
+        $cacheSnapshot = $this->app->make(DomainQueryService::class)->snapshot('cache', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $cachePayloads = array_column($cacheSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Cache', $cacheSnapshot['feature']['context']);
+        $this->assertSame('default', $cacheSnapshot['store_view']);
+        $this->assertSame(4, $cacheSnapshot['payload']['count']);
+        $this->assertSame(['config', 'block_html', 'layout', 'compiler'], array_column($cachePayloads, 'cache_type'));
+        $this->assertSame(['clean', 'invalidated', 'clean', 'disabled'], array_column($cachePayloads, 'status'));
+        $this->assertFalse($cachePayloads[0]['is_stale']);
+        $this->assertTrue($cachePayloads[1]['is_stale']);
+        $this->assertSame('cms_block_save_invalidated_block_html', $cachePayloads[1]['stale_reason']);
+        $this->assertContains('BLOCK_HTML', $cachePayloads[1]['cache_tags']);
+        $this->assertSame('Retire unless project overlay requires compiler parity', $cachePayloads[3]['compiler']['retained_decision']);
+        $this->assertSame('core_clean_cache', $cachePayloads[0]['cron']['job']);
+        $this->assertSame('30 2 * * *', $cachePayloads[0]['cron']['schedule']);
+
+        foreach ($cachePayloads as $cachePayload) {
+            $this->assertArrayHasKey('operation_type', $cachePayload);
+            $this->assertArrayHasKey('cache_type', $cachePayload);
+            $this->assertArrayHasKey('status', $cachePayload);
+            $this->assertArrayHasKey('legacy_status', $cachePayload);
+            $this->assertArrayHasKey('is_stale', $cachePayload);
+            $this->assertArrayHasKey('actions', $cachePayload);
+            $this->assertArrayHasKey('ui', $cachePayload);
+        }
+
+        $deCacheSnapshot = $this->app->make(DomainQueryService::class)->snapshot('cache', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deCachePayloads = array_column($deCacheSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('de', $deCacheSnapshot['store_view']);
+        $this->assertSame(2, $deCacheSnapshot['payload']['count']);
+        $this->assertSame(['config', 'translate'], array_column($deCachePayloads, 'cache_type'));
+        $this->assertSame(['clean', 'invalidated'], array_column($deCachePayloads, 'status'));
+        $this->assertTrue($deCachePayloads[1]['is_stale']);
+        $this->assertSame('store_view_locale_translation_change', $deCachePayloads[1]['stale_reason']);
+
+        $indexSnapshot = $this->app->make(DomainQueryService::class)->snapshot('index', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+
+        $indexPayloads = array_column($indexSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('Index', $indexSnapshot['feature']['context']);
+        $this->assertSame('default', $indexSnapshot['store_view']);
+        $this->assertSame(4, $indexSnapshot['payload']['count']);
+        $this->assertSame([
+            'catalog_product_price',
+            'cataloginventory_stock',
+            'catalog_url',
+            'catalogsearch_fulltext',
+        ], array_column($indexPayloads, 'process_code'));
+        $this->assertSame(['reindex_required', 'ready', 'processing', 'error'], array_column($indexPayloads, 'status'));
+        $this->assertSame(['require_reindex', 'pending', 'working', 'require_reindex'], array_column($indexPayloads, 'legacy_status'));
+        $this->assertTrue($indexPayloads[0]['update_required']);
+        $this->assertFalse($indexPayloads[1]['update_required']);
+        $this->assertTrue($indexPayloads[2]['is_locked']);
+        $this->assertSame('indexer:catalog_url:9001', $indexPayloads[2]['lock']['owner']);
+        $this->assertSame('lock_wait_timeout', $indexPayloads[3]['failure_reason']);
+        $this->assertSame('catalog_product_index_price_reindex_all', $indexPayloads[0]['cron']['job']);
+        $this->assertSame('0 2 * * *', $indexPayloads[0]['cron']['schedule']);
+
+        foreach ($indexPayloads as $indexPayload) {
+            $this->assertArrayHasKey('operation_type', $indexPayload);
+            $this->assertArrayHasKey('process_code', $indexPayload);
+            $this->assertArrayHasKey('status', $indexPayload);
+            $this->assertArrayHasKey('legacy_status', $indexPayload);
+            $this->assertArrayHasKey('mode', $indexPayload);
+            $this->assertArrayHasKey('update_required', $indexPayload);
+            $this->assertArrayHasKey('is_stale', $indexPayload);
+            $this->assertArrayHasKey('is_locked', $indexPayload);
+            $this->assertArrayHasKey('event_count', $indexPayload);
+            $this->assertArrayHasKey('ui', $indexPayload);
+        }
+
+        $deIndexSnapshot = $this->app->make(DomainQueryService::class)->snapshot('index', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $deIndexPayloads = array_column($deIndexSnapshot['payload']['rows'], 'payload');
+
+        $this->assertSame('de', $deIndexSnapshot['store_view']);
+        $this->assertSame(2, $deIndexSnapshot['payload']['count']);
+        $this->assertSame(['catalog_product_price', 'catalogsearch_fulltext'], array_column($deIndexPayloads, 'process_code'));
+        $this->assertSame(['ready', 'reindex_required'], array_column($deIndexPayloads, 'status'));
+        $this->assertSame('DE search index requires reindex after query updates', $deIndexPayloads[1]['ui']['summary']);
+
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'cache',
+            'entity_id' => 10806,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'index',
+            'entity_id' => 10906,
             'store_id' => 9002,
             'store_view' => 'de',
         ]);
@@ -987,11 +1114,15 @@ class DomainFoundationTest extends TestCase
             'AD-004',
             'AD-007',
             'AD-009',
+            'AD-011',
             'AD-013',
             'AD-015',
             'AD-017',
             'CB-012',
+            'CB-013',
+            'CJ-016',
             'CJ-019',
+            'CJ-021',
             'CJ-022',
             'CJ-025',
         ]);

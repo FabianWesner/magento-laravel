@@ -2,6 +2,25 @@
 
 This file records the main considerations behind implementation choices. It is not the progress ledger and it is not release evidence. The intent is to preserve the reasoning trail in a form that can later be turned into external writing or internal narrative.
 
+## 2026-05-19 14:04 CEST - Why The Cache/Index Workbench Exists
+
+The cache/index slice exists because Magento's admin cache screen is an operations surface, not a simple settings page. It combines cache-type enablement, invalidated tags, stale output, compiler controls, index process state, unprocessed index events, cron scheduling, lock ownership, and failure diagnostics. Those details are easy to flatten away if the replacement starts directly with a final admin controller.
+
+I implemented a read-only workbench first so the team can inspect those states in Chrome before deciding how much of the old operational surface should be preserved, replaced, or retired. The workbench is deliberately fixture-backed and local-only: it helps us exercise the behavior shape without flushing real caches, running indexers, changing compiler state, or pretending final admin parity is already done.
+
+The core reasoning was:
+
+- Use cache and index as explicit domain keys because they cut across admin, commerce, and cron feature IDs.
+- Keep stale cache and stale index cases visible as first-class rows, since they are the states operators actually need to reason about during migration.
+- Carry cron job and schedule metadata on the rows instead of hiding it in a separate note, because cache cleanup and price reindexing are operationally tied to the admin status screens.
+- Include lock owner and failure reason data early, because "Processing" in Magento can mean a healthy job, a stuck lock, or a failure that needs intervention.
+- Preserve the compiler surface as a disabled retained-decision row, making the migration choice visible instead of silently dropping it.
+- Add filterable cache, index, cron, and lock sections so Chrome verification mirrors how an operator would drill into the screen.
+- Normalize Livewire public state before filtering, because every filter is browser-controlled input.
+- Fix the Cron type filter when browser verification exposed that the UI option did not yet match the filtering semantics.
+
+The tradeoff is intentional: this is not a production cache management implementation and it does not run destructive operations. It is a characterization and inspection surface that moves the migration forward while final project fixtures, auth boundaries, release screenshots, accessibility, performance, CI, and cutover evidence remain open.
+
 ## 2026-05-19 13:13 CEST - Why The CMS/SEO Workbench Exists
 
 The current implementation slice intentionally adds a workbench instead of trying to replace Magento CMS routing outright. CMS and SEO behavior in Magento is deceptively broad: a visible storefront page can depend on CMS page identifiers, store-scoped page/block assignments, widgets injected through layout handles, URL rewrites, no-route behavior, redirects, sitemap generation, RSS feeds, and store configuration fallback.

@@ -28,6 +28,8 @@ class DomainCatalog
             'widget' => new DomainFeature('widget', 'Widget', 'Widget output', ['SF-013', 'AD-007'], ['widget instance'], true),
             'newsletter' => new DomainFeature('newsletter', 'Newsletter', 'Newsletter', ['SF-016', 'AD-015', 'CJ-022'], ['subscriber', 'problem reports', 'email'], true),
             'contact' => new DomainFeature('contact', 'Contact', 'Contact and send to friend', ['SF-016', 'AD-017'], ['contact', 'product alert', 'send to friend', 'email'], true),
+            'cache' => new DomainFeature('cache', 'Cache', 'Cache and compiler operations', ['AD-011', 'CB-013', 'CJ-016'], ['enabled', 'disabled', 'invalidated', 'stale cache', 'compiler'], true),
+            'index' => new DomainFeature('index', 'Index', 'Index management', ['AD-011', 'CB-012', 'CJ-021'], ['ready', 'processing', 'reindex required', 'update required', 'lock'], true),
             'sitemap' => new DomainFeature('sitemap', 'Sitemap', 'Sitemap and RSS', ['SF-014', 'CJ-025'], ['sitemap', 'RSS', 'SEO'], true),
             'url_rewrite' => new DomainFeature('url_rewrite', 'UrlRewrite', 'URL rewrite', ['SF-014', 'CB-012'], ['url rewrite', 'canonical', 'redirect'], true),
             'import_export' => new DomainFeature('import_export', 'ImportExport', 'Import export', ['AD-013'], ['CSV', 'validation', 'error file'], false),

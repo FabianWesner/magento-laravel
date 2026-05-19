@@ -30,6 +30,39 @@ Next:
 
 ## Entries
 
+## 2026-05-19 14:04 CEST - Admin Cache Index Workbench Implementation
+
+Changed:
+- Added deterministic cache and index `domain_facts` fixtures for cache types, invalidated cache tags, compiler state, index process status, update-required events, cron schedules, locks, and failure reasons across default and DE store views.
+- Added `cache` and `index` domain catalog entries covering feature IDs `AD-011`, `CB-013`, `CJ-016`, `CB-012`, and `CJ-021`.
+- Added the `/_modernization/admin/cache-index` Livewire workbench with cache, index, cron, lock, store-view, status, type, empty-state, and denied-role states.
+- Added the cache/index route, CSS asset route, responsive CSS, focused PHPUnit route/Livewire coverage, and public filter normalization.
+- Fixed the Cron type filter after browser verification exposed that the UI option needed to match rows with cron metadata.
+- Ignored local cache/index Playwright screenshots.
+
+Verified:
+- Required Laravel Boost docs lookup was attempted before code changes, but the available local docs command tried to open the remote Laravel docs URL from the sandbox and could not complete.
+- Parallel subagents supplied Laravel implementation pattern review and Magento cache/index behavior context before integration.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l app/Livewire/CacheIndexWorkbench.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php -l tests/Feature/ModernizationCacheIndexRouteTest.php` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH vendor/bin/pint --dirty --format agent` passed from `laravel/`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan test --compact tests/Feature/DomainFoundationTest.php tests/Feature/ModernizationCacheIndexRouteTest.php` passed with 14 tests and 713 assertions.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php artisan db:seed --class=DomainFactSeeder --no-interaction` seeded local browser data.
+- `curl -I http://magento-lts.test/_modernization/admin/cache-index` returned HTTP 200.
+- `curl -I http://magento-lts.test/_modernization/assets/cache-index.css` returned HTTP 200.
+- Chrome/Playwright desktop verification passed for initial cache rows, index rows, cron rows, lock rows, DE store-view counts, reindex-required lock filtering, compiler-only filtering, Cron type filtering, empty query state, denied role, and clean current console output.
+- Chrome/Playwright mobile verification passed for responsive single-column layout, visible summary counts, stacked controls, cache cards, and clean current console output.
+- Screenshots were captured as `cache-index-desktop-2026-05-19.png` and `cache-index-mobile-2026-05-19.png`.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH php dev/modernization/markdown-check.php` passed for 83 files.
+- `env PATH=/private/tmp/magento-lts-php85-bin:$PATH bash dev/modernization/gate.sh` passed in normal no-DB mode, with Laravel tests passing 115 tests and 1453 assertions, fixture coverage/schema skipped because `DB_DSN` is unset, and Docusaurus browser smoke skipped by sandbox bind restrictions.
+
+Blocked:
+- Laravel Boost docs lookup remains blocked in this environment.
+- This is a local modernization workbench slice only; final Magento/Laravel parity screenshots, canonical fixtures, accessibility, performance, hosted CI, production readiness, and cutover evidence remain incomplete.
+
+Next:
+- Commit this verified admin cache/index workbench slice, then continue implementation-first on the next browser-verifiable Magento domain slice.
+
 ## 2026-05-19 13:43 CEST - Storefront Communications Workbench Implementation
 
 Changed:
