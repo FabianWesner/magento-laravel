@@ -47,6 +47,7 @@ class DomainFoundationTest extends TestCase
         'AD-005',
         'AD-006',
         'AD-007',
+        'AD-008',
         'AD-009',
         'AD-010',
         'AD-011',
@@ -54,6 +55,9 @@ class DomainFoundationTest extends TestCase
         'AD-015',
         'AD-016',
         'AD-017',
+        'CB-003',
+        'CB-004',
+        'CB-005',
         'CB-006',
         'CB-008',
         'CB-010',
@@ -63,6 +67,8 @@ class DomainFoundationTest extends TestCase
         'CB-014',
         'CJ-001',
         'CJ-002',
+        'CJ-014',
+        'CJ-015',
         'CJ-016',
         'CJ-019',
         'CJ-020',
@@ -879,6 +885,178 @@ class DomainFoundationTest extends TestCase
         ]);
     }
 
+    public function test_domain_fact_seeder_provides_read_only_promotions_diagnostics_snapshots(): void
+    {
+        $this->seed(DomainFactSeeder::class);
+
+        $catalog = $this->app->make(DomainCatalog::class);
+        $queryService = $this->app->make(DomainQueryService::class);
+
+        $defaultRuleSnapshot = $queryService->snapshot('promotion_rule', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deRuleSnapshot = $queryService->snapshot('promotion_rule', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultCatalogRuleSnapshot = $queryService->snapshot('catalog_price_rule', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deCatalogRuleSnapshot = $queryService->snapshot('catalog_price_rule', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultCouponSnapshot = $queryService->snapshot('promotion_coupon', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deCouponSnapshot = $queryService->snapshot('promotion_coupon', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $defaultReportSnapshot = $queryService->snapshot('promotion_report', [
+            'store_id' => 9001,
+            'store_view' => 'default',
+        ]);
+        $deReportSnapshot = $queryService->snapshot('promotion_report', [
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+
+        $defaultRulePayloads = array_column($defaultRuleSnapshot['payload']['rows'], 'payload');
+        $deRulePayloads = array_column($deRuleSnapshot['payload']['rows'], 'payload');
+        $defaultCatalogRulePayloads = array_column($defaultCatalogRuleSnapshot['payload']['rows'], 'payload');
+        $deCatalogRulePayloads = array_column($deCatalogRuleSnapshot['payload']['rows'], 'payload');
+        $defaultCouponPayloads = array_column($defaultCouponSnapshot['payload']['rows'], 'payload');
+        $deCouponPayloads = array_column($deCouponSnapshot['payload']['rows'], 'payload');
+        $defaultReportPayload = $defaultReportSnapshot['payload']['rows'][0]['payload'];
+        $deReportPayload = $deReportSnapshot['payload']['rows'][0]['payload'];
+
+        $this->assertContains('PromotionRule', $this->domainContexts());
+        $this->assertContains('CatalogPriceRule', $this->domainContexts());
+        $this->assertContains('PromotionCoupon', $this->domainContexts());
+        $this->assertContains('PromotionReport', $this->domainContexts());
+        $this->assertSame(['AD-008', 'CB-004', 'CB-005'], $catalog->get('promotion_rule')->featureIds);
+        $this->assertSame(['AD-008', 'CB-003', 'CB-004', 'CJ-014'], $catalog->get('catalog_price_rule')->featureIds);
+        $this->assertSame(['AD-008', 'CB-004', 'CB-005'], $catalog->get('promotion_coupon')->featureIds);
+        $this->assertSame(['AD-008', 'CJ-015'], $catalog->get('promotion_report')->featureIds);
+        $this->assertContains('percent discount', $catalog->get('promotion_rule')->states);
+        $this->assertContains('price resolution', $catalog->get('catalog_price_rule')->states);
+        $this->assertContains('exhausted', $catalog->get('promotion_coupon')->states);
+        $this->assertContains('aggregation row', $catalog->get('promotion_report')->states);
+
+        $this->assertSame('PromotionRule', $defaultRuleSnapshot['feature']['context']);
+        $this->assertSame('default', $defaultRuleSnapshot['store_view']);
+        $this->assertSame(2, $defaultRuleSnapshot['payload']['count']);
+        $this->assertSame(['active', 'invalid_condition'], array_column($defaultRulePayloads, 'status'));
+        $this->assertSame(['cart-percent-10-default', 'cart-invalid-condition-default'], array_column($defaultRulePayloads, 'rule_code'));
+        $this->assertSame([false, true], array_column($defaultRulePayloads, 'is_problem'));
+        $this->assertSame(10, $defaultRulePayloads[0]['discount_amount']);
+        $this->assertSame(10, $defaultRulePayloads[0]['totals_preview']['discount']);
+        $this->assertSame('USD', $defaultRulePayloads[0]['totals_preview']['currency']);
+        $this->assertFalse($defaultRulePayloads[1]['conditions']['is_valid']);
+        $this->assertSame('invalid_condition', $defaultRulePayloads[1]['problem_type']);
+        $this->assertSame('default', $defaultRulePayloads[0]['store_scope']['store_view']);
+        $this->assertSame('en_US', $defaultRulePayloads[0]['store_scope']['locale']);
+
+        $this->assertSame('de', $deRuleSnapshot['store_view']);
+        $this->assertSame(2, $deRuleSnapshot['payload']['count']);
+        $this->assertSame(['active', 'invalid_condition'], array_column($deRulePayloads, 'status'));
+        $this->assertSame('cart-percent-12-de', $deRulePayloads[0]['rule_code']);
+        $this->assertSame('EUR', $deRulePayloads[0]['totals_preview']['currency']);
+        $this->assertSame('de_DE', $deRulePayloads[0]['store_scope']['locale']);
+        $this->assertSame('invalid_condition', $deRulePayloads[1]['problem_type']);
+
+        $this->assertSame('CatalogPriceRule', $defaultCatalogRuleSnapshot['feature']['context']);
+        $this->assertSame(3, $defaultCatalogRuleSnapshot['payload']['count']);
+        $this->assertSame(['scheduled', 'expired', 'active'], array_column($defaultCatalogRulePayloads, 'status'));
+        $this->assertSame(['pending', 'not_applied', 'stale'], array_column($defaultCatalogRulePayloads, 'apply_status'));
+        $this->assertSame([false, false, true], array_column($defaultCatalogRulePayloads, 'is_problem'));
+        $this->assertSame('catalogrule_apply_all', $defaultCatalogRulePayloads[0]['cron']['job']);
+        $this->assertSame('CJ-014', $defaultCatalogRulePayloads[0]['cron']['feature_id']);
+        $this->assertSame('simple-shirt', $defaultCatalogRulePayloads[0]['price_resolution']['sku']);
+        $this->assertSame(25.46, $defaultCatalogRulePayloads[0]['price_resolution']['catalog_rule_price']);
+        $this->assertNull($defaultCatalogRulePayloads[1]['price_resolution']['catalog_rule_price']);
+        $this->assertSame('stale_catalog_rule_application', $defaultCatalogRulePayloads[2]['problem_type']);
+        $this->assertSame(59, $defaultCatalogRulePayloads[2]['price_resolution']['indexed_price']);
+        $this->assertSame('default', $defaultCatalogRulePayloads[0]['store_scope']['store_view']);
+
+        $this->assertSame(3, $deCatalogRuleSnapshot['payload']['count']);
+        $this->assertSame(['scheduled', 'expired', 'active'], array_column($deCatalogRulePayloads, 'status'));
+        $this->assertSame(['pending', 'not_applied', 'stale'], array_column($deCatalogRulePayloads, 'apply_status'));
+        $this->assertSame('EUR', $deCatalogRulePayloads[0]['price_resolution']['currency']);
+        $this->assertSame('de_DE', $deCatalogRulePayloads[0]['store_scope']['locale']);
+        $this->assertSame('stale_catalog_rule_application', $deCatalogRulePayloads[2]['problem_type']);
+
+        $this->assertSame('PromotionCoupon', $defaultCouponSnapshot['feature']['context']);
+        $this->assertSame(2, $defaultCouponSnapshot['payload']['count']);
+        $this->assertSame(['active', 'exhausted'], array_column($defaultCouponPayloads, 'status'));
+        $this->assertSame(['autogenerated', 'specific'], array_column($defaultCouponPayloads, 'coupon_type'));
+        $this->assertSame('AUTO10-DEFAULT-0001', $defaultCouponPayloads[0]['coupon_code']);
+        $this->assertSame(3, $defaultCouponPayloads[0]['usage']['times_used']);
+        $this->assertFalse($defaultCouponPayloads[0]['is_exhausted']);
+        $this->assertSame('WELCOME-USED-UP', $defaultCouponPayloads[1]['coupon_code']);
+        $this->assertSame(10, $defaultCouponPayloads[1]['usage']['times_used']);
+        $this->assertTrue($defaultCouponPayloads[1]['is_exhausted']);
+        $this->assertSame('usage_limit_exhausted', $defaultCouponPayloads[1]['problem_type']);
+        $this->assertSame([false, true], array_column($defaultCouponPayloads, 'is_problem'));
+
+        $this->assertSame(2, $deCouponSnapshot['payload']['count']);
+        $this->assertSame(['active', 'exhausted'], array_column($deCouponPayloads, 'status'));
+        $this->assertSame('AUTO12-DE-0001', $deCouponPayloads[0]['coupon_code']);
+        $this->assertSame('de_DE', $deCouponPayloads[0]['store_scope']['locale']);
+        $this->assertSame('usage_limit_exhausted', $deCouponPayloads[1]['problem_type']);
+
+        $this->assertSame('PromotionReport', $defaultReportSnapshot['feature']['context']);
+        $this->assertSame(1, $defaultReportSnapshot['payload']['count']);
+        $this->assertSame('aggregated', $defaultReportPayload['status']);
+        $this->assertSame('coupon', $defaultReportPayload['report_type']);
+        $this->assertSame(2, $defaultReportPayload['rows_aggregated']);
+        $this->assertSame(17.50, $defaultReportPayload['total_discount']);
+        $this->assertSame('USD', $defaultReportPayload['currency']);
+        $this->assertSame('aggregate_coupon_report_data', $defaultReportPayload['cron']['job']);
+        $this->assertSame('CJ-015', $defaultReportPayload['cron']['feature_id']);
+        $this->assertSame(['salesrule', 'salesrule_coupon', 'salesrule_coupon_usage'], $defaultReportPayload['source_tables']);
+
+        $this->assertSame(1, $deReportSnapshot['payload']['count']);
+        $this->assertSame('aggregated', $deReportPayload['status']);
+        $this->assertSame(14.40, $deReportPayload['total_discount']);
+        $this->assertSame('EUR', $deReportPayload['currency']);
+        $this->assertSame('de_DE', $deReportPayload['store_scope']['locale']);
+
+        $promotionFeatureKeys = ['promotion_rule', 'catalog_price_rule', 'promotion_coupon', 'promotion_report'];
+
+        $this->assertSame(16, DB::table('domain_facts')->whereIn('feature_key', $promotionFeatureKeys)->count());
+        $this->assertSame(8, DB::table('domain_facts')->whereIn('feature_key', $promotionFeatureKeys)->where('store_id', 9001)->count());
+        $this->assertSame(8, DB::table('domain_facts')->whereIn('feature_key', $promotionFeatureKeys)->where('store_id', 9002)->count());
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'promotion_rule',
+            'entity_id' => 12504,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'catalog_price_rule',
+            'entity_id' => 12606,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'promotion_coupon',
+            'entity_id' => 12704,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+        $this->assertDatabaseHas('domain_facts', [
+            'feature_key' => 'promotion_report',
+            'entity_id' => 12802,
+            'store_id' => 9002,
+            'store_view' => 'de',
+        ]);
+    }
+
     public function test_domain_fact_seeder_provides_tax_currency_rate_rule_job_and_problem_snapshots(): void
     {
         $this->seed(DomainFactSeeder::class);
@@ -1511,6 +1689,7 @@ class DomainFoundationTest extends TestCase
             'AD-005',
             'AD-006',
             'AD-007',
+            'AD-008',
             'AD-009',
             'AD-010',
             'AD-011',
@@ -1518,6 +1697,9 @@ class DomainFoundationTest extends TestCase
             'AD-015',
             'AD-016',
             'AD-017',
+            'CB-003',
+            'CB-004',
+            'CB-005',
             'CB-006',
             'CB-008',
             'CB-010',
@@ -1527,6 +1709,8 @@ class DomainFoundationTest extends TestCase
             'CB-014',
             'CJ-001',
             'CJ-002',
+            'CJ-014',
+            'CJ-015',
             'CJ-016',
             'CJ-019',
             'CJ-020',

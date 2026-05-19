@@ -52,6 +52,7 @@ return [
                 '/_modernization/admin/newsletter-polls',
                 '/_modernization/admin/store-operations',
                 '/_modernization/admin/sales-fulfillment',
+                '/_modernization/admin/promotions',
             ],
             'commands' => [
                 'modernization:modules',
@@ -93,6 +94,8 @@ return [
                 'livewire.admin-store-operations-workbench',
                 'modernization.admin-sales-fulfillment',
                 'livewire.admin-sales-fulfillment-workbench',
+                'modernization.admin-promotions',
+                'livewire.admin-promotions-workbench',
             ],
             'jobs' => [
                 CaptureCronParitySnapshot::class,
