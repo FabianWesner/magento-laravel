@@ -30,6 +30,32 @@ Next:
 
 ## Entries
 
+## 2026-05-19 02:23 CEST - Manual Acceptance And Support Readiness Gate
+
+Changed:
+- Added `dev/modernization/validate-manual-acceptance-readiness.php` to validate the `specs/GOAL.md` requirements for manual acceptance, support readiness, support/rollback notes, known limitations, and signed per-feature evidence.
+- Wired the validator into `dev/modernization/gate.sh`; final release mode now requires manual acceptance evidence and support readiness evidence before cutover.
+
+Verified:
+- Loaded the project-local Laravel best-practices skill from `laravel/.agents/skills/laravel-best-practices/SKILL.md` before PHP tooling edits.
+- Laravel Boost `ApplicationInfo` reported PHP `8.5`, Laravel `13.9.0`, Boost `2.4.7`, and MCP `0.7.0`.
+- Laravel Boost `DatabaseQuery` returned `[{"ok":1}]` for read-only `select 1 as ok`.
+- Laravel Boost `SearchDocs` failed in the sandbox with DNS resolution for `boost.laravel.com`; escalated PHP `8.5.5` retry succeeded for console command testing, filesystem testing, configuration, and HTTP test docs.
+- `/Users/fabianwesner/Library/Application Support/Herd/bin/php85 laravel/vendor/bin/pint --dirty --format agent` passed.
+- `php -l dev/modernization/validate-manual-acceptance-readiness.php` passed.
+- `bash -n dev/modernization/gate.sh` passed.
+- `php dev/modernization/validate-manual-acceptance-readiness.php` passed.
+- `php dev/modernization/validate-manual-acceptance-readiness.php --final` failed as expected because no manual acceptance evidence or support readiness evidence exists yet.
+- `bash dev/modernization/gate.sh` passed in normal no-DB mode, including the manual acceptance/support template check.
+- `MODERNIZATION_FINAL=1 bash dev/modernization/gate.sh` failed as expected on documentation placeholders, missing UI screenshot manifest, release readiness, missing manual acceptance/support evidence, defect evidence, CI workflow/evidence, source/dependency evidence, fixture/media evidence, performance budgets, operations/security/accessibility/production evidence, missing Laravel target implementations, placeholder project overlay, missing DB-backed fixture/schema checks, final traceability evidence, and sandbox browser smoke unavailability.
+- Escalated `node dev/modernization/smoke-docusaurus.mjs` passed for `/`, `/user/`, and `/developer/`.
+
+Blocked:
+- Manual acceptance evidence, support readiness evidence, final user-facing feature coverage, support escalation paths, known limitations, rollback notes, accepted defect evidence, project overlay, full UI baseline, Laravel parity implementation, and final release evidence remain incomplete or unavailable.
+
+Next:
+- Commit the manual acceptance/support readiness gate, then continue with the next unblocked `specs/GOAL.md` acceptance gap.
+
 ## 2026-05-19 02:18 CEST - Source And Dependency Target Gate
 
 Changed:
